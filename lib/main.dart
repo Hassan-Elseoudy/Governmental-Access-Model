@@ -1,9 +1,5 @@
 import 'package:flutter/material.dart';
-<<<<<<< HEAD
 import 'package:gam_app/login_screen_3.dart';
-=======
-import 'package:flutter_login_screens/login_screen_3.dart';
->>>>>>> origin/master
 
 void main() => runApp(new MyApp());
 
@@ -27,20 +23,12 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-<<<<<<< HEAD
-
-=======
->>>>>>> origin/master
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         backgroundColor: Colors.white,
         body: Container(
-<<<<<<< HEAD
-          child: LoginScreen3()
-=======
           child: LoginScreen3(),
->>>>>>> origin/master
         ));
   }
 }
