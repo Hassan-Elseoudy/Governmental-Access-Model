@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 name: gam_app
 description: A new Flutter application.
 
@@ -16,6 +17,11 @@ version: 1.0.0+1
 environment:
   sdk: ">=2.1.0 <3.0.0"
 
+=======
+name: flutter_login_screens
+description: A new Flutter application.
+
+>>>>>>> origin/master
 dependencies:
   flutter:
     sdk: flutter
@@ -30,7 +36,11 @@ dev_dependencies:
 
 
 # For information on the generic Dart part of this file, see the
+<<<<<<< HEAD
 # following page: https://dart.dev/tools/pub/pubspec
+=======
+# following page: https://www.dartlang.org/tools/pub/pubspec
+>>>>>>> origin/master
 
 # The following section is specific to Flutter.
 flutter:
@@ -41,6 +51,7 @@ flutter:
   uses-material-design: true
 
   # To add assets to your application, add an assets section, like this:
+<<<<<<< HEAD
   # assets:
   #  - images/a_dot_burr.jpeg
   #  - images/a_dot_ham.jpeg
@@ -50,12 +61,32 @@ flutter:
 
   # For details regarding adding assets from package dependencies, see
   # https://flutter.dev/assets-and-images/#from-packages
+=======
+  assets:
+    - assets/images/full-bloom.png
+    - assets/images/mountains.jpeg
+    - assets/images/mountains.jpg
+  # - images/a_dot_ham.jpeg
+
+  # An image asset can refer to one or more resolution-specific "variants", see
+  # https://flutter.io/assets-and-images/#resolution-aware.
+
+  # For details regarding adding assets from package dependencies, see
+  # https://flutter.io/assets-and-images/#from-packages
+>>>>>>> origin/master
 
   # To add custom fonts to your application, add a fonts section here,
   # in this "flutter" section. Each entry in this list should have a
   # "family" key with the font family name, and a "fonts" key with a
   # list giving the asset and other descriptors for the font. For
   # example:
+<<<<<<< HEAD
+=======
+  fonts:
+      - family: icomoon
+        fonts:
+        - asset: assets/fonts/IcoMoon.ttf
+>>>>>>> origin/master
   # fonts:
   #   - family: Schyler
   #     fonts:
@@ -69,4 +100,8 @@ flutter:
   #         weight: 700
   #
   # For details regarding fonts from package dependencies,
+<<<<<<< HEAD
   # see https://flutter.dev/custom-fonts/#from-packages
+=======
+  # see https://flutter.io/custom-fonts/#from-packages
+>>>>>>> origin/master

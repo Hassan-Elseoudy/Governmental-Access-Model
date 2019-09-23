@@ -7,6 +7,7 @@ class LoginScreen3 extends StatefulWidget {
 
 class _LoginScreen3State extends State<LoginScreen3>
     with TickerProviderStateMixin {
+<<<<<<< HEAD
 
   //The code is commented because instead of manual scrolling with animation,
   //Now PageView is being used
@@ -114,6 +115,11 @@ class _LoginScreen3State extends State<LoginScreen3>
       setState(() {});
     });
     */
+=======
+  @override
+  void initState() {
+    super.initState();
+>>>>>>> origin/master
   }
 
   Widget HomePage() {
@@ -134,9 +140,15 @@ class _LoginScreen3State extends State<LoginScreen3>
             padding: EdgeInsets.only(top: 250.0),
             child: Center(
               child: Icon(
+<<<<<<< HEAD
                 Icons.headset_mic,
                 color: Colors.white,
                 size: 40.0,
+=======
+                Icons.person_pin,
+                color: Colors.white,
+                size: 100.0,
+>>>>>>> origin/master
               ),
             ),
           ),
@@ -146,14 +158,22 @@ class _LoginScreen3State extends State<LoginScreen3>
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 Text(
+<<<<<<< HEAD
                   "Awesome",
+=======
+                  "الوصول الحكومي",
+>>>>>>> origin/master
                   style: TextStyle(
                     color: Colors.white,
                     fontSize: 20.0,
                   ),
                 ),
                 Text(
+<<<<<<< HEAD
                   "App",
+=======
+                  " نموذج",
+>>>>>>> origin/master
                   style: TextStyle(
                       color: Colors.white,
                       fontSize: 20.0,
@@ -185,7 +205,11 @@ class _LoginScreen3State extends State<LoginScreen3>
                         children: <Widget>[
                           new Expanded(
                             child: Text(
+<<<<<<< HEAD
                               "SIGN UP",
+=======
+                              "إنشاء حساب جديد",
+>>>>>>> origin/master
                               textAlign: TextAlign.center,
                               style: TextStyle(
                                   color: Colors.white,
@@ -222,7 +246,11 @@ class _LoginScreen3State extends State<LoginScreen3>
                         children: <Widget>[
                           new Expanded(
                             child: Text(
+<<<<<<< HEAD
                               "LOGIN",
+=======
+                              "تسجيل الدخول",
+>>>>>>> origin/master
                               textAlign: TextAlign.center,
                               style: TextStyle(
                                   color: Colors.redAccent,
@@ -270,10 +298,19 @@ class _LoginScreen3State extends State<LoginScreen3>
             children: <Widget>[
               new Expanded(
                 child: new Padding(
+<<<<<<< HEAD
                   padding: const EdgeInsets.only(left: 40.0),
                   child: new Text(
                     "EMAIL",
                     style: TextStyle(
+=======
+                  padding: const EdgeInsets.only(right: 40.0),
+                  child: new Text(
+                    "الرقم القومي",
+                    textDirection: TextDirection.rtl,
+                    style: TextStyle(
+                      
+>>>>>>> origin/master
                       fontWeight: FontWeight.bold,
                       color: Colors.redAccent,
                       fontSize: 15.0,
@@ -306,7 +343,11 @@ class _LoginScreen3State extends State<LoginScreen3>
                     textAlign: TextAlign.left,
                     decoration: InputDecoration(
                       border: InputBorder.none,
+<<<<<<< HEAD
                       hintText: 'samarthagarwal@live.com',
+=======
+                      hintText: '297XXXXXXXXXXX',
+>>>>>>> origin/master
                       hintStyle: TextStyle(color: Colors.grey),
                     ),
                   ),
@@ -321,9 +362,16 @@ class _LoginScreen3State extends State<LoginScreen3>
             children: <Widget>[
               new Expanded(
                 child: new Padding(
+<<<<<<< HEAD
                   padding: const EdgeInsets.only(left: 40.0),
                   child: new Text(
                     "PASSWORD",
+=======
+                  padding: const EdgeInsets.only(right: 40.0),
+                  child: new Text(
+                    "كلمة السر",
+                    textDirection: TextDirection.rtl,
+>>>>>>> origin/master
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
                       color: Colors.redAccent,
@@ -375,7 +423,11 @@ class _LoginScreen3State extends State<LoginScreen3>
                 padding: const EdgeInsets.only(right: 20.0),
                 child: new FlatButton(
                   child: new Text(
+<<<<<<< HEAD
                     "Forgot Password?",
+=======
+                    "نسيت كلمة المرور؟",
+>>>>>>> origin/master
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
                       color: Colors.redAccent,
@@ -411,7 +463,11 @@ class _LoginScreen3State extends State<LoginScreen3>
                         children: <Widget>[
                           new Expanded(
                             child: Text(
+<<<<<<< HEAD
                               "LOGIN",
+=======
+                              "الدخول",
+>>>>>>> origin/master
                               textAlign: TextAlign.center,
                               style: TextStyle(
                                   color: Colors.white,
@@ -425,6 +481,7 @@ class _LoginScreen3State extends State<LoginScreen3>
                 ),
               ],
             ),
+<<<<<<< HEAD
           ),
           new Container(
             width: MediaQuery.of(context).size.width,
@@ -571,11 +628,15 @@ class _LoginScreen3State extends State<LoginScreen3>
             ),
           )
         ],
+=======
+          ),],
+>>>>>>> origin/master
       ),
     );
   }
 
   Widget SignupPage() {
+<<<<<<< HEAD
     return new Container(
       height: MediaQuery.of(context).size.height,
       decoration: BoxDecoration(
@@ -600,13 +661,62 @@ class _LoginScreen3State extends State<LoginScreen3>
               ),
             ),
           ),
+=======
+    return new ListView(
+        children: <Widget>[
+          Container(
+            padding: EdgeInsets.all(10.0),
+            child: Center(
+              child: Icon(
+                Icons.person_pin,
+                color: Colors.redAccent,
+                size: 30.0,
+              ),
+            ),
+          ),
+          new Text(
+            "بيانات المولود",
+            textAlign: TextAlign.center,
+            style: new TextStyle(
+              color: Colors.blue,
+              fontSize: 20,
+              fontWeight: FontWeight.bold, 
+            ),   
+          ),
+          new Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        new Radio(
+                          value: 0,
+                          activeColor: Colors.red,
+                        ),
+                        new Text(
+                          'ذكر',
+                          style: new TextStyle(fontSize: 16.0),
+                        ),
+                        new Radio(
+                          value: 1,                         
+                        ),
+                        new Text(
+                          'أنثي',
+                          style: new TextStyle(
+                            fontSize: 16.0,
+                          ),
+                        ),
+                      ],
+                    ),
+>>>>>>> origin/master
           new Row(
             children: <Widget>[
               new Expanded(
                 child: new Padding(
                   padding: const EdgeInsets.only(left: 40.0),
                   child: new Text(
+<<<<<<< HEAD
                     "EMAIL",
+=======
+                    "محل الولادة",
+>>>>>>> origin/master
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
                       color: Colors.redAccent,
@@ -657,7 +767,11 @@ class _LoginScreen3State extends State<LoginScreen3>
                 child: new Padding(
                   padding: const EdgeInsets.only(left: 40.0),
                   child: new Text(
+<<<<<<< HEAD
                     "PASSWORD",
+=======
+                    "تاريخ الميلاد",
+>>>>>>> origin/master
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
                       color: Colors.redAccent,
@@ -811,9 +925,13 @@ class _LoginScreen3State extends State<LoginScreen3>
               ],
             ),
           ),
+<<<<<<< HEAD
         ],
       ),
         )
+=======
+        ],     
+>>>>>>> origin/master
     );
   }
 
@@ -835,7 +953,12 @@ class _LoginScreen3State extends State<LoginScreen3>
     );
   }
 
+<<<<<<< HEAD
   PageController _controller = new PageController(initialPage: 1, viewportFraction: 1.0);
+=======
+  PageController _controller =
+      new PageController(initialPage: 1, viewportFraction: 1.0);
+>>>>>>> origin/master
 
   @override
   Widget build(BuildContext context) {
