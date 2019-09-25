@@ -6,7 +6,9 @@ class actualService extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text("شهادة المِيلاد"),
+        backgroundColor: Colors.redAccent.shade700,
       ),
+      
       body: Center(
         child: RaisedButton(
           onPressed: () {
