@@ -171,6 +171,7 @@ class _LoginScreen3State extends State<LoginScreen3>
                     "الرقم القومي",
                     textDirection: TextDirection.rtl,
                     style: TextStyle(
+                      
                       fontWeight: FontWeight.bold,
                       color: Colors.redAccent,
                       fontSize: 15.0,
@@ -607,6 +608,7 @@ class _LoginScreen3State extends State<LoginScreen3>
 
   PageController _controller =
       new PageController(initialPage: 1, viewportFraction: 1.0);
+
   @override
   Widget build(BuildContext context) {
     return Container(
