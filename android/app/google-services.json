@@ -1,0 +1,83 @@
+{
+  "project_info": {
+    "project_number": "215843958205",
+    "firebase_url": "https://test-88d52.firebaseio.com",
+    "project_id": "test-88d52",
+    "storage_bucket": "test-88d52.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:215843958205:android:27c4872604ac17165036d4",
+        "android_client_info": {
+          "package_name": "com.example.flut"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "215843958205-5g0oe19garbhak6a8jpektg4uf8oc4pq.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBwyrlHfE_H9WrZzuKrtsPm4LCjA6XtEnw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "215843958205-5g0oe19garbhak6a8jpektg4uf8oc4pq.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "215843958205-ragflr8easlt2mp7q2jvkt4ug8p5ar49.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.flut"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:215843958205:android:75ca1593c9c953455036d4",
+        "android_client_info": {
+          "package_name": "com.samarth.flutterloginscreens"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "215843958205-5g0oe19garbhak6a8jpektg4uf8oc4pq.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBwyrlHfE_H9WrZzuKrtsPm4LCjA6XtEnw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "215843958205-5g0oe19garbhak6a8jpektg4uf8oc4pq.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "215843958205-ragflr8easlt2mp7q2jvkt4ug8p5ar49.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.flut"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
