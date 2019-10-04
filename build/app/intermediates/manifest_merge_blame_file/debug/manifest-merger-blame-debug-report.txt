@@ -1,0 +1,200 @@
+1<?xml version="1.0" encoding="utf-8"?>
+2<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+3    package="com.samarth.flutterloginscreens"
+4    android:versionCode="1"
+5    android:versionName="1.0" >
+6
+7    <uses-sdk
+8        android:minSdkVersion="16"
+8-->/home/smsm/Documents/Linux_Mobile/Projects/Governmental-Access-Model/android/app/src/main/AndroidManifest.xml
+9        android:targetSdkVersion="29" />
+9-->/home/smsm/Documents/Linux_Mobile/Projects/Governmental-Access-Model/android/app/src/main/AndroidManifest.xml
+10
+11    <!--
+12         The INTERNET permission is required for development. Specifically,
+13         flutter needs it to communicate with the running application
+14         to allow setting breakpoints, to provide hot reload, etc.
+15    -->
+16    <uses-permission android:name="android.permission.INTERNET" />
+16-->/home/smsm/Documents/Linux_Mobile/Projects/Governmental-Access-Model/android/app/src/main/AndroidManifest.xml:8:5-66
+16-->/home/smsm/Documents/Linux_Mobile/Projects/Governmental-Access-Model/android/app/src/main/AndroidManifest.xml:8:22-64
+17    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+17-->[com.google.android.gms:play-services-measurement:17.2.0] /home/smsm/.gradle/caches/transforms-2/files-2.1/2d129cff003e147d6b695aea30ba4359/play-services-measurement-17.2.0/AndroidManifest.xml:24:5-79
+17-->[com.google.android.gms:play-services-measurement:17.2.0] /home/smsm/.gradle/caches/transforms-2/files-2.1/2d129cff003e147d6b695aea30ba4359/play-services-measurement-17.2.0/AndroidManifest.xml:24:22-76
+18    <uses-permission android:name="android.permission.WAKE_LOCK" />
+18-->[com.google.android.gms:play-services-measurement:17.2.0] /home/smsm/.gradle/caches/transforms-2/files-2.1/2d129cff003e147d6b695aea30ba4359/play-services-measurement-17.2.0/AndroidManifest.xml:25:5-68
+18-->[com.google.android.gms:play-services-measurement:17.2.0] /home/smsm/.gradle/caches/transforms-2/files-2.1/2d129cff003e147d6b695aea30ba4359/play-services-measurement-17.2.0/AndroidManifest.xml:25:22-65
+19    <uses-permission android:name="com.google.android.finsky.permission.BIND_GET_INSTALL_REFERRER_SERVICE" /> <!-- Required by older versions of Google Play services to create IID tokens -->
+19-->[com.google.android.gms:play-services-measurement:17.2.0] /home/smsm/.gradle/caches/transforms-2/files-2.1/2d129cff003e147d6b695aea30ba4359/play-services-measurement-17.2.0/AndroidManifest.xml:26:5-110
+19-->[com.google.android.gms:play-services-measurement:17.2.0] /home/smsm/.gradle/caches/transforms-2/files-2.1/2d129cff003e147d6b695aea30ba4359/play-services-measurement-17.2.0/AndroidManifest.xml:26:22-107
+20    <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
+20-->[com.google.firebase:firebase-iid:19.0.0] /home/smsm/.gradle/caches/transforms-2/files-2.1/94c9f464e4651f229040476d0bb9d87f/firebase-iid-19.0.0/AndroidManifest.xml:26:5-82
+20-->[com.google.firebase:firebase-iid:19.0.0] /home/smsm/.gradle/caches/transforms-2/files-2.1/94c9f464e4651f229040476d0bb9d87f/firebase-iid-19.0.0/AndroidManifest.xml:26:22-79
+21    <!--
+22 io.flutter.app.FlutterApplication is an android.app.Application that
+23         calls FlutterMain.startInitialization(this); in its onCreate method.
+24         In most cases you can leave this as-is, but you if you want to provide
+25         additional functionality it is fine to subclass or reimplement
+26         FlutterApplication and put your custom class here.
+27    -->
+28    <application
+28-->/home/smsm/Documents/Linux_Mobile/Projects/Governmental-Access-Model/android/app/src/main/AndroidManifest.xml:15:5-38:19
+29        android:name="io.flutter.app.FlutterApplication"
+29-->/home/smsm/Documents/Linux_Mobile/Projects/Governmental-Access-Model/android/app/src/main/AndroidManifest.xml:16:9-57
+30        android:appComponentFactory="androidx.core.app.CoreComponentFactory"
+30-->[androidx.core:core:1.0.0] /home/smsm/.gradle/caches/transforms-2/files-2.1/497b0b17c6d3a63df1ad67518077b712/core-1.0.0/AndroidManifest.xml:22:18-86
+31        android:debuggable="true"
+32        android:icon="@mipmap/ic_launcher"
+32-->/home/smsm/Documents/Linux_Mobile/Projects/Governmental-Access-Model/android/app/src/main/AndroidManifest.xml:18:9-43
+33        android:label="flutter_login_screens" >
+33-->/home/smsm/Documents/Linux_Mobile/Projects/Governmental-Access-Model/android/app/src/main/AndroidManifest.xml:17:9-46
+34        <activity
+34-->/home/smsm/Documents/Linux_Mobile/Projects/Governmental-Access-Model/android/app/src/main/AndroidManifest.xml:19:9-37:20
+35            android:name="com.samarth.flutterloginscreens.MainActivity"
+35-->/home/smsm/Documents/Linux_Mobile/Projects/Governmental-Access-Model/android/app/src/main/AndroidManifest.xml:20:13-41
+36            android:configChanges="orientation|keyboardHidden|keyboard|screenSize|locale|layoutDirection|fontScale|screenLayout|density"
+36-->/home/smsm/Documents/Linux_Mobile/Projects/Governmental-Access-Model/android/app/src/main/AndroidManifest.xml:23:13-137
+37            android:hardwareAccelerated="true"
+37-->/home/smsm/Documents/Linux_Mobile/Projects/Governmental-Access-Model/android/app/src/main/AndroidManifest.xml:24:13-47
+38            android:launchMode="singleTop"
+38-->/home/smsm/Documents/Linux_Mobile/Projects/Governmental-Access-Model/android/app/src/main/AndroidManifest.xml:21:13-43
+39            android:theme="@style/LaunchTheme"
+39-->/home/smsm/Documents/Linux_Mobile/Projects/Governmental-Access-Model/android/app/src/main/AndroidManifest.xml:22:13-47
+40            android:windowSoftInputMode="adjustResize" >
+40-->/home/smsm/Documents/Linux_Mobile/Projects/Governmental-Access-Model/android/app/src/main/AndroidManifest.xml:25:13-55
+41
+42            <!--
+43                 This keeps the window background of the activity showing
+44                 until Flutter renders its first frame. It can be removed if
+45                 there is no splash screen (such as the default splash screen
+46                 defined in @style/LaunchTheme).
+47            -->
+48            <meta-data
+48-->/home/smsm/Documents/Linux_Mobile/Projects/Governmental-Access-Model/android/app/src/main/AndroidManifest.xml:30:13-32:40
+49                android:name="io.flutter.app.android.SplashScreenUntilFirstFrame"
+49-->/home/smsm/Documents/Linux_Mobile/Projects/Governmental-Access-Model/android/app/src/main/AndroidManifest.xml:31:17-82
+50                android:value="true" />
+50-->/home/smsm/Documents/Linux_Mobile/Projects/Governmental-Access-Model/android/app/src/main/AndroidManifest.xml:32:17-37
+51
+52            <intent-filter>
+52-->/home/smsm/Documents/Linux_Mobile/Projects/Governmental-Access-Model/android/app/src/main/AndroidManifest.xml:33:13-36:29
+53                <action android:name="android.intent.action.MAIN" />
+53-->/home/smsm/Documents/Linux_Mobile/Projects/Governmental-Access-Model/android/app/src/main/AndroidManifest.xml:34:17-68
+53-->/home/smsm/Documents/Linux_Mobile/Projects/Governmental-Access-Model/android/app/src/main/AndroidManifest.xml:34:25-66
+54
+55                <category android:name="android.intent.category.LAUNCHER" />
+55-->/home/smsm/Documents/Linux_Mobile/Projects/Governmental-Access-Model/android/app/src/main/AndroidManifest.xml:35:17-76
+55-->/home/smsm/Documents/Linux_Mobile/Projects/Governmental-Access-Model/android/app/src/main/AndroidManifest.xml:35:27-74
+56            </intent-filter>
+57        </activity>
+58
+59        <receiver
+59-->[com.google.android.gms:play-services-measurement:17.2.0] /home/smsm/.gradle/caches/transforms-2/files-2.1/2d129cff003e147d6b695aea30ba4359/play-services-measurement-17.2.0/AndroidManifest.xml:29:9-33:20
+60            android:name="com.google.android.gms.measurement.AppMeasurementReceiver"
+60-->[com.google.android.gms:play-services-measurement:17.2.0] /home/smsm/.gradle/caches/transforms-2/files-2.1/2d129cff003e147d6b695aea30ba4359/play-services-measurement-17.2.0/AndroidManifest.xml:30:13-85
+61            android:enabled="true"
+61-->[com.google.android.gms:play-services-measurement:17.2.0] /home/smsm/.gradle/caches/transforms-2/files-2.1/2d129cff003e147d6b695aea30ba4359/play-services-measurement-17.2.0/AndroidManifest.xml:31:13-35
+62            android:exported="false" >
+62-->[com.google.android.gms:play-services-measurement:17.2.0] /home/smsm/.gradle/caches/transforms-2/files-2.1/2d129cff003e147d6b695aea30ba4359/play-services-measurement-17.2.0/AndroidManifest.xml:32:13-37
+63        </receiver>
+64        <receiver
+64-->[com.google.android.gms:play-services-measurement:17.2.0] /home/smsm/.gradle/caches/transforms-2/files-2.1/2d129cff003e147d6b695aea30ba4359/play-services-measurement-17.2.0/AndroidManifest.xml:34:9-42:20
+65            android:name="com.google.android.gms.measurement.AppMeasurementInstallReferrerReceiver"
+65-->[com.google.android.gms:play-services-measurement:17.2.0] /home/smsm/.gradle/caches/transforms-2/files-2.1/2d129cff003e147d6b695aea30ba4359/play-services-measurement-17.2.0/AndroidManifest.xml:35:13-100
+66            android:enabled="true"
+66-->[com.google.android.gms:play-services-measurement:17.2.0] /home/smsm/.gradle/caches/transforms-2/files-2.1/2d129cff003e147d6b695aea30ba4359/play-services-measurement-17.2.0/AndroidManifest.xml:36:13-35
+67            android:exported="true"
+67-->[com.google.android.gms:play-services-measurement:17.2.0] /home/smsm/.gradle/caches/transforms-2/files-2.1/2d129cff003e147d6b695aea30ba4359/play-services-measurement-17.2.0/AndroidManifest.xml:37:13-36
+68            android:permission="android.permission.INSTALL_PACKAGES" >
+68-->[com.google.android.gms:play-services-measurement:17.2.0] /home/smsm/.gradle/caches/transforms-2/files-2.1/2d129cff003e147d6b695aea30ba4359/play-services-measurement-17.2.0/AndroidManifest.xml:38:13-69
+69            <intent-filter>
+69-->[com.google.android.gms:play-services-measurement:17.2.0] /home/smsm/.gradle/caches/transforms-2/files-2.1/2d129cff003e147d6b695aea30ba4359/play-services-measurement-17.2.0/AndroidManifest.xml:39:13-41:29
+70                <action android:name="com.android.vending.INSTALL_REFERRER" />
+70-->[com.google.android.gms:play-services-measurement:17.2.0] /home/smsm/.gradle/caches/transforms-2/files-2.1/2d129cff003e147d6b695aea30ba4359/play-services-measurement-17.2.0/AndroidManifest.xml:40:17-79
+70-->[com.google.android.gms:play-services-measurement:17.2.0] /home/smsm/.gradle/caches/transforms-2/files-2.1/2d129cff003e147d6b695aea30ba4359/play-services-measurement-17.2.0/AndroidManifest.xml:40:25-76
+71            </intent-filter>
+72        </receiver>
+73
+74        <service
+74-->[com.google.android.gms:play-services-measurement:17.2.0] /home/smsm/.gradle/caches/transforms-2/files-2.1/2d129cff003e147d6b695aea30ba4359/play-services-measurement-17.2.0/AndroidManifest.xml:44:9-47:40
+75            android:name="com.google.android.gms.measurement.AppMeasurementService"
+75-->[com.google.android.gms:play-services-measurement:17.2.0] /home/smsm/.gradle/caches/transforms-2/files-2.1/2d129cff003e147d6b695aea30ba4359/play-services-measurement-17.2.0/AndroidManifest.xml:45:13-84
+76            android:enabled="true"
+76-->[com.google.android.gms:play-services-measurement:17.2.0] /home/smsm/.gradle/caches/transforms-2/files-2.1/2d129cff003e147d6b695aea30ba4359/play-services-measurement-17.2.0/AndroidManifest.xml:46:13-35
+77            android:exported="false" />
+77-->[com.google.android.gms:play-services-measurement:17.2.0] /home/smsm/.gradle/caches/transforms-2/files-2.1/2d129cff003e147d6b695aea30ba4359/play-services-measurement-17.2.0/AndroidManifest.xml:47:13-37
+78        <service
+78-->[com.google.android.gms:play-services-measurement:17.2.0] /home/smsm/.gradle/caches/transforms-2/files-2.1/2d129cff003e147d6b695aea30ba4359/play-services-measurement-17.2.0/AndroidManifest.xml:48:9-52:72
+79            android:name="com.google.android.gms.measurement.AppMeasurementJobService"
+79-->[com.google.android.gms:play-services-measurement:17.2.0] /home/smsm/.gradle/caches/transforms-2/files-2.1/2d129cff003e147d6b695aea30ba4359/play-services-measurement-17.2.0/AndroidManifest.xml:49:13-87
+80            android:enabled="true"
+80-->[com.google.android.gms:play-services-measurement:17.2.0] /home/smsm/.gradle/caches/transforms-2/files-2.1/2d129cff003e147d6b695aea30ba4359/play-services-measurement-17.2.0/AndroidManifest.xml:50:13-35
+81            android:exported="false"
+81-->[com.google.android.gms:play-services-measurement:17.2.0] /home/smsm/.gradle/caches/transforms-2/files-2.1/2d129cff003e147d6b695aea30ba4359/play-services-measurement-17.2.0/AndroidManifest.xml:51:13-37
+82            android:permission="android.permission.BIND_JOB_SERVICE" />
+82-->[com.google.android.gms:play-services-measurement:17.2.0] /home/smsm/.gradle/caches/transforms-2/files-2.1/2d129cff003e147d6b695aea30ba4359/play-services-measurement-17.2.0/AndroidManifest.xml:52:13-69
+83        <service
+83-->[com.google.android.gms:play-services-measurement-api:17.2.0] /home/smsm/.gradle/caches/transforms-2/files-2.1/2ee83584e442d7039f38c72179781432/play-services-measurement-api-17.2.0/AndroidManifest.xml:27:9-33:19
+84            android:name="com.google.firebase.components.ComponentDiscoveryService"
+84-->[com.google.android.gms:play-services-measurement-api:17.2.0] /home/smsm/.gradle/caches/transforms-2/files-2.1/2ee83584e442d7039f38c72179781432/play-services-measurement-api-17.2.0/AndroidManifest.xml:28:13-84
+85            android:exported="false" >
+85-->[com.google.android.gms:play-services-measurement-api:17.2.0] /home/smsm/.gradle/caches/transforms-2/files-2.1/2ee83584e442d7039f38c72179781432/play-services-measurement-api-17.2.0/AndroidManifest.xml:29:13-37
+86            <meta-data
+86-->[com.google.android.gms:play-services-measurement-api:17.2.0] /home/smsm/.gradle/caches/transforms-2/files-2.1/2ee83584e442d7039f38c72179781432/play-services-measurement-api-17.2.0/AndroidManifest.xml:30:13-32:85
+87                android:name="com.google.firebase.components:com.google.firebase.analytics.connector.internal.AnalyticsConnectorRegistrar"
+87-->[com.google.android.gms:play-services-measurement-api:17.2.0] /home/smsm/.gradle/caches/transforms-2/files-2.1/2ee83584e442d7039f38c72179781432/play-services-measurement-api-17.2.0/AndroidManifest.xml:31:17-139
+88                android:value="com.google.firebase.components.ComponentRegistrar" />
+88-->[com.google.android.gms:play-services-measurement-api:17.2.0] /home/smsm/.gradle/caches/transforms-2/files-2.1/2ee83584e442d7039f38c72179781432/play-services-measurement-api-17.2.0/AndroidManifest.xml:32:17-82
+89            <meta-data
+89-->[com.google.firebase:firebase-iid:19.0.0] /home/smsm/.gradle/caches/transforms-2/files-2.1/94c9f464e4651f229040476d0bb9d87f/firebase-iid-19.0.0/AndroidManifest.xml:32:13-34:85
+90                android:name="com.google.firebase.components:com.google.firebase.iid.Registrar"
+90-->[com.google.firebase:firebase-iid:19.0.0] /home/smsm/.gradle/caches/transforms-2/files-2.1/94c9f464e4651f229040476d0bb9d87f/firebase-iid-19.0.0/AndroidManifest.xml:33:17-96
+91                android:value="com.google.firebase.components.ComponentRegistrar" />
+91-->[com.google.firebase:firebase-iid:19.0.0] /home/smsm/.gradle/caches/transforms-2/files-2.1/94c9f464e4651f229040476d0bb9d87f/firebase-iid-19.0.0/AndroidManifest.xml:34:17-82
+92        </service>
+93
+94        <receiver
+94-->[com.google.firebase:firebase-iid:19.0.0] /home/smsm/.gradle/caches/transforms-2/files-2.1/94c9f464e4651f229040476d0bb9d87f/firebase-iid-19.0.0/AndroidManifest.xml:37:9-44:20
+95            android:name="com.google.firebase.iid.FirebaseInstanceIdReceiver"
+95-->[com.google.firebase:firebase-iid:19.0.0] /home/smsm/.gradle/caches/transforms-2/files-2.1/94c9f464e4651f229040476d0bb9d87f/firebase-iid-19.0.0/AndroidManifest.xml:38:13-78
+96            android:exported="true"
+96-->[com.google.firebase:firebase-iid:19.0.0] /home/smsm/.gradle/caches/transforms-2/files-2.1/94c9f464e4651f229040476d0bb9d87f/firebase-iid-19.0.0/AndroidManifest.xml:39:13-36
+97            android:permission="com.google.android.c2dm.permission.SEND" >
+97-->[com.google.firebase:firebase-iid:19.0.0] /home/smsm/.gradle/caches/transforms-2/files-2.1/94c9f464e4651f229040476d0bb9d87f/firebase-iid-19.0.0/AndroidManifest.xml:40:13-73
+98            <intent-filter>
+98-->[com.google.firebase:firebase-iid:19.0.0] /home/smsm/.gradle/caches/transforms-2/files-2.1/94c9f464e4651f229040476d0bb9d87f/firebase-iid-19.0.0/AndroidManifest.xml:41:13-43:29
+99                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+99-->[com.google.firebase:firebase-iid:19.0.0] /home/smsm/.gradle/caches/transforms-2/files-2.1/94c9f464e4651f229040476d0bb9d87f/firebase-iid-19.0.0/AndroidManifest.xml:42:17-81
+99-->[com.google.firebase:firebase-iid:19.0.0] /home/smsm/.gradle/caches/transforms-2/files-2.1/94c9f464e4651f229040476d0bb9d87f/firebase-iid-19.0.0/AndroidManifest.xml:42:25-78
+100            </intent-filter>
+101        </receiver>
+102
+103        <provider
+103-->[com.google.firebase:firebase-common:19.0.0] /home/smsm/.gradle/caches/transforms-2/files-2.1/bc5211cec79389e52fadce833b3e418f/firebase-common-19.0.0/AndroidManifest.xml:12:9-16:39
+104            android:name="com.google.firebase.provider.FirebaseInitProvider"
+104-->[com.google.firebase:firebase-common:19.0.0] /home/smsm/.gradle/caches/transforms-2/files-2.1/bc5211cec79389e52fadce833b3e418f/firebase-common-19.0.0/AndroidManifest.xml:13:13-77
+105            android:authorities="com.samarth.flutterloginscreens.firebaseinitprovider"
+105-->[com.google.firebase:firebase-common:19.0.0] /home/smsm/.gradle/caches/transforms-2/files-2.1/bc5211cec79389e52fadce833b3e418f/firebase-common-19.0.0/AndroidManifest.xml:14:13-72
+106            android:exported="false"
+106-->[com.google.firebase:firebase-common:19.0.0] /home/smsm/.gradle/caches/transforms-2/files-2.1/bc5211cec79389e52fadce833b3e418f/firebase-common-19.0.0/AndroidManifest.xml:15:13-37
+107            android:initOrder="100" />
+107-->[com.google.firebase:firebase-common:19.0.0] /home/smsm/.gradle/caches/transforms-2/files-2.1/bc5211cec79389e52fadce833b3e418f/firebase-common-19.0.0/AndroidManifest.xml:16:13-36
+108
+109        <activity
+109-->[com.google.android.gms:play-services-base:17.0.0] /home/smsm/.gradle/caches/transforms-2/files-2.1/0a327595935d71250b4927f775c046fa/play-services-base-17.0.0/AndroidManifest.xml:23:9-26:75
+110            android:name="com.google.android.gms.common.api.GoogleApiActivity"
+110-->[com.google.android.gms:play-services-base:17.0.0] /home/smsm/.gradle/caches/transforms-2/files-2.1/0a327595935d71250b4927f775c046fa/play-services-base-17.0.0/AndroidManifest.xml:24:13-79
+111            android:exported="false"
+111-->[com.google.android.gms:play-services-base:17.0.0] /home/smsm/.gradle/caches/transforms-2/files-2.1/0a327595935d71250b4927f775c046fa/play-services-base-17.0.0/AndroidManifest.xml:25:13-37
+112            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+112-->[com.google.android.gms:play-services-base:17.0.0] /home/smsm/.gradle/caches/transforms-2/files-2.1/0a327595935d71250b4927f775c046fa/play-services-base-17.0.0/AndroidManifest.xml:26:13-72
+113
+114        <meta-data
+114-->[com.google.android.gms:play-services-basement:17.0.0] /home/smsm/.gradle/caches/transforms-2/files-2.1/c7fa5a6d191d1ffe4041d5e36986ecfb/play-services-basement-17.0.0/AndroidManifest.xml:23:9-25:69
+115            android:name="com.google.android.gms.version"
+115-->[com.google.android.gms:play-services-basement:17.0.0] /home/smsm/.gradle/caches/transforms-2/files-2.1/c7fa5a6d191d1ffe4041d5e36986ecfb/play-services-basement-17.0.0/AndroidManifest.xml:24:13-58
+116            android:value="@integer/google_play_services_version" />
+116-->[com.google.android.gms:play-services-basement:17.0.0] /home/smsm/.gradle/caches/transforms-2/files-2.1/c7fa5a6d191d1ffe4041d5e36986ecfb/play-services-basement-17.0.0/AndroidManifest.xml:25:13-66
+117    </application>
+118
+119</manifest>

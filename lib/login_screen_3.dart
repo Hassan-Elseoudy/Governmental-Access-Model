@@ -6,11 +6,84 @@ class LoginScreen3 extends StatefulWidget {
   _LoginScreen3State createState() => new _LoginScreen3State();
 }
 
+final myController0 = TextEditingController();
+Map map = new Map();
+
 class _LoginScreen3State extends State<LoginScreen3>
     with TickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
+    myController0.addListener(_printLatestValue);
+  }
+
+  _printLatestValue() {
+    print("Second text field: ${myController0.text}");
+  }
+
+  Widget div_dec(double _size) {
+    return new Divider(
+      height: _size,
+    );
+  }
+
+  Column col(String txt, String hint, String idx, TextEditingController txtController) {
+    return new Column(
+      children: <Widget>[
+        new Row(
+          children: <Widget>[
+            new Expanded(
+              child: new Padding(
+                padding: const EdgeInsets.only(left: 40.0),
+                child: new Text(
+                  txt,
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: Colors.redAccent,
+                    fontSize: 15.0,
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+        new Container(
+          width: MediaQuery.of(context).size.width,
+          margin: const EdgeInsets.only(left: 40.0, right: 40.0, top: 0),
+          alignment: Alignment.center,
+          decoration: BoxDecoration(
+            border: Border(
+              bottom: BorderSide(
+                  color: Colors.redAccent,
+                  width: 0.5,
+                  style: BorderStyle.solid),
+            ),
+          ),
+          padding: const EdgeInsets.only(left: 0.0, right: 10.0),
+          child: new Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: <Widget>[
+              new Expanded(
+                child: TextField(
+                  onChanged: (text) {
+                    map[idx] = txtController.text;
+                  },
+                  controller: txtController,
+                  obscureText: true,
+                  textAlign: TextAlign.left,
+                  decoration: InputDecoration(
+                    border: InputBorder.none,
+                    hintText: hint,
+                    hintStyle: TextStyle(color: Colors.grey),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
   }
 
   Widget HomePage() {
@@ -212,9 +285,7 @@ class _LoginScreen3State extends State<LoginScreen3>
               ],
             ),
           ),
-          Divider(
-            height: 24.0,
-          ),
+          div_dec(24),
           new Row(
             children: <Widget>[
               new Expanded(
@@ -264,9 +335,7 @@ class _LoginScreen3State extends State<LoginScreen3>
               ],
             ),
           ),
-          Divider(
-            height: 24.0,
-          ),
+          div_dec(24),
           new Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: <Widget>[
@@ -379,303 +448,17 @@ class _LoginScreen3State extends State<LoginScreen3>
             ),
           ],
         ),
-        new Row(
-          children: <Widget>[
-            new Expanded(
-              child: new Padding(
-                padding: const EdgeInsets.only(left: 40.0),
-                child: new Text(
-                  "الجنسيه",
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: Colors.redAccent,
-                    fontSize: 15.0,
-                  ),
-                ),
-              ),
-            ),
-          ],
-        ),
-        new Container(
-          width: MediaQuery.of(context).size.width,
-          margin: const EdgeInsets.only(left: 40.0, right: 40.0, top: 10.0),
-          alignment: Alignment.center,
-          decoration: BoxDecoration(
-            border: Border(
-              bottom: BorderSide(
-                  color: Colors.redAccent,
-                  width: 0.5,
-                  style: BorderStyle.solid),
-            ),
-          ),
-          padding: const EdgeInsets.only(left: 0.0, right: 10.0),
-          child: new Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: <Widget>[
-              new Expanded(
-                child: TextField(
-                  obscureText: true,
-                  textAlign: TextAlign.left,
-                  decoration: InputDecoration(
-                    border: InputBorder.none,
-                    hintText: 'مصري',
-                    hintStyle: TextStyle(color: Colors.grey),
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-        new Row(
-          children: <Widget>[
-            new Expanded(
-              child: new Padding(
-                padding: const EdgeInsets.only(left: 40.0),
-                child: new Text(
-                  "الديانه",
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: Colors.redAccent,
-                    fontSize: 15.0,
-                  ),
-                ),
-              ),
-            ),
-          ],
-        ),
-        new Container(
-          width: MediaQuery.of(context).size.width,
-          margin: const EdgeInsets.only(left: 40.0, right: 40.0, top: 10.0),
-          alignment: Alignment.center,
-          decoration: BoxDecoration(
-            border: Border(
-              bottom: BorderSide(
-                  color: Colors.redAccent,
-                  width: 0.5,
-                  style: BorderStyle.solid),
-            ),
-          ),
-          padding: const EdgeInsets.only(left: 0.0, right: 10.0),
-          child: new Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: <Widget>[
-              new Expanded(
-                child: TextField(
-                  obscureText: true,
-                  textAlign: TextAlign.left,
-                  decoration: InputDecoration(
-                    border: InputBorder.none,
-                    hintText: 'مسلم/مسيحي',
-                    hintStyle: TextStyle(color: Colors.grey),
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-        new Row(
-          children: <Widget>[
-            new Expanded(
-              child: new Padding(
-                padding: const EdgeInsets.only(left: 40.0),
-                child: new Text(
-                  "محل الولادة",
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: Colors.redAccent,
-                    fontSize: 15.0,
-                  ),
-                ),
-              ),
-            ),
-          ],
-        ),
-        new Container(
-          width: MediaQuery.of(context).size.width,
-          margin: const EdgeInsets.only(left: 40.0, right: 40.0, top: 10.0),
-          alignment: Alignment.center,
-          decoration: BoxDecoration(
-            border: Border(
-              bottom: BorderSide(
-                  color: Colors.redAccent,
-                  width: 0.5,
-                  style: BorderStyle.solid),
-            ),
-          ),
-          padding: const EdgeInsets.only(left: 0.0, right: 10.0),
-          child: new Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: <Widget>[
-              new Expanded(
-                child: TextField(
-                  obscureText: true,
-                  textAlign: TextAlign.left,
-                  decoration: InputDecoration(
-                    border: InputBorder.none,
-                    hintText: 'samarthagarwal@live.com',
-                    hintStyle: TextStyle(color: Colors.grey),
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-        Divider(
-          height: 24.0,
-        ),
-        new Row(
-          children: <Widget>[
-            new Expanded(
-              child: new Padding(
-                padding: const EdgeInsets.only(left: 40.0),
-                child: new Text(
-                  "تاريخ الميلاد",
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: Colors.redAccent,
-                    fontSize: 15.0,
-                  ),
-                ),
-              ),
-            ),
-          ],
-        ),
-        new Container(
-          width: MediaQuery.of(context).size.width,
-          margin: const EdgeInsets.only(left: 40.0, right: 40.0, top: 10.0),
-          alignment: Alignment.center,
-          decoration: BoxDecoration(
-            border: Border(
-              bottom: BorderSide(
-                  color: Colors.redAccent,
-                  width: 0.5,
-                  style: BorderStyle.solid),
-            ),
-          ),
-          padding: const EdgeInsets.only(left: 0.0, right: 10.0),
-          child: new Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: <Widget>[
-              new Expanded(
-                child: TextField(
-                  obscureText: true,
-                  textAlign: TextAlign.left,
-                  decoration: InputDecoration(
-                    border: InputBorder.none,
-                    hintText: '6/11/2001',
-                    hintStyle: TextStyle(color: Colors.grey),
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-        Divider(
-          height: 24.0,
-        ),
-        new Row(
-          children: <Widget>[
-            new Expanded(
-              child: new Padding(
-                padding: const EdgeInsets.only(left: 40.0),
-                child: new Text(
-                  "رقم السر",
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: Colors.redAccent,
-                    fontSize: 15.0,
-                  ),
-                ),
-              ),
-            ),
-          ],
-        ),
-        new Container(
-          width: MediaQuery.of(context).size.width,
-          margin: const EdgeInsets.only(left: 40.0, right: 40.0, top: 10.0),
-          alignment: Alignment.center,
-          decoration: BoxDecoration(
-            border: Border(
-              bottom: BorderSide(
-                  color: Colors.redAccent,
-                  width: 0.5,
-                  style: BorderStyle.solid),
-            ),
-          ),
-          padding: const EdgeInsets.only(left: 0.0, right: 10.0),
-          child: new Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: <Widget>[
-              new Expanded(
-                child: TextField(
-                  obscureText: true,
-                  textAlign: TextAlign.left,
-                  decoration: InputDecoration(
-                    border: InputBorder.none,
-                    hintText: '*********',
-                    hintStyle: TextStyle(color: Colors.grey),
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-        Divider(
-          height: 24.0,
-        ),
-        new Row(
-          children: <Widget>[
-            new Expanded(
-              child: new Padding(
-                padding: const EdgeInsets.only(left: 40.0),
-                child: new Text(
-                  "تاكيد رقم السر",
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: Colors.redAccent,
-                    fontSize: 15.0,
-                  ),
-                ),
-              ),
-            ),
-          ],
-        ),
-        new Container(
-          width: MediaQuery.of(context).size.width,
-          margin: const EdgeInsets.only(left: 40.0, right: 40.0, top: 10.0),
-          alignment: Alignment.center,
-          decoration: BoxDecoration(
-            border: Border(
-              bottom: BorderSide(
-                  color: Colors.redAccent,
-                  width: 0.5,
-                  style: BorderStyle.solid),
-            ),
-          ),
-          padding: const EdgeInsets.only(left: 0.0, right: 10.0),
-          child: new Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: <Widget>[
-              new Expanded(
-                child: TextField(
-                  obscureText: true,
-                  textAlign: TextAlign.left,
-                  decoration: InputDecoration(
-                    border: InputBorder.none,
-                    hintText: '********',
-                    hintStyle: TextStyle(color: Colors.grey),
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
+        col("الجنسيّة", "مصري","1",new TextEditingController()),
+        div_dec(20),
+        col("الديانة", "مسلِم/مسِيحي","2",new TextEditingController()),
+        div_dec(20),
+        col("محلّ الولادة", "إسم البلدة","3",new TextEditingController()),
+        div_dec(20),
+        col("تاريخ المِيلاد", "يوم/شهر/سنة","4",new TextEditingController()),
+        div_dec(20),
+        col("رقم السّر", "**********","5",new TextEditingController()),
+        div_dec(20),
+        col("تأكِيد رقم السّر", "**********","6",new TextEditingController()),
         new Text(
           "بيانات الوالدين",
           textAlign: TextAlign.center,
@@ -685,300 +468,18 @@ class _LoginScreen3State extends State<LoginScreen3>
             fontWeight: FontWeight.bold,
           ),
         ),
-        new Row(
-          children: <Widget>[
-            new Expanded(
-              child: new Padding(
-                padding: const EdgeInsets.only(left: 40.0),
-                child: new Text(
-                  "اسم الاب ",
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: Colors.redAccent,
-                    fontSize: 15.0,
-                  ),
-                ),
-              ),
-            ),
-          ],
-        ),
-        new Container(
-          width: MediaQuery.of(context).size.width,
-          margin: const EdgeInsets.only(left: 40.0, right: 40.0, top: 10.0),
-          alignment: Alignment.center,
-          decoration: BoxDecoration(
-            border: Border(
-              bottom: BorderSide(
-                  color: Colors.redAccent,
-                  width: 0.5,
-                  style: BorderStyle.solid),
-            ),
-          ),
-          padding: const EdgeInsets.only(left: 0.0, right: 10.0),
-          child: new Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: <Widget>[
-              new Expanded(
-                child: TextField(
-                  obscureText: true,
-                  textAlign: TextAlign.left,
-                  decoration: InputDecoration(
-                    border: InputBorder.none,
-                    hintText: '',
-                    hintStyle: TextStyle(color: Colors.grey),
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-        new Row(
-          children: <Widget>[
-            new Expanded(
-              child: new Padding(
-                padding: const EdgeInsets.only(left: 40.0),
-                child: new Text(
-                  "جنسيه الاب",
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: Colors.redAccent,
-                    fontSize: 15.0,
-                  ),
-                ),
-              ),
-            ),
-          ],
-        ),
-        new Container(
-          width: MediaQuery.of(context).size.width,
-          margin: const EdgeInsets.only(left: 40.0, right: 40.0, top: 10.0),
-          alignment: Alignment.center,
-          decoration: BoxDecoration(
-            border: Border(
-              bottom: BorderSide(
-                  color: Colors.redAccent,
-                  width: 0.5,
-                  style: BorderStyle.solid),
-            ),
-          ),
-          padding: const EdgeInsets.only(left: 0.0, right: 10.0),
-          child: new Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: <Widget>[
-              new Expanded(
-                child: TextField(
-                  obscureText: true,
-                  textAlign: TextAlign.left,
-                  decoration: InputDecoration(
-                    border: InputBorder.none,
-                    hintText: 'مسلم/مسيحي',
-                    hintStyle: TextStyle(color: Colors.grey),
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-        new Row(
-          children: <Widget>[
-            new Expanded(
-              child: new Padding(
-                padding: const EdgeInsets.only(left: 40.0),
-                child: new Text(
-                  "ديانه الاب",
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: Colors.redAccent,
-                    fontSize: 15.0,
-                  ),
-                ),
-              ),
-            ),
-          ],
-        ),
-        new Container(
-          width: MediaQuery.of(context).size.width,
-          margin: const EdgeInsets.only(left: 40.0, right: 40.0, top: 10.0),
-          alignment: Alignment.center,
-          decoration: BoxDecoration(
-            border: Border(
-              bottom: BorderSide(
-                  color: Colors.redAccent,
-                  width: 0.5,
-                  style: BorderStyle.solid),
-            ),
-          ),
-          padding: const EdgeInsets.only(left: 0.0, right: 10.0),
-          child: new Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: <Widget>[
-              new Expanded(
-                child: TextField(
-                  obscureText: true,
-                  textAlign: TextAlign.left,
-                  decoration: InputDecoration(
-                    border: InputBorder.none,
-                    hintText: 'مسلم/مسيحي',
-                    hintStyle: TextStyle(color: Colors.grey),
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-        Divider(
-          height: 24.0,
-        ),
-        new Row(
-          children: <Widget>[
-            new Expanded(
-              child: new Padding(
-                padding: const EdgeInsets.only(left: 40.0),
-                child: new Text(
-                  "اسم الام ",
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: Colors.redAccent,
-                    fontSize: 15.0,
-                  ),
-                ),
-              ),
-            ),
-          ],
-        ),
-        new Container(
-          width: MediaQuery.of(context).size.width,
-          margin: const EdgeInsets.only(left: 40.0, right: 40.0, top: 10.0),
-          alignment: Alignment.center,
-          decoration: BoxDecoration(
-            border: Border(
-              bottom: BorderSide(
-                  color: Colors.redAccent,
-                  width: 0.5,
-                  style: BorderStyle.solid),
-            ),
-          ),
-          padding: const EdgeInsets.only(left: 0.0, right: 10.0),
-          child: new Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: <Widget>[
-              new Expanded(
-                child: TextField(
-                  obscureText: true,
-                  textAlign: TextAlign.left,
-                  decoration: InputDecoration(
-                    border: InputBorder.none,
-                    hintText: '',
-                    hintStyle: TextStyle(color: Colors.grey),
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-        new Row(
-          children: <Widget>[
-            new Expanded(
-              child: new Padding(
-                padding: const EdgeInsets.only(left: 40.0),
-                child: new Text(
-                  "جنسيه الام",
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: Colors.redAccent,
-                    fontSize: 15.0,
-                  ),
-                ),
-              ),
-            ),
-          ],
-        ),
-        new Container(
-          width: MediaQuery.of(context).size.width,
-          margin: const EdgeInsets.only(left: 40.0, right: 40.0, top: 10.0),
-          alignment: Alignment.center,
-          decoration: BoxDecoration(
-            border: Border(
-              bottom: BorderSide(
-                  color: Colors.redAccent,
-                  width: 0.5,
-                  style: BorderStyle.solid),
-            ),
-          ),
-          padding: const EdgeInsets.only(left: 0.0, right: 10.0),
-          child: new Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: <Widget>[
-              new Expanded(
-                child: TextField(
-                  obscureText: true,
-                  textAlign: TextAlign.left,
-                  decoration: InputDecoration(
-                    border: InputBorder.none,
-                    hintText: 'مصريه',
-                    hintStyle: TextStyle(color: Colors.grey),
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-        new Row(
-          children: <Widget>[
-            new Expanded(
-              child: new Padding(
-                padding: const EdgeInsets.only(left: 40.0),
-                child: new Text(
-                  "ديانه الام",
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: Colors.redAccent,
-                    fontSize: 15.0,
-                  ),
-                ),
-              ),
-            ),
-          ],
-        ),
-        new Container(
-          width: MediaQuery.of(context).size.width,
-          margin: const EdgeInsets.only(left: 40.0, right: 40.0, top: 10.0),
-          alignment: Alignment.center,
-          decoration: BoxDecoration(
-            border: Border(
-              bottom: BorderSide(
-                  color: Colors.redAccent,
-                  width: 0.5,
-                  style: BorderStyle.solid),
-            ),
-          ),
-          padding: const EdgeInsets.only(left: 0.0, right: 10.0),
-          child: new Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: <Widget>[
-              new Expanded(
-                child: TextField(
-                  obscureText: true,
-                  textAlign: TextAlign.left,
-                  decoration: InputDecoration(
-                    border: InputBorder.none,
-                    hintText: 'مسلم/مسيحي',
-                    hintStyle: TextStyle(color: Colors.grey),
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-        Divider(
-          height: 24.0,
-        ),
+        col("اسم اﻷب", "مثال: محمّد","7",new TextEditingController()),
+        div_dec(20),
+        col("ديانة اﻷب", "مسلِم/مسِيحي","8",new TextEditingController()),
+        div_dec(20),
+        col("جنسيّة اﻷب", "مصري","9",new TextEditingController()),
+        div_dec(20),
+        col("اسم اﻷم", "مثال: مِيرنا","10",new TextEditingController()),
+        div_dec(20),
+        col("ديانة اﻷم", "مسلِمة/مسِيحية","11",new TextEditingController()),
+        div_dec(20),
+        col("جنسيّة اﻷم", "مصرية","12",new TextEditingController()),
+        div_dec(20),
         new Text(
           "بيانات المبلغ",
           textAlign: TextAlign.center,
@@ -988,402 +489,22 @@ class _LoginScreen3State extends State<LoginScreen3>
             fontWeight: FontWeight.bold,
           ),
         ),
-        new Row(
-          children: <Widget>[
-            new Expanded(
-              child: new Padding(
-                padding: const EdgeInsets.only(left: 40.0),
-                child: new Text(
-                  "اسم المبلغ ",
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: Colors.redAccent,
-                    fontSize: 15.0,
-                  ),
-                ),
-              ),
-            ),
-          ],
-        ),
-        new Container(
-          width: MediaQuery.of(context).size.width,
-          margin: const EdgeInsets.only(left: 40.0, right: 40.0, top: 10.0),
-          alignment: Alignment.center,
-          decoration: BoxDecoration(
-            border: Border(
-              bottom: BorderSide(
-                  color: Colors.redAccent,
-                  width: 0.5,
-                  style: BorderStyle.solid),
-            ),
-          ),
-          padding: const EdgeInsets.only(left: 0.0, right: 10.0),
-          child: new Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: <Widget>[
-              new Expanded(
-                child: TextField(
-                  obscureText: true,
-                  textAlign: TextAlign.left,
-                  decoration: InputDecoration(
-                    border: InputBorder.none,
-                    hintText: '',
-                    hintStyle: TextStyle(color: Colors.grey),
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-        new Row(
-          children: <Widget>[
-            new Expanded(
-              child: new Padding(
-                padding: const EdgeInsets.only(left: 40.0),
-                child: new Text(
-                  "اسم الاب",
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: Colors.redAccent,
-                    fontSize: 15.0,
-                  ),
-                ),
-              ),
-            ),
-          ],
-        ),
-        new Container(
-          width: MediaQuery.of(context).size.width,
-          margin: const EdgeInsets.only(left: 40.0, right: 40.0, top: 10.0),
-          alignment: Alignment.center,
-          decoration: BoxDecoration(
-            border: Border(
-              bottom: BorderSide(
-                  color: Colors.redAccent,
-                  width: 0.5,
-                  style: BorderStyle.solid),
-            ),
-          ),
-          padding: const EdgeInsets.only(left: 0.0, right: 10.0),
-          child: new Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: <Widget>[
-              new Expanded(
-                child: TextField(
-                  obscureText: true,
-                  textAlign: TextAlign.left,
-                  decoration: InputDecoration(
-                    border: InputBorder.none,
-                    hintText: '',
-                    hintStyle: TextStyle(color: Colors.grey),
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-        new Row(
-          children: <Widget>[
-            new Expanded(
-              child: new Padding(
-                padding: const EdgeInsets.only(left: 40.0),
-                child: new Text(
-                  "الجد او اللقب",
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: Colors.redAccent,
-                    fontSize: 15.0,
-                  ),
-                ),
-              ),
-            ),
-          ],
-        ),
-        new Container(
-          width: MediaQuery.of(context).size.width,
-          margin: const EdgeInsets.only(left: 40.0, right: 40.0, top: 10.0),
-          alignment: Alignment.center,
-          decoration: BoxDecoration(
-            border: Border(
-              bottom: BorderSide(
-                  color: Colors.redAccent,
-                  width: 0.5,
-                  style: BorderStyle.solid),
-            ),
-          ),
-          padding: const EdgeInsets.only(left: 0.0, right: 10.0),
-          child: new Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: <Widget>[
-              new Expanded(
-                child: TextField(
-                  obscureText: true,
-                  textAlign: TextAlign.left,
-                  decoration: InputDecoration(
-                    border: InputBorder.none,
-                    hintText: '',
-                    hintStyle: TextStyle(color: Colors.grey),
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-        Divider(
-          height: 24.0,
-        ),
-        new Row(
-          children: <Widget>[
-            new Expanded(
-              child: new Padding(
-                padding: const EdgeInsets.only(left: 40.0),
-                child: new Text(
-                  "الرقم القومي ",
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: Colors.redAccent,
-                    fontSize: 15.0,
-                  ),
-                ),
-              ),
-            ),
-          ],
-        ),
-        new Container(
-          width: MediaQuery.of(context).size.width,
-          margin: const EdgeInsets.only(left: 40.0, right: 40.0, top: 10.0),
-          alignment: Alignment.center,
-          decoration: BoxDecoration(
-            border: Border(
-              bottom: BorderSide(
-                  color: Colors.redAccent,
-                  width: 0.5,
-                  style: BorderStyle.solid),
-            ),
-          ),
-          padding: const EdgeInsets.only(left: 0.0, right: 10.0),
-          child: new Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: <Widget>[
-              new Expanded(
-                child: TextField(
-                  obscureText: true,
-                  textAlign: TextAlign.left,
-                  decoration: InputDecoration(
-                    border: InputBorder.none,
-                    hintText: '',
-                    hintStyle: TextStyle(color: Colors.grey),
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-        new Row(
-          children: <Widget>[
-            new Expanded(
-              child: new Padding(
-                padding: const EdgeInsets.only(left: 40.0),
-                child: new Text(
-                  "جهه الصدور",
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: Colors.redAccent,
-                    fontSize: 15.0,
-                  ),
-                ),
-              ),
-            ),
-          ],
-        ),
-        new Container(
-          width: MediaQuery.of(context).size.width,
-          margin: const EdgeInsets.only(left: 40.0, right: 40.0, top: 10.0),
-          alignment: Alignment.center,
-          decoration: BoxDecoration(
-            border: Border(
-              bottom: BorderSide(
-                  color: Colors.redAccent,
-                  width: 0.5,
-                  style: BorderStyle.solid),
-            ),
-          ),
-          padding: const EdgeInsets.only(left: 0.0, right: 10.0),
-          child: new Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: <Widget>[
-              new Expanded(
-                child: TextField(
-                  obscureText: true,
-                  textAlign: TextAlign.left,
-                  decoration: InputDecoration(
-                    border: InputBorder.none,
-                    hintText: '',
-                    hintStyle: TextStyle(color: Colors.grey),
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-        new Row(
-          children: <Widget>[
-            new Expanded(
-              child: new Padding(
-                padding: const EdgeInsets.only(left: 40.0),
-                child: new Text(
-                  "علاقته بالمولود",
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: Colors.redAccent,
-                    fontSize: 15.0,
-                  ),
-                ),
-              ),
-            ),
-          ],
-        ),
-        new Container(
-          width: MediaQuery.of(context).size.width,
-          margin: const EdgeInsets.only(left: 40.0, right: 40.0, top: 10.0),
-          alignment: Alignment.center,
-          decoration: BoxDecoration(
-            border: Border(
-              bottom: BorderSide(
-                  color: Colors.redAccent,
-                  width: 0.5,
-                  style: BorderStyle.solid),
-            ),
-          ),
-          padding: const EdgeInsets.only(left: 0.0, right: 10.0),
-          child: new Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: <Widget>[
-              new Expanded(
-                child: TextField(
-                  obscureText: true,
-                  textAlign: TextAlign.left,
-                  decoration: InputDecoration(
-                    border: InputBorder.none,
-                    hintText: '',
-                    hintStyle: TextStyle(color: Colors.grey),
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-        Divider(
-          height: 24.0,
-        ),
-        new Row(
-          children: <Widget>[
-            new Expanded(
-              child: new Padding(
-                padding: const EdgeInsets.only(left: 40.0),
-                child: new Text(
-                  "التاريخ",
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: Colors.redAccent,
-                    fontSize: 15.0,
-                  ),
-                ),
-              ),
-            ),
-          ],
-        ),
-        new Container(
-          width: MediaQuery.of(context).size.width,
-          margin: const EdgeInsets.only(left: 40.0, right: 40.0, top: 10.0),
-          alignment: Alignment.center,
-          decoration: BoxDecoration(
-            border: Border(
-              bottom: BorderSide(
-                  color: Colors.redAccent,
-                  width: 0.5,
-                  style: BorderStyle.solid),
-            ),
-          ),
-          padding: const EdgeInsets.only(left: 0.0, right: 10.0),
-          child: new Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: <Widget>[
-              new Expanded(
-                child: TextField(
-                  obscureText: true,
-                  textAlign: TextAlign.left,
-                  decoration: InputDecoration(
-                    border: InputBorder.none,
-                    hintText: '',
-                    hintStyle: TextStyle(color: Colors.grey),
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-        Divider(
-          height: 24.0,
-        ),
-        new Row(
-          children: <Widget>[
-            new Expanded(
-              child: new Padding(
-                padding: const EdgeInsets.only(left: 40.0),
-                child: new Text(
-                  "العنوان",
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: Colors.redAccent,
-                    fontSize: 15.0,
-                  ),
-                ),
-              ),
-            ),
-          ],
-        ),
-        new Container(
-          width: MediaQuery.of(context).size.width,
-          margin: const EdgeInsets.only(left: 40.0, right: 40.0, top: 10.0),
-          alignment: Alignment.center,
-          decoration: BoxDecoration(
-            border: Border(
-              bottom: BorderSide(
-                  color: Colors.redAccent,
-                  width: 0.5,
-                  style: BorderStyle.solid),
-            ),
-          ),
-          padding: const EdgeInsets.only(left: 0.0, right: 10.0),
-          child: new Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: <Widget>[
-              new Expanded(
-                child: TextField(
-                  obscureText: true,
-                  textAlign: TextAlign.left,
-                  decoration: InputDecoration(
-                    border: InputBorder.none,
-                    hintText: '',
-                    hintStyle: TextStyle(color: Colors.grey),
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-        Divider(
-          height: 24.0,
-        ),
+        col("اسم المُبلّغ", "مثال: محمّد","13",new TextEditingController()),
+        div_dec(20),
+        col("اسم اﻷب", "مثال: محمّد","14",new TextEditingController()),
+        div_dec(20),
+        col("اسم الجدّ أو اللقب", "مثال: محمّد","15",new TextEditingController()),
+        div_dec(20),
+        col("الرقم القومي", "15 رقم","16",new TextEditingController()),
+        div_dec(20),
+        col("جهة الصُدور", "مثال: القَاهرة","17",new TextEditingController()),
+        div_dec(20),
+        col("علاقته بالمَولود", "مثال: اﻷب","18",new TextEditingController()),
+        div_dec(20),
+        col("التّاريخ", "يوم/شهر/سنة","19",new TextEditingController()),
+        div_dec(20),
+        col("العنوَان", "مثال: القَاهرة","20",new TextEditingController()),
+        div_dec(20),
         new Container(
           width: MediaQuery.of(context).size.width,
           margin: const EdgeInsets.only(left: 30.0, right: 30.0, top: 50.0),
@@ -1396,11 +517,12 @@ class _LoginScreen3State extends State<LoginScreen3>
                     borderRadius: new BorderRadius.circular(30.0),
                   ),
                   color: Colors.redAccent,
-                  onPressed: () => {
+                  onPressed: ()  {
+                   map.forEach((k,v) => debugPrint('${k}: ${v}'));
                     Navigator.push(
                       context,
                       MaterialPageRoute(builder: (context) => MyAccount()),
-                    ),
+                    );
                   },
                   child: new Container(
                     padding: const EdgeInsets.symmetric(

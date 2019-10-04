@@ -1,0 +1,4 @@
+#Fri Oct 04 20:28:58 EET 2019
+base.0=/home/smsm/Documents/Linux_Mobile/Projects/Governmental-Access-Model/build/app/intermediates/dex/debug/mergeDexDebug/out/classes.dex
+path.0=classes.dex
+renamed.0=classes.dex
