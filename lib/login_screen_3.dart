@@ -6,7 +6,6 @@ class LoginScreen3 extends StatefulWidget {
   _LoginScreen3State createState() => new _LoginScreen3State();
 }
 
-final myController0 = TextEditingController();
 Map map = new Map();
 
 class _LoginScreen3State extends State<LoginScreen3>
@@ -14,11 +13,6 @@ class _LoginScreen3State extends State<LoginScreen3>
   @override
   void initState() {
     super.initState();
-    myController0.addListener(_printLatestValue);
-  }
-
-  _printLatestValue() {
-    print("Second text field: ${myController0.text}");
   }
 
   Widget div_dec(double _size) {
@@ -27,7 +21,8 @@ class _LoginScreen3State extends State<LoginScreen3>
     );
   }
 
-  Column col(String txt, String hint, String idx, TextEditingController txtController) {
+  Column col(bool flag, String txt, String hint, String idx,
+      TextEditingController txtController) {
     return new Column(
       children: <Widget>[
         new Row(
@@ -70,7 +65,7 @@ class _LoginScreen3State extends State<LoginScreen3>
                     map[idx] = txtController.text;
                   },
                   controller: txtController,
-                  obscureText: true,
+                  obscureText: flag,
                   textAlign: TextAlign.left,
                   decoration: InputDecoration(
                     border: InputBorder.none,
@@ -448,17 +443,20 @@ class _LoginScreen3State extends State<LoginScreen3>
             ),
           ],
         ),
-        col("الجنسيّة", "مصري","1",new TextEditingController()),
+        col(false, "الجنسيّة", "مصري", "1", new TextEditingController()),
         div_dec(20),
-        col("الديانة", "مسلِم/مسِيحي","2",new TextEditingController()),
+        col(false, "الديانة", "مسلِم/مسِيحي", "2", new TextEditingController()),
         div_dec(20),
-        col("محلّ الولادة", "إسم البلدة","3",new TextEditingController()),
+        col(false, "محلّ الولادة", "إسم البلدة", "3",
+            new TextEditingController()),
         div_dec(20),
-        col("تاريخ المِيلاد", "يوم/شهر/سنة","4",new TextEditingController()),
+        col(false, "تاريخ المِيلاد", "يوم/شهر/سنة", "4",
+            new TextEditingController()),
         div_dec(20),
-        col("رقم السّر", "**********","5",new TextEditingController()),
+        col(true, "رقم السّر", "**********", "5", new TextEditingController()),
         div_dec(20),
-        col("تأكِيد رقم السّر", "**********","6",new TextEditingController()),
+        col(false, "تأكِيد رقم السّر", "**********", "6",
+            new TextEditingController()),
         new Text(
           "بيانات الوالدين",
           textAlign: TextAlign.center,
@@ -468,17 +466,20 @@ class _LoginScreen3State extends State<LoginScreen3>
             fontWeight: FontWeight.bold,
           ),
         ),
-        col("اسم اﻷب", "مثال: محمّد","7",new TextEditingController()),
+        col(false, "اسم اﻷب", "مثال: محمّد", "7", new TextEditingController()),
         div_dec(20),
-        col("ديانة اﻷب", "مسلِم/مسِيحي","8",new TextEditingController()),
+        col(false, "ديانة اﻷب", "مسلِم/مسِيحي", "8",
+            new TextEditingController()),
         div_dec(20),
-        col("جنسيّة اﻷب", "مصري","9",new TextEditingController()),
+        col(false, "جنسيّة اﻷب", "مصري", "9", new TextEditingController()),
         div_dec(20),
-        col("اسم اﻷم", "مثال: مِيرنا","10",new TextEditingController()),
+        col(false, "اسم اﻷم", "مثال: مِيرنا", "10",
+            new TextEditingController()),
         div_dec(20),
-        col("ديانة اﻷم", "مسلِمة/مسِيحية","11",new TextEditingController()),
+        col(false, "ديانة اﻷم", "مسلِمة/مسِيحية", "11",
+            new TextEditingController()),
         div_dec(20),
-        col("جنسيّة اﻷم", "مصرية","12",new TextEditingController()),
+        col(false, "جنسيّة اﻷم", "مصرية", "12", new TextEditingController()),
         div_dec(20),
         new Text(
           "بيانات المبلغ",
@@ -489,21 +490,27 @@ class _LoginScreen3State extends State<LoginScreen3>
             fontWeight: FontWeight.bold,
           ),
         ),
-        col("اسم المُبلّغ", "مثال: محمّد","13",new TextEditingController()),
+        col(false, "اسم المُبلّغ", "مثال: محمّد", "13",
+            new TextEditingController()),
         div_dec(20),
-        col("اسم اﻷب", "مثال: محمّد","14",new TextEditingController()),
+        col(false, "اسم اﻷب", "مثال: محمّد", "14", new TextEditingController()),
         div_dec(20),
-        col("اسم الجدّ أو اللقب", "مثال: محمّد","15",new TextEditingController()),
+        col(false, "اسم الجدّ أو اللقب", "مثال: محمّد", "15",
+            new TextEditingController()),
         div_dec(20),
-        col("الرقم القومي", "15 رقم","16",new TextEditingController()),
+        col(false, "الرقم القومي", "15 رقم", "16", new TextEditingController()),
         div_dec(20),
-        col("جهة الصُدور", "مثال: القَاهرة","17",new TextEditingController()),
+        col(false, "جهة الصُدور", "مثال: القَاهرة", "17",
+            new TextEditingController()),
         div_dec(20),
-        col("علاقته بالمَولود", "مثال: اﻷب","18",new TextEditingController()),
+        col(false, "علاقته بالمَولود", "مثال: اﻷب", "18",
+            new TextEditingController()),
         div_dec(20),
-        col("التّاريخ", "يوم/شهر/سنة","19",new TextEditingController()),
+        col(false, "التّاريخ", "يوم/شهر/سنة", "19",
+            new TextEditingController()),
         div_dec(20),
-        col("العنوَان", "مثال: القَاهرة","20",new TextEditingController()),
+        col(false, "العنوَان", "مثال: القَاهرة", "20",
+            new TextEditingController()),
         div_dec(20),
         new Container(
           width: MediaQuery.of(context).size.width,
@@ -517,8 +524,8 @@ class _LoginScreen3State extends State<LoginScreen3>
                     borderRadius: new BorderRadius.circular(30.0),
                   ),
                   color: Colors.redAccent,
-                  onPressed: ()  {
-                   map.forEach((k,v) => debugPrint('${k}: ${v}'));
+                  onPressed: () {
+                    map.forEach((k, v) => debugPrint('${k}: ${v}'));
                     Navigator.push(
                       context,
                       MaterialPageRoute(builder: (context) => MyAccount()),
@@ -554,7 +561,6 @@ class _LoginScreen3State extends State<LoginScreen3>
   }
 
   gotoLogin() {
-    //controller_0To1.forward(from: 0.0);
     _controller.animateToPage(
       0,
       duration: Duration(milliseconds: 800),
@@ -563,7 +569,6 @@ class _LoginScreen3State extends State<LoginScreen3>
   }
 
   gotoSignup() {
-    //controller_minus1To0.reverse(from: 0.0);
     _controller.animateToPage(
       2,
       duration: Duration(milliseconds: 800),
