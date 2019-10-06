@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:gam_app/MyAccount.dart';
+
+import 'package:gam_app/CountryPicker/pick.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-
 
 final Firestore db = Firestore.instance;
 final FirebaseAuth auth = FirebaseAuth.instance;
@@ -39,7 +41,7 @@ class _Signup extends State<SignupPage> with TickerProviderStateMixin {
     return new RegExp(r"[\u0600-\u06FF]").hasMatch(txt) == true ? true : false;
   }
 
-    Widget decoration(double _size) {
+  Widget decoration(double _size) {
     return new Divider(
       height: _size,
     );
@@ -162,6 +164,7 @@ class _Signup extends State<SignupPage> with TickerProviderStateMixin {
           ],
         ),
         col(false, "الجنسيّة", "مصري", "1", txtControllers[0]),
+        Picker(),
         decoration(20),
         col(false, "الديانة", "مسلِم/مسِيحي", "2", txtControllers[1]),
         decoration(20),

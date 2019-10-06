@@ -5,7 +5,6 @@ dependencies:
   firebase_core: ^0.4.0+9
   cloud_firestore: ^0.12.9+4
   firebase_auth: ^0.14.0+5
-  country_pickers: ^1.1.0
   flutter:
     sdk: flutter
  
