@@ -50,7 +50,7 @@ class Services extends StatelessWidget {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => actualService()),
+                                builder: (context) => ActualService()),
                           );
                         },
                   )

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:gam_app/login_screen_3.dart';
+import 'package:gam_app/Homepage.dart';
 
 void main() => runApp(new MyApp());
 
@@ -28,7 +28,7 @@ class _MyHomePageState extends State<MyHomePage> {
     return Scaffold(
         backgroundColor: Colors.white,
         body: Container(
-          child: LoginScreen3(),
+          child: Homepage(),
         ));
   }
 }

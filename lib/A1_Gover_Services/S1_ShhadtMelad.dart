@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
 
-class actualService extends StatelessWidget {
+class ActualService extends StatefulWidget {
+  @override
+  _ActualServiceState createState() => _ActualServiceState();
+}
+
+class _ActualServiceState extends State<ActualService> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(

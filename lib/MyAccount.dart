@@ -2,27 +2,21 @@ import 'package:flutter/material.dart';
 import 'package:gam_app/services_page.dart';
 
 class MyAccount extends StatefulWidget {
-  String name;
   @override
-  _ThirdState createState() => _ThirdState(name);
+  _MyAccount createState() => _MyAccount();
 }
 
-class _ThirdState extends State<MyAccount> {
-  _ThirdState(this.name);
-  String name;
-
+class _MyAccount extends State<MyAccount> {
   Widget build(BuildContext context) {
     return new Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.red,
         title: new Row(
           mainAxisAlignment: MainAxisAlignment.center,
-          
           children: <Widget>[
             new Text("الملف الشخصي            "),
           ],
         ),
-        
       ),
       drawer: new Drawer(
         child: new Column(

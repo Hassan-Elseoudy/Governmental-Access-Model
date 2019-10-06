@@ -18,7 +18,7 @@ class SelectServicesA1 extends StatelessWidget {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => actualService()),
+                                builder: (context) => ActualService()),
                           );
                         },
                   child: Text('يلّا!'),
