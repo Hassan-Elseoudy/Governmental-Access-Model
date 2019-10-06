@@ -7,6 +7,7 @@ class LoginScreen3 extends StatefulWidget {
 }
 
 Map map = new Map();
+int _genderValue = -1;
 
 class _LoginScreen3State extends State<LoginScreen3>
     with TickerProviderStateMixin {
@@ -19,6 +20,12 @@ class _LoginScreen3State extends State<LoginScreen3>
     return new Divider(
       height: _size,
     );
+  }
+
+  void _handleChangeGenger(result){
+    setState(() {
+      _genderValue = result;
+    });
   }
 
   Column col(bool flag, String txt, String hint, String idx,
@@ -427,6 +434,8 @@ class _LoginScreen3State extends State<LoginScreen3>
             new Radio(
               value: 0,
               activeColor: Colors.red,
+              groupValue: _genderValue,
+              onChanged: _handleChangeGenger,
             ),
             new Text(
               'ذكر',
@@ -434,6 +443,8 @@ class _LoginScreen3State extends State<LoginScreen3>
             ),
             new Radio(
               value: 1,
+              onChanged: _handleChangeGenger,
+              groupValue: _genderValue,
             ),
             new Text(
               'أنثي',
