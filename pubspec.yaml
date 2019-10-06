@@ -2,8 +2,9 @@ name: gam_app
 description: Governmental Access Model.
  
 dependencies:
-  firebase_core:
-  cloud_firestore:
+  firebase_core: ^0.4.0+9
+  cloud_firestore: ^0.12.9+4
+  firebase_auth: ^0.14.0+5
   flutter:
     sdk: flutter
  
