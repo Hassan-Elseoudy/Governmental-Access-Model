@@ -1,5 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:gam_app/MyAccount.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+
+final Firestore db = Firestore.instance;
+final FirebaseAuth auth = FirebaseAuth.instance;
+
+Future<FirebaseUser> handleSignUp(email, password) async {
+  AuthResult result = await auth.createUserWithEmailAndPassword(
+      email: email, password: password);
+  final FirebaseUser user = result.user;
+  user.sendEmailVerification();
+
+  assert (user != null);
+  assert (await user.getIdToken() != null);
+
+  return user;
+}
 
 class LoginScreen3 extends StatefulWidget {
   @override
@@ -70,6 +87,7 @@ class _LoginScreen3State extends State<LoginScreen3>
                 child: TextField(
                   onChanged: (text) {
                     map[idx] = txtController.text;
+                    debugPrint("new");
                   },
                   controller: txtController,
                   obscureText: flag,
@@ -370,11 +388,11 @@ class _LoginScreen3State extends State<LoginScreen3>
                       borderRadius: new BorderRadius.circular(30.0),
                     ),
                     color: Colors.redAccent,
-                    onPressed: () => {
+                    onPressed: () {
                       Navigator.push(
                         context,
                         MaterialPageRoute(builder: (context) => MyAccount()),
-                      )
+                      );
                     },
                     child: new Container(
                       padding: const EdgeInsets.symmetric(
@@ -535,12 +553,14 @@ class _LoginScreen3State extends State<LoginScreen3>
                     borderRadius: new BorderRadius.circular(30.0),
                   ),
                   color: Colors.redAccent,
-                  onPressed: () {
+                  onPressed: () async {
+                    handleSignUp(map['4'], map['5']);
+
                     map.forEach((k, v) => debugPrint('${k}: ${v}'));
-                    Navigator.push(
+                    /*Navigator.push(
                       context,
                       MaterialPageRoute(builder: (context) => MyAccount()),
-                    );
+                    );*/
                   },
                   child: new Container(
                     padding: const EdgeInsets.symmetric(
