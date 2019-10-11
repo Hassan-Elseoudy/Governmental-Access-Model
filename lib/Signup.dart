@@ -4,6 +4,8 @@ import 'package:gam_app/country.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:gam_app/country_pickers.dart';
+import 'package:gam_app/PDFBuilder.dart';
+
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 
 final Firestore db = Firestore.instance;
@@ -216,7 +218,7 @@ class _Signup extends State<SignupPage> with TickerProviderStateMixin {
           children: <Widget>[
             new Radio(
               value: 0,
-              activeColor: Colors.red,
+              activeColor: Colors.blue,
               groupValue: _genderValue,
               onChanged: _handleChangeGenger,
             ),
@@ -226,6 +228,7 @@ class _Signup extends State<SignupPage> with TickerProviderStateMixin {
             ),
             new Radio(
               value: 1,
+              activeColor: Colors.pink,
               onChanged: _handleChangeGenger,
               groupValue: _genderValue,
             ),
@@ -404,12 +407,15 @@ class _Signup extends State<SignupPage> with TickerProviderStateMixin {
                   ),
                   color: Colors.redAccent,
                   onPressed: () async {
-                    handleSignUp(map['4'], map['5']);
-                    map.forEach((k, v) => debugPrint('$k: $v'));
-                    Navigator.push(
+                 //   handleSignUp(map['4'], map['5']);
+                 //   map.forEach((k, v) => debugPrint('$k: $v'));
+                     debugPrint("M");
+                   setupPDF(); // ==>
+                   /* Navigator.push(
                       context,
                       MaterialPageRoute(builder: (context) => MyAccount()),
-                    );
+                    ); */
+                   
                   },
                   child: new Container(
                     padding: const EdgeInsets.symmetric(
