@@ -1,6 +1,6 @@
 name: gam_app
 description: Governmental Access Model.
- 
+
 dependencies:
   firebase_core: ^0.4.0+9
   cloud_firestore: ^0.12.9+4
@@ -10,20 +10,20 @@ dependencies:
   pdf: ^1.3.22
   flutter:
     sdk: flutter
-    
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
 
 flutter:
   uses-material-design: true
-  
+
   assets:
     - assets/images/full-bloom.png
     - assets/images/mountains.jpeg
     - assets/
- 
+
   fonts:
-      - family: icomoon
-        fonts:
+    - family: icomoon
+      fonts:
         - asset: assets/fonts/IcoMoon.ttf
