@@ -19,8 +19,19 @@ List<String> dropdownBtns = ["الإسلام", "الإسلام", "الإسلام
 // Index 2 => ديانة اﻷم
 // Index 3 => علاقة المُبلّغ بالطفل
 
+TextEditingController txtDOAController =
+    new TextEditingController(text: "اختر التاريخ");
+TextEditingController txtDOBController =
+    new TextEditingController(text: "اختر التاريخ");
+List<TextEditingController> txtControllers =
+    new List<TextEditingController>(20);
+
 int religionButton = -1;
-Country _selectedDialogCountry = CountryPickerUtils.getCountryByPhoneCode('20');
+List<Country> _selectedDialogCountry = [
+  CountryPickerUtils.getCountryByPhoneCode('20'),
+  CountryPickerUtils.getCountryByPhoneCode('20'),
+  CountryPickerUtils.getCountryByPhoneCode('20')
+];
 
 Future<FirebaseUser> handleSignUp(email, password) async {
   AuthResult result = await auth.createUserWithEmailAndPassword(
@@ -42,13 +53,23 @@ class SignupPage extends StatefulWidget {
 Map map = new Map();
 int genderValue = -1;
 
-List<TextEditingController> txtControllers =
-    new List<TextEditingController>(21);
-
 class _Signup extends State<SignupPage> with TickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
+  }
+
+  void intializeOurMap() {
+    map['Nationality'] =
+        map['Father_Nationality'] = map['Mother_Nationality'] = 'مصر';
+    map['Child_Religion'] =
+        map['Father_Religion'] = map['Mother_Religion'] = 'اﻹسلام';
+    map['Announcer_Type_Of_Connection'] = 'اﻷب';
+    map['POB'] = map['DOB'] = map['Password'] = map['Re_Password'] =
+        map['Father_Name'] = map['Gender'] = map['Mother_Name'] =
+            map['Announcer_Name'] = map['Announcer_GF'] = map['Announcer_SSN'] =
+                map['Announcer_P_SSN'] = map['Announcer_Father'] =
+                    map['Announcer_Address'] = map['DOA'] = 'Default';
   }
 
   /// Returns `true` if every [txt] is arabic, It's not working till now.
@@ -77,18 +98,18 @@ class _Signup extends State<SignupPage> with TickerProviderStateMixin {
   /// And because every `Conainer` needs a controller, I created list of `dropDownBtn`
   /// where each element is responsible for one list, so i needed an [idx] to diffrentiate
   Container dropDownBtn(List<String> _items, int idx, String key) {
-    return Container(
+    return new Container(
       padding: EdgeInsets.fromLTRB(
           MediaQuery.of(context).size.width * 0.70, 0, 0, 0),
       child: DropdownButton<String>(
-        underline: SizedBox(),
+        underline: new SizedBox(),
         value: dropdownBtns[idx],
-        icon: Icon(
+        icon: new Icon(
           Icons.arrow_downward,
           textDirection: TextDirection.rtl,
         ),
         iconSize: 24,
-        elevation: 5,
+        // elevation: 5,
         style: TextStyle(
           color: Colors.black,
         ),
@@ -113,10 +134,10 @@ class _Signup extends State<SignupPage> with TickerProviderStateMixin {
   /// [hint]: It contains the hint text for every component.
   /// [idx]: It was designed to get each text and save it in [map] public variable.
   /// [txtController]: Because every text needs a controller so we can keep changes in each Text Field.
-  /// [_verifyText]: If we want to set validation method to each TextField, we can pass a function.
+  /// [_verifyText]: If we want to set validation method to each TextFormField, we can pass a function.
 
   Column col(bool flag, String txt, String hint, String idx,
-      TextEditingController txtController, Function _verifyText) {
+      Function _verifyText, int i) {
     return new Column(
       children: <Widget>[
         new Container(
@@ -156,12 +177,15 @@ class _Signup extends State<SignupPage> with TickerProviderStateMixin {
                 new Expanded(
                   child: TextField(
                     textDirection: TextDirection.rtl,
-                    onChanged: (text) {
-                      map[idx] = txtController.text;
-                      if (_verifyText(txtController.text)) {
-                      }
+                    onChanged: (value) {
+                      setState(() {
+                        debugPrint(idx);
+                        txtControllers[i].text = value;
+                        map[idx] = txtControllers[i].text;
+                      });
+                      if (_verifyText(txtControllers[i].text)) {}
                     },
-                    controller: txtController,
+                    controller: txtControllers[i],
                     obscureText: (txt == "رقم السر" || txt == "تأكيد رقم السر")
                         ? true
                         : false,
@@ -182,7 +206,7 @@ class _Signup extends State<SignupPage> with TickerProviderStateMixin {
 
   /// Responsible for Flags and countries. (Open Source)
 
-  Widget _buildDialogItem(Country country) => Row(
+  Widget _buildDialogItem(Country country) => new Row(
         children: <Widget>[
           CountryPickerUtils.getDefaultFlagImage(country),
           SizedBox(width: 8.0),
@@ -193,30 +217,34 @@ class _Signup extends State<SignupPage> with TickerProviderStateMixin {
 
   /// Responsible to open the dialouge for flags and countries. (Open Source)
 
-  void _openCountryPickerDialog(String key) => showDialog(
-        context: context,
-        builder: (context) => Theme(
-            data: Theme.of(context).copyWith(primaryColor: Colors.pink),
-            child: CountryPickerDialog(
-                titlePadding: EdgeInsets.all(8.0),
-                searchCursorColor: Colors.pinkAccent,
-                searchInputDecoration: InputDecoration(hintText: 'بحث...'),
-                isSearchable: true,
-                title: Text(
-                  'إبحث عن الدولة',
-                  textDirection: TextDirection.rtl,
-                ),
-                onValuePicked: (Country country) => setState(() {
-                      _selectedDialogCountry = country;
-                      map[key] = country.name;
-                    }),
-                itemBuilder: _buildDialogItem)),
-      );
+  void _openCountryPickerDialog(String key, int i) {
+    showDialog(
+      context: context,
+      builder: (context) => Theme(
+          data: Theme.of(context).copyWith(primaryColor: Colors.pink),
+          child: CountryPickerDialog(
+              titlePadding: EdgeInsets.all(8.0),
+              searchCursorColor: Colors.pinkAccent,
+              searchInputDecoration: InputDecoration(hintText: 'بحث...'),
+              isSearchable: true,
+              title: Text(
+                'إبحث عن الدولة',
+                textDirection: TextDirection.rtl,
+              ),
+              onValuePicked: (Country country) => setState(() {
+                    _selectedDialogCountry[i] = country;
+                    map[key] = country.name;
+                  }),
+              itemBuilder: _buildDialogItem)),
+    );
+  }
 
   /// Main function for the sign up Page.
   @override
   Widget build(BuildContext context) {
-    return new ListView(
+    intializeOurMap();
+    return new SingleChildScrollView(
+        child: new Column(
       children: <Widget>[
         Container(
           padding: EdgeInsets.all(10.0),
@@ -264,8 +292,7 @@ class _Signup extends State<SignupPage> with TickerProviderStateMixin {
             ),
           ],
         ),
-        col(false, "الجنسية", "مصري", "Nationality",
-            new TextEditingController(), isArabicString),
+        col(false, "الجنسية", "مصري", "Nationality", isArabicString, 0),
         Container(
           width: MediaQuery.of(context).size.width * 0.85,
           child: Column(
@@ -273,43 +300,43 @@ class _Signup extends State<SignupPage> with TickerProviderStateMixin {
               Container(
                 child: ListTile(
                   onTap: () {
-                    _openCountryPickerDialog('Nationality');
+                    _openCountryPickerDialog('Nationality', 0);
                   },
-                  title: _buildDialogItem(_selectedDialogCountry),
+                  title: _buildDialogItem(_selectedDialogCountry[0]),
                 ),
               )
             ],
           ),
         ),
         decoration(5),
-        col(false, "الديانة", "مسلم/مسيحي", "Religion",
-            new TextEditingController(), isArabicString),
+        col(false, "الديانة", "مسلم/مسيحي", ".", isArabicString, 1),
         dropDownBtn(religions, 0, 'Child_Religion'),
         decoration(20),
-        col(false, "محل الولادة", "إسم البلدة", "POB",
-            new TextEditingController(), isArabicString),
+        col(false, "محل الولادة", "إسم البلدة", "POB", isArabicString, 2),
         decoration(20),
-        col(false, "تاريخ الميلاد", "يوم/شهر/سنة", "DOB",
-            new TextEditingController(), isArabicString),
-        FlatButton(
+        col(false, "تاريخ الميلاد", "يوم/شهر/سنة", "DOB", isArabicString, 3),
+        new FlatButton(
             onPressed: () {
               DatePicker.showDatePicker(context,
                   minTime: DateTime(1920, 1, 1),
-                  maxTime: DateTime(2100, 12, 31), onConfirm: (date) {
+                  maxTime: DateTime(2100, 12, 31), onChanged: (date) {
+                setState(() {
+                  txtDOBController.text =
+                      '${date.year}:${date.month}:${date.day}';
+                });
                 map['DOB'] = '${date.year}:${date.month}:${date.day}';
               }, currentTime: DateTime.now(), locale: LocaleType.ar);
             },
             child: Text(
-              'إختر التاريخ',
+              txtDOBController.text,
               textDirection: TextDirection.rtl,
               style: TextStyle(color: Colors.black45),
             )),
         decoration(20),
-        col(true, "رقم السر", "**********", "Password",
-            new TextEditingController(), isArabicString),
+        col(true, "رقم السر", "**********", "Password", isArabicString, 4),
         decoration(20),
         col(false, "تأكيد رقم السر", "**********", "Re_Password",
-            new TextEditingController(), isArabicString),
+            isArabicString, 5),
         decoration(20),
         new Text(
           "بيانات الوالدين",
@@ -320,50 +347,45 @@ class _Signup extends State<SignupPage> with TickerProviderStateMixin {
             fontWeight: FontWeight.bold,
           ),
         ),
-        col(false, "اسم اﻷب", "مثال: محمد", "Father_Name",
-            new TextEditingController(), isArabicString),
+        col(false, "اسم اﻷب", "مثال: محمد", "Father_Name", isArabicString, 6),
         decoration(20),
-        col(false, "ديانة اﻷب", "Father_Religion", ".",
-            new TextEditingController(), isArabicString),
+        col(false, "ديانة اﻷب", ".", ".", isArabicString, 7),
         dropDownBtn(religions, 1, "Father_Religion"),
         decoration(20),
-        col(false, "جنسية اﻷب", "مصري", "Father_Nationality",
-            new TextEditingController(), isArabicString),
-        Container(
+        col(false, "جنسية اﻷب", "مصري", "Father_Nationality", isArabicString,
+            8),
+        new Container(
           width: MediaQuery.of(context).size.width * 0.85,
           child: Column(
             children: <Widget>[
               Container(
                 child: ListTile(
                   onTap: () {
-                    _openCountryPickerDialog('Father_Nationality');
+                    _openCountryPickerDialog('Father_Nationality', 1);
                   },
-                  title: _buildDialogItem(_selectedDialogCountry),
+                  title: _buildDialogItem(_selectedDialogCountry[1]),
                 ),
               )
             ],
           ),
         ),
         decoration(5),
-        col(false, "اسم اﻷم", "مثال: ميرنا", "10", new TextEditingController(),
-            isArabicString),
+        col(false, "اسم اﻷم", "مثال: ميرنا", "Mother_Name", isArabicString, 9),
         decoration(20),
-        col(false, "ديانة اﻷم", "مسلمة/مسيحية", "11",
-            new TextEditingController(), isArabicString),
+        col(false, "ديانة اﻷم", "مسلمة/مسيحية", ".", isArabicString, 10),
         dropDownBtn(religions, 2, "Mother_Religion"),
         decoration(20),
-        col(false, "جنسية اﻷم", "مصرية", "12", new TextEditingController(),
-            isArabicString),
-        Container(
+        col(false, "جنسية اﻷم", "مصرية", ".", isArabicString, 11),
+        new Container(
           width: MediaQuery.of(context).size.width * 0.85,
           child: Column(
             children: <Widget>[
               Container(
                 child: ListTile(
                   onTap: () {
-                    _openCountryPickerDialog('Mother_Nationality');
+                    _openCountryPickerDialog('Mother_Nationality', 2);
                   },
-                  title: _buildDialogItem(_selectedDialogCountry),
+                  title: _buildDialogItem(_selectedDialogCountry[2]),
                 ),
               )
             ],
@@ -379,43 +401,45 @@ class _Signup extends State<SignupPage> with TickerProviderStateMixin {
             fontWeight: FontWeight.bold,
           ),
         ),
-        col(false, "اسم المبلغ", "مثال: محمد", "13",
-            new TextEditingController(), isArabicString),
+        col(false, "اسم المبلغ", "مثال: محمد", "Announcer_Name", isArabicString,
+            12),
         decoration(20),
-        col(false, "اسم اﻷب", "مثال: محمد", "14", new TextEditingController(),
-            isArabicString),
+        col(false, "اسم اﻷب", "مثال: محمد", "Announcer_Father", isArabicString,
+            13),
         decoration(20),
-        col(false, "اسم الجد أو اللقب", "مثال: محمد", "15",
-            new TextEditingController(), isArabicString),
+        col(false, "اسم الجد أو اللقب", "مثال: محمد", "Announcer_GF",
+            isArabicString, 14),
         decoration(20),
-        col(false, "الرقم القومي", "خمسة عشر رقم", "16",
-            new TextEditingController(), isArabicString),
+        col(false, "الرقم القومي", "خمسة عشر رقم", "Announcer_SSN",
+            isArabicString, 15),
         decoration(20),
-        col(false, "جهة الصدور", "مثال: القاهرة", "17",
-            new TextEditingController(), isArabicString),
+        col(false, "جهة الصدور", "مثال: القاهرة", "Announcer_P_SSN",
+            isArabicString, 16),
         decoration(20),
-        col(false, "علاقته بالمولود", "مثال: اﻷب", "18",
-            new TextEditingController(), isArabicString),
-        dropDownBtn(relatives, 3, "Type_Of_Connection"),
+        col(false, "علاقته بالمولود", "مثال: اﻷب", ".", isArabicString, 17),
+        dropDownBtn(relatives, 3, "Announcer_Type_Of_Connection"),
         decoration(20),
-        col(false, "التاريخ", "يوم/شهر/سنة", "19", new TextEditingController(),
-            isArabicString),
-        FlatButton(
+        col(false, "التاريخ", "يوم/شهر/سنة", ".", isArabicString, 18),
+        new FlatButton(
             onPressed: () {
               DatePicker.showDatePicker(context,
                   minTime: DateTime(1920, 1, 1),
-                  maxTime: DateTime(2100, 12, 31), onConfirm: (date) {
+                  maxTime: DateTime(2100, 12, 31), onChanged: (date) {
+                setState(() {
+                  txtDOAController.text =
+                      '${date.year}:${date.month}:${date.day}';
+                });
                 map['DOA'] = '${date.year}:${date.month}:${date.day}';
               }, currentTime: DateTime.now(), locale: LocaleType.ar);
             },
             child: Text(
-              'إختر التاريخ',
+              txtDOAController.text,
               textDirection: TextDirection.rtl,
               style: TextStyle(color: Colors.black45),
             )),
         decoration(20),
-        col(false, "العنوان", "مثال: القاهرة", "Address",
-            new TextEditingController(), isArabicString),
+        col(false, "العنوان", "مثال: القاهرة", "Announcer_Address",
+            isArabicString, 19),
         decoration(20),
         new Container(
           width: MediaQuery.of(context).size.width,
@@ -464,6 +488,6 @@ class _Signup extends State<SignupPage> with TickerProviderStateMixin {
           ),
         ),
       ],
-    );
+    ));
   }
 }

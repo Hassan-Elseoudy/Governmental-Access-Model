@@ -157,7 +157,6 @@ class _MyAccount extends State<MyAccount> {
             image: DecorationImage(
               colorFilter: new ColorFilter.mode(
                   Colors.black.withOpacity(0.4), BlendMode.dstATop),
-              image: AssetImage('assets/images/pyramids.jpg'),
               fit: BoxFit.cover,
             ),
           ),
