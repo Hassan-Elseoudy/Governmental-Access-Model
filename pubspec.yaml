@@ -8,6 +8,7 @@ dependencies:
   flutter_datetime_picker: ^1.2.6
   path_provider: ^1.3.0
   pdf: ^1.3.22
+  email_validator: '^1.0.0'
   flutter:
     sdk: flutter
 

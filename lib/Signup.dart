@@ -5,14 +5,13 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:gam_app/country_pickers.dart';
 import 'package:gam_app/PDFBuilder.dart';
-
+import 'package:email_validator/email_validator.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 
 final Firestore db = Firestore.instance;
 final FirebaseAuth auth = FirebaseAuth.instance;
 List<String> religions = ["الإسلام", "المسيحية", "اليهيودية", "غير ذلك"];
 List<String> relatives = ["اﻷب", "الأم", "الجد", "الجدة"];
-
 List<String> dropdownBtns = ["الإسلام", "الإسلام", "الإسلام", "اﻷب"];
 // Index 0 => ديانة الطفل
 // Index 1 => ديانة اﻷب
@@ -92,6 +91,42 @@ map['Email']=map['Password']=map['Re_Password']=map['Gender']=map['POB']=map['DO
       genderValue = result;
       map['Gender'] = result == 0 ? 'ذكر' : 'أنثي';
     });
+  }
+
+  String _errors;
+  String _warnings;
+
+  bool _isValid(){
+    _errors = "";
+    if (EmailValidator.validate(map["Email"].toString()) == false)
+      _errors += "الرجاء التأكد من البريد الالكتروني\n";
+    if (map["Password"].toString().length < 8)
+      _errors += "الرجاء ادخال كلمة سر تتكون من 8 رموز على الأقل\n";
+    if (map["Re_Password"] != map["Password"])
+      _errors += "الرجاء التأكد من تطابق كلمة السر\n";
+    if (map["Gender"] == -1)
+      _errors += "الرجاء اختيار النوع (ذكر/أنثى)\n";
+    if (map["POB"] == "Default")
+      _errors +=  "الرجاء ادخال محل الولادة\n";
+    if (map["DOB"] == "Default")
+      _errors += "الرجاء اختيار تاريخ الميلاد\n";
+    if (map["Village_Name"] == "Default")
+      _errors += "الرجاء اختيار اسم القرية\n";
+    if (map["Center_Name"] == "Default")
+      _errors += "الرجاء اختيار اسم المركز\n";
+    if (map["Gover_Name"] == "Default")
+      _errors += "الرجاء اختيار اسم المحافطة\n";
+    if (map["M_status"] == "Default")
+      _errors += "الرجاء اختيار الحالة الاجتماعية\n";
+    if (map["Father_Name"] == "Default")
+      _errors += "الرجاء اختيار اسم الأب\n";
+    if (map["Mother_Name"] == "Default")
+      _errors += "الرجاء اختيار اسم الأم\n";
+    // warnings
+    if (_errors == "")
+      return true;
+    else
+      return false;
   }
 
   /// Returns a `Conainer` which contians list of items [_items]
@@ -179,7 +214,7 @@ map['Email']=map['Password']=map['Re_Password']=map['Gender']=map['POB']=map['DO
                     textDirection: TextDirection.rtl,
                     onChanged: (value) {
                       setState(() {
-                        debugPrint(idx);
+                        //debugPrint(idx);
                         txtControllers[i].text = value;
                         map[idx] = txtControllers[i].text;
                       });
@@ -309,12 +344,20 @@ map['Email']=map['Password']=map['Re_Password']=map['Gender']=map['POB']=map['DO
                   color: Colors.redAccent,
                   onPressed: () async {
                     //    handleSignUp(map['4'], map['5']);
-                    map.forEach((k, v) => debugPrint('$k: $v'));
+                    //map.forEach((k, v) => debugPrint('$k: $v'));
                     setupPDF();
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => MyAccount()),
-                    );
+                    if (_isValid()) {
+                      debugPrint("-------------------------no Errors-------------------------");
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => MyAccount()),
+                      );
+                    }
+                    else{
+                      debugPrint("-------------------------errors-------------------------");
+                      debugPrint(_errors);
+                    } // display an error
+
                   },
                   child: new Container(
                     padding: const EdgeInsets.symmetric(
