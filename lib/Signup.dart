@@ -23,8 +23,11 @@ TextEditingController txtDOAController =
     new TextEditingController(text: "اختر التاريخ");
 TextEditingController txtDOBController =
     new TextEditingController(text: "اختر التاريخ");
+TextEditingController txtMilitaryController =
+    new TextEditingController(text: "اختر التاريخ");
+
 List<TextEditingController> txtControllers =
-    new List<TextEditingController>(20);
+    new List<TextEditingController>(100000);
 
 int religionButton = -1;
 List<Country> _selectedDialogCountry = [
@@ -45,6 +48,8 @@ Future<FirebaseUser> handleSignUp(email, password) async {
   return user;
 }
 
+int i = 0;
+
 class SignupPage extends StatefulWidget {
   @override
   _Signup createState() => new _Signup();
@@ -64,12 +69,7 @@ class _Signup extends State<SignupPage> with TickerProviderStateMixin {
         map['Father_Nationality'] = map['Mother_Nationality'] = 'مصر';
     map['Child_Religion'] =
         map['Father_Religion'] = map['Mother_Religion'] = 'اﻹسلام';
-    map['Announcer_Type_Of_Connection'] = 'اﻷب';
-    map['POB'] = map['DOB'] = map['Password'] = map['Re_Password'] =
-        map['Father_Name'] = map['Gender'] = map['Mother_Name'] =
-            map['Announcer_Name'] = map['Announcer_GF'] = map['Announcer_SSN'] =
-                map['Announcer_P_SSN'] = map['Announcer_Father'] =
-                    map['Announcer_Address'] = map['DOA'] = 'Default';
+map['Email']=map['Password']=map['Re_Password']=map['Gender']=map['POB']=map['DOB']=map['Village_Name']=map['Center_Name']=map['Gover_Name']=map['M_Status']=map['Father_Name']=map['Mother_Name']=map['Husband_Wife_Name']=map['Card_Type']=map['Card_Number']=map['Building_Number']=map['Street_Name']=map['Apartment_Block']=map['Station_Name']=map['Governorate_Name']=map['Best_Qualification']=map['Name_Best_Qualification']=map['Date_Best_Qualification']=map['University_Name']=map['College_Name']=map['Job_Name']=map['Job_Date']=map['Job_Place']=map['Commercial_Register']=map['Commercial_Register_Number']=map['Mi_Status']=map['Mi_Number']=map['DOM']=map['DOS']= "Default";
   }
 
   /// Returns `true` if every [txt] is arabic, It's not working till now.
@@ -109,7 +109,7 @@ class _Signup extends State<SignupPage> with TickerProviderStateMixin {
           textDirection: TextDirection.rtl,
         ),
         iconSize: 24,
-        // elevation: 5,
+        elevation: 5,
         style: TextStyle(
           color: Colors.black,
         ),
@@ -246,6 +246,9 @@ class _Signup extends State<SignupPage> with TickerProviderStateMixin {
     return new SingleChildScrollView(
         child: new Column(
       children: <Widget>[
+        Divider(
+          height: 30,
+        ),
         Container(
           padding: EdgeInsets.all(10.0),
           child: Center(
@@ -256,191 +259,42 @@ class _Signup extends State<SignupPage> with TickerProviderStateMixin {
             ),
           ),
         ),
-        new Text(
-          "بيانات المولود",
-          textAlign: TextAlign.center,
-          style: new TextStyle(
-            color: Colors.blue,
-            fontSize: 20,
-            fontWeight: FontWeight.bold,
-          ),
+        loginData("بيانات الحساب"),
+        Divider(
+          color: Colors.white,
+          height: 30,
         ),
-        new Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            new Radio(
-              value: 0,
-              activeColor: Colors.blue,
-              groupValue: genderValue,
-              onChanged: _handleChangeGenger,
-            ),
-            new Text(
-              'ذكر',
-              style: new TextStyle(fontSize: 16.0),
-            ),
-            new Radio(
-              value: 1,
-              activeColor: Colors.pink,
-              onChanged: _handleChangeGenger,
-              groupValue: genderValue,
-            ),
-            new Text(
-              'أنثي',
-              style: new TextStyle(
-                fontSize: 16.0,
-              ),
-            ),
-          ],
+        personalData("البيانات الشخصيّة"),
+        Divider(
+          color: Colors.white,
+          height: 30,
         ),
-        col(false, "الجنسية", "مصري", "Nationality", isArabicString, 0),
-        Container(
-          width: MediaQuery.of(context).size.width * 0.85,
-          child: Column(
-            children: <Widget>[
-              Container(
-                child: ListTile(
-                  onTap: () {
-                    _openCountryPickerDialog('Nationality', 0);
-                  },
-                  title: _buildDialogItem(_selectedDialogCountry[0]),
-                ),
-              )
-            ],
-          ),
+        familyData("البيانات العائلية"),
+        Divider(
+          color: Colors.white,
+          height: 30,
         ),
-        decoration(5),
-        col(false, "الديانة", "مسلم/مسيحي", ".", isArabicString, 1),
-        dropDownBtn(religions, 0, 'Child_Religion'),
-        decoration(20),
-        col(false, "محل الولادة", "إسم البلدة", "POB", isArabicString, 2),
-        decoration(20),
-        col(false, "تاريخ الميلاد", "يوم/شهر/سنة", "DOB", isArabicString, 3),
-        new FlatButton(
-            onPressed: () {
-              DatePicker.showDatePicker(context,
-                  minTime: DateTime(1920, 1, 1),
-                  maxTime: DateTime(2100, 12, 31), onChanged: (date) {
-                setState(() {
-                  txtDOBController.text =
-                      '${date.year}:${date.month}:${date.day}';
-                });
-                map['DOB'] = '${date.year}:${date.month}:${date.day}';
-              }, currentTime: DateTime.now(), locale: LocaleType.ar);
-            },
-            child: Text(
-              txtDOBController.text,
-              textDirection: TextDirection.rtl,
-              style: TextStyle(color: Colors.black45),
-            )),
-        decoration(20),
-        col(true, "رقم السر", "**********", "Password", isArabicString, 4),
-        decoration(20),
-        col(false, "تأكيد رقم السر", "**********", "Re_Password",
-            isArabicString, 5),
-        decoration(20),
-        new Text(
-          "بيانات الوالدين",
-          textAlign: TextAlign.center,
-          style: new TextStyle(
-            color: Colors.blue,
-            fontSize: 20,
-            fontWeight: FontWeight.bold,
-          ),
+        addressData("بيانات العنوان"),
+        Divider(
+          color: Colors.white,
+          height: 30,
         ),
-        col(false, "اسم اﻷب", "مثال: محمد", "Father_Name", isArabicString, 6),
-        decoration(20),
-        col(false, "ديانة اﻷب", ".", ".", isArabicString, 7),
-        dropDownBtn(religions, 1, "Father_Religion"),
-        decoration(20),
-        col(false, "جنسية اﻷب", "مصري", "Father_Nationality", isArabicString,
-            8),
-        new Container(
-          width: MediaQuery.of(context).size.width * 0.85,
-          child: Column(
-            children: <Widget>[
-              Container(
-                child: ListTile(
-                  onTap: () {
-                    _openCountryPickerDialog('Father_Nationality', 1);
-                  },
-                  title: _buildDialogItem(_selectedDialogCountry[1]),
-                ),
-              )
-            ],
-          ),
+        scientificData("البيانات العلميّة"),
+        Divider(
+          color: Colors.white,
+          height: 30,
         ),
-        decoration(5),
-        col(false, "اسم اﻷم", "مثال: ميرنا", "Mother_Name", isArabicString, 9),
-        decoration(20),
-        col(false, "ديانة اﻷم", "مسلمة/مسيحية", ".", isArabicString, 10),
-        dropDownBtn(religions, 2, "Mother_Religion"),
-        decoration(20),
-        col(false, "جنسية اﻷم", "مصرية", ".", isArabicString, 11),
-        new Container(
-          width: MediaQuery.of(context).size.width * 0.85,
-          child: Column(
-            children: <Widget>[
-              Container(
-                child: ListTile(
-                  onTap: () {
-                    _openCountryPickerDialog('Mother_Nationality', 2);
-                  },
-                  title: _buildDialogItem(_selectedDialogCountry[2]),
-                ),
-              )
-            ],
-          ),
+        jobData("البيانات الوظيفية"),
+        Divider(
+          color: Colors.white,
+          height: 30,
         ),
-        decoration(5),
-        new Text(
-          "بيانات المُبلّغ",
-          textAlign: TextAlign.center,
-          style: new TextStyle(
-            color: Colors.blue,
-            fontSize: 20,
-            fontWeight: FontWeight.bold,
-          ),
+        militaryServiceData("بيانات الخدمة العسكرّية"),
+        Divider(
+          color: Colors.white,
+          height: 30,
         ),
-        col(false, "اسم المبلغ", "مثال: محمد", "Announcer_Name", isArabicString,
-            12),
-        decoration(20),
-        col(false, "اسم اﻷب", "مثال: محمد", "Announcer_Father", isArabicString,
-            13),
-        decoration(20),
-        col(false, "اسم الجد أو اللقب", "مثال: محمد", "Announcer_GF",
-            isArabicString, 14),
-        decoration(20),
-        col(false, "الرقم القومي", "خمسة عشر رقم", "Announcer_SSN",
-            isArabicString, 15),
-        decoration(20),
-        col(false, "جهة الصدور", "مثال: القاهرة", "Announcer_P_SSN",
-            isArabicString, 16),
-        decoration(20),
-        col(false, "علاقته بالمولود", "مثال: اﻷب", ".", isArabicString, 17),
-        dropDownBtn(relatives, 3, "Announcer_Type_Of_Connection"),
-        decoration(20),
-        col(false, "التاريخ", "يوم/شهر/سنة", ".", isArabicString, 18),
-        new FlatButton(
-            onPressed: () {
-              DatePicker.showDatePicker(context,
-                  minTime: DateTime(1920, 1, 1),
-                  maxTime: DateTime(2100, 12, 31), onChanged: (date) {
-                setState(() {
-                  txtDOAController.text =
-                      '${date.year}:${date.month}:${date.day}';
-                });
-                map['DOA'] = '${date.year}:${date.month}:${date.day}';
-              }, currentTime: DateTime.now(), locale: LocaleType.ar);
-            },
-            child: Text(
-              txtDOAController.text,
-              textDirection: TextDirection.rtl,
-              style: TextStyle(color: Colors.black45),
-            )),
-        decoration(20),
-        col(false, "العنوان", "مثال: القاهرة", "Announcer_Address",
-            isArabicString, 19),
-        decoration(20),
+        electionData("البيانات اﻹنتخابية"),
         new Container(
           width: MediaQuery.of(context).size.width,
           margin: const EdgeInsets.only(left: 30.0, right: 30.0, top: 50.0),
@@ -487,7 +341,385 @@ class _Signup extends State<SignupPage> with TickerProviderStateMixin {
             ],
           ),
         ),
+        Divider(
+          color: Colors.white,
+          height: 10,
+        ),
       ],
     ));
+  }
+
+  Widget personalData(String str) {
+    return new Column(
+      children: <Widget>[
+        new Container(
+          padding: EdgeInsets.fromLTRB(0, 0, 0, 15),
+          child: new Text(
+            str,
+            textAlign: TextAlign.center,
+            style: new TextStyle(
+              color: Colors.blue,
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ),
+        decoration(20),
+        new Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            new Radio(
+              value: 0,
+              activeColor: Colors.blue,
+              groupValue: genderValue,
+              onChanged: _handleChangeGenger,
+            ),
+            new Text(
+              'ذكر',
+              style: new TextStyle(fontSize: 16.0),
+            ),
+            new Radio(
+              value: 1,
+              activeColor: Colors.pink,
+              onChanged: _handleChangeGenger,
+              groupValue: genderValue,
+            ),
+            new Text(
+              'أنثي',
+              style: new TextStyle(
+                fontSize: 16.0,
+              ),
+            ),
+          ],
+        ),
+        decoration(20),
+        col(false, "الجنسية", "مصري", "Nationality", isArabicString, i++),
+        Container(
+          width: MediaQuery.of(context).size.width * 0.85,
+          child: Column(
+            children: <Widget>[
+              Container(
+                child: ListTile(
+                  onTap: () {
+                    _openCountryPickerDialog('Nationality', i++);
+                  },
+                  title: _buildDialogItem(_selectedDialogCountry[0]),
+                ),
+              )
+            ],
+          ),
+        ),
+        decoration(5),
+        col(false, "الديانة", "مسلم/مسيحي", ".", isArabicString, i++),
+        dropDownBtn(religions, 0, 'Child_Religion'),
+        decoration(20),
+        col(false, "محل الولادة", "إسم البلدة", "POB", isArabicString, i++),
+        decoration(20),
+        col(false, "تاريخ الميلاد", "يوم/شهر/سنة", "DOB", isArabicString, i++),
+        new FlatButton(
+            onPressed: () {
+              DatePicker.showDatePicker(context,
+                  minTime: DateTime(1920, 1, i++),
+                  maxTime: DateTime(2100, 12, i++), onChanged: (date) {
+                setState(() {
+                  txtDOBController.text =
+                      '${date.year}:${date.month}:${date.day}';
+                });
+                map['DOB'] = '${date.year}:${date.month}:${date.day}';
+              }, currentTime: DateTime.now(), locale: LocaleType.ar);
+            },
+            child: Text(
+              txtDOBController.text,
+              textDirection: TextDirection.rtl,
+              style: TextStyle(color: Colors.black45),
+            )),
+        decoration(20),
+        col(false, "قرية", "مثال: طربنبا", "Village_Name", isArabicString, i++),
+        decoration(20),
+        col(false, "قسم", "مثال: مركز دمنهور", "Center_Name", isArabicString,
+            i++),
+        decoration(20),
+        col(false, "محافظة", "مثال: محافظة البحيرة", "Gover_Name",
+            isArabicString, i++),
+        decoration(20),
+        col(false, "الحالة اﻹجتماعية", "مثال: أعزب", "M_Status", isArabicString,
+            i++),
+        decoration(20),
+        col(false, "اسم اﻷب", "مثال: محمد", "Father_Name", isArabicString, i++),
+        decoration(20),
+        col(false, "ديانة اﻷب", ".", ".", isArabicString, i++),
+        dropDownBtn(religions, 1, "Father_Religion"),
+        decoration(20),
+        col(false, "جنسية اﻷب", "مصري", "Father_Nationality", isArabicString,
+            i++),
+        new Container(
+          width: MediaQuery.of(context).size.width * 0.85,
+          child: Column(
+            children: <Widget>[
+              Container(
+                child: ListTile(
+                  onTap: () {
+                    _openCountryPickerDialog('Father_Nationality', i++);
+                  },
+                  title: _buildDialogItem(_selectedDialogCountry[1]),
+                ),
+              )
+            ],
+          ),
+        ),
+        decoration(5),
+        col(false, "اسم اﻷم", "مثال: ميرنا", "Mother_Name", isArabicString,
+            i++),
+        decoration(20),
+        col(false, "ديانة اﻷم", ".", ".", isArabicString, i++),
+        dropDownBtn(religions, 2, "Mother_Religion"),
+        decoration(20),
+        col(false, "جنسية اﻷم", ".", ".", isArabicString, i++),
+        new Container(
+          width: MediaQuery.of(context).size.width * 0.85,
+          child: Column(
+            children: <Widget>[
+              Container(
+                child: ListTile(
+                  onTap: () {
+                    _openCountryPickerDialog('Mother_Nationality', i++);
+                  },
+                  title: _buildDialogItem(_selectedDialogCountry[2]),
+                ),
+              )
+            ],
+          ),
+        ),
+        decoration(20),
+      ],
+    );
+  }
+
+  Widget militaryServiceData(String str) {
+    return new Column(
+      children: <Widget>[
+        new Container(
+          padding: EdgeInsets.fromLTRB(0, 0, 0, 15),
+          child: new Text(
+            str,
+            textAlign: TextAlign.center,
+            style: new TextStyle(
+              color: Colors.blue,
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ),
+        decoration(20),
+        col(false, "الموقف", "تحت التنجيد", "Mi_Status", isArabicString,
+            i++),
+        decoration(20),
+        col(false, "رقم بطاقة الخدمة العسكرية", "أرقام", "Mi_Number",
+            isArabicString, i++),
+        decoration(20),
+        new FlatButton(
+            onPressed: () {
+              DatePicker.showDatePicker(context,
+                  minTime: DateTime(1920, 1, i++),
+                  maxTime: DateTime(2100, 12, i++), onChanged: (date) {
+                setState(() {
+                  txtMilitaryController.text =
+                      '${date.year}:${date.month}:${date.day}';
+                });
+                map['DOM'] = '${date.year}:${date.month}:${date.day}';
+              }, currentTime: DateTime.now(), locale: LocaleType.ar);
+            },
+            child: Text(
+              txtDOBController.text,
+              textDirection: TextDirection.rtl,
+              style: TextStyle(color: Colors.black45),
+            )),
+        decoration(20),
+      ],
+    );
+  }
+
+  Widget scientificData(String str) {
+    return new Column(
+      children: <Widget>[
+        new Container(
+          padding: EdgeInsets.fromLTRB(0, 0, 0, 15),
+          child: new Text(
+            str,
+            textAlign: TextAlign.center,
+            style: new TextStyle(
+              color: Colors.blue,
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ),
+        decoration(20),
+        col(false, "أعلى مؤهل", "مثال: دكتوراه", "Best_Qualification",
+            isArabicString, i++),
+        decoration(20),
+        col(false, "اسم المؤهل", "مثال: دكتوراه فى الهندسة المدنية",
+            "Name_Best_Qualification", isArabicString, i++),
+        decoration(20),
+        col(false, "سنة الحصول عليه", "مثال: 2015", "Date_Best_Qualification",
+            isArabicString, i++),
+        decoration(20),
+        col(false, "جامعة/وزارة", "مثال: جامعة اﻹسكندرية", "University_Name",
+            isArabicString, i++),
+        decoration(20),
+        col(false, "كلية/معهد/مدرسة", "مثال: كلية الهندسة", "College_Name",
+            isArabicString, i++),
+        decoration(20),
+      ],
+    );
+  }
+
+  Widget familyData(String str) {
+    return new Column(
+      children: <Widget>[
+        new Container(
+          padding: EdgeInsets.fromLTRB(0, 0, 0, 15),
+          child: new Text(
+            str,
+            textAlign: TextAlign.center,
+            style: new TextStyle(
+              color: Colors.blue,
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ),
+        decoration(20),
+        col(false, "اسم الزوجة/الزوجة", "مثال: محمد/سمر", "Husband_Wife_Name",
+            isArabicString, i++),
+        decoration(20),
+        col(false, "نوع البطاقة", "مثال: دكتوراه فى الهندسة المدنية",
+            "Card_Type", isArabicString, i++),
+        decoration(20),
+        col(false, "رقم البطاقة", "أرقام", "Card_Number", isArabicString, i++),
+        decoration(20),
+      ],
+    );
+  }
+
+  Widget jobData(String str) {
+    return new Column(
+      children: <Widget>[
+        new Container(
+          padding: EdgeInsets.fromLTRB(0, 0, 0, 15),
+          child: new Text(
+            str,
+            textAlign: TextAlign.center,
+            style: new TextStyle(
+              color: Colors.blue,
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ),
+        decoration(20),
+        col(false, "الوظيفة", "مثال: رجل أعمال", "Job_Name", isArabicString,
+            i++),
+        decoration(20),
+        col(false, "سنة شغل الوظيفة", "مثال: 2015", "Job_Date", isArabicString,
+            i++),
+        decoration(20),
+        col(false, "جهة العمل", "مثال: وزارة الكهرباء", "Job_Place",
+            isArabicString, i++),
+        decoration(20),
+        col(false, "مكتب السجل التجاري", "مثال: مكتب قسم المنتزه",
+            "Commercial_Register", isArabicString, i++),
+        decoration(20),
+        col(false, "رقم السجل التجارى", "ثمان أرقام",
+            "Commercial_Register_Number", isArabicString, i++),
+        decoration(20),
+      ],
+    );
+  }
+
+  Widget addressData(String str) {
+    return new Column(
+      children: <Widget>[
+        new Container(
+          padding: EdgeInsets.fromLTRB(0, 0, 0, 15),
+          child: new Text(
+            str,
+            textAlign: TextAlign.center,
+            style: new TextStyle(
+              color: Colors.blue,
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ),
+        decoration(20),
+        col(false, "رقم العقار", "مثال: 17", "Building_Number", isArabicString,
+            i++),
+        decoration(20),
+        col(false, "إسم الشارع", "مثال: شارع المعهد الدينى", "Street_Name",
+            isArabicString, i++),
+        decoration(20),
+        col(false, "مجمع سكنى", "مثال: مجمّع السلام", "Apartment_Block",
+            isArabicString, i++),
+        decoration(20),
+        col(false, "قسم/مركز", "مثال: قسم أول الرمل", "Station_Name",
+            isArabicString, i++),
+        decoration(20),
+        col(false, "محافظة", "مثال: اﻹسكندرية", "Governorate_Name",
+            isArabicString, i++),
+        decoration(20),
+      ],
+    );
+  }
+
+  Widget electionData(String str) {
+    return new Column(
+      children: <Widget>[
+        new Container(
+          padding: EdgeInsets.fromLTRB(0, 0, 0, 15),
+          child: new Text(
+            str,
+            textAlign: TextAlign.center,
+            style: new TextStyle(
+              color: Colors.blue,
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ),
+        decoration(20),
+        col(false, "الموطن اﻹنتخابي", "مثال: الجيزة", "Husband_Wife_Name",
+            isArabicString, i++),
+        decoration(20),
+      ],
+    );
+  }
+
+  Widget loginData(String str) {
+    return new Column(
+      children: <Widget>[
+        new Container(
+          padding: EdgeInsets.fromLTRB(0, 0, 0, 15),
+          child: new Text(
+            str,
+            textAlign: TextAlign.center,
+            style: new TextStyle(
+              color: Colors.blue,
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ),
+        decoration(20),
+        col(false, "البريد اﻹلكتروني", "example@example.com", "Email",
+            isArabicString, i++),
+        decoration(20),
+        col(true, "رقم السر", "**********", "Password", isArabicString, i++),
+        decoration(20),
+        col(false, "تأكيد رقم السر", "**********", "Re_Password",
+            isArabicString, i++),
+        decoration(20),
+      ],
+    );
   }
 }
