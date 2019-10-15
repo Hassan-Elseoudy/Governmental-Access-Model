@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' as prefix0;
 import 'package:gam_app/MyAccount.dart';
 import 'package:gam_app/country.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -12,7 +13,7 @@ final Firestore db = Firestore.instance;
 final FirebaseAuth auth = FirebaseAuth.instance;
 List<String> religions = ["الإسلام", "المسيحية", "اليهيودية", "غير ذلك"];
 List<String> relatives = ["اﻷب", "الأم", "الجد", "الجدة"];
-List<String> dropdownBtns = ["الإسلام", "الإسلام", "الإسلام", "اﻷب"];
+Map<String, String> dropdownBtns = new Map();
 // Index 0 => ديانة الطفل
 // Index 1 => ديانة اﻷب
 // Index 2 => ديانة اﻷم
@@ -25,15 +26,15 @@ TextEditingController txtDOBController =
 TextEditingController txtMilitaryController =
     new TextEditingController(text: "اختر التاريخ");
 
-List<TextEditingController> txtControllers =
-    new List<TextEditingController>(100000);
+Map<String, TextEditingController> txtControllers =
+    new Map<String, TextEditingController>();
 
 int religionButton = -1;
-List<Country> _selectedDialogCountry = [
-  CountryPickerUtils.getCountryByPhoneCode('20'),
-  CountryPickerUtils.getCountryByPhoneCode('20'),
-  CountryPickerUtils.getCountryByPhoneCode('20')
-];
+Map<String, Country> _selectedDialogCountry = {
+  'Nationality': CountryPickerUtils.getCountryByPhoneCode('20'),
+  'Father_Nationality': CountryPickerUtils.getCountryByPhoneCode('20'),
+  'Mother_Nationality': CountryPickerUtils.getCountryByPhoneCode('20')
+};
 
 Future<FirebaseUser> handleSignUp(email, password) async {
   AuthResult result = await auth.createUserWithEmailAndPassword(
@@ -47,14 +48,14 @@ Future<FirebaseUser> handleSignUp(email, password) async {
   return user;
 }
 
-int i = 0;
+//int i = 0;
 
 class SignupPage extends StatefulWidget {
   @override
   _Signup createState() => new _Signup();
 }
 
-Map map = new Map();
+Map<String, dynamic> map = new Map();
 int genderValue = -1;
 
 class _Signup extends State<SignupPage> with TickerProviderStateMixin {
@@ -63,14 +64,22 @@ class _Signup extends State<SignupPage> with TickerProviderStateMixin {
     super.initState();
   }
 
+/*
   void intializeOurMap() {
-    map['Nationality'] =
-        map['Father_Nationality'] = map['Mother_Nationality'] = 'مصر';
-    map['Child_Religion'] =
-        map['Father_Religion'] = map['Mother_Religion'] = 'اﻹسلام';
-map['Email']=map['Password']=map['Re_Password']=map['Gender']=map['POB']=map['DOB']=map['Village_Name']=map['Center_Name']=map['Gover_Name']=map['M_Status']=map['Father_Name']=map['Mother_Name']=map['Husband_Wife_Name']=map['Card_Type']=map['Card_Number']=map['Building_Number']=map['Street_Name']=map['Apartment_Block']=map['Station_Name']=map['Governorate_Name']=map['Best_Qualification']=map['Name_Best_Qualification']=map['Date_Best_Qualification']=map['University_Name']=map['College_Name']=map['Job_Name']=map['Job_Date']=map['Job_Place']=map['Commercial_Register']=map['Commercial_Register_Number']=map['Mi_Status']=map['Mi_Number']=map['DOM']=map['DOS']= "Default";
-  }
+    for (String key in map.keys){
 
+  }
+    map['Nationality'] = map['Father_Nationality'] = map['Mother_Nationality'] = 'مصر';
+    map['Child_Religion'] = map['Father_Religion'] = map['Mother_Religion'] = 'اﻹسلام';
+    map['Email'] =
+    map['Password'] =
+    map['Re_Password'] =
+    map['Gender'] =
+    map['POB'] =
+    map['DOB'] =
+    map['Village_Name'] = map['Center_Name']=map['Gover_Name']=map['M_Status']=map['Father_Name']=map['Mother_Name']=map['Husband_Wife_Name']=map['Card_Type']=map['Card_Number']=map['Building_Number']=map['Street_Name']=map['Apartment_Block']=map['Station_Name']=map['Governorate_Name']=map['Best_Qualification']=map['Name_Best_Qualification']=map['Date_Best_Qualification']=map['University_Name']=map['College_Name']=map['Job_Name']=map['Job_Date']=map['Job_Place']=map['Commercial_Register']=map['Commercial_Register_Number']=map['Mi_Status']=map['Mi_Number']=map['DOM']=map['DOS']= "Default";
+  }
+*/
   /// Returns `true` if every [txt] is arabic, It's not working till now.
   bool isArabicString(String txt) {
     return new RegExp(r"[\u0600-\u06FF]").hasMatch(txt) == true ? true : false;
@@ -96,20 +105,18 @@ map['Email']=map['Password']=map['Re_Password']=map['Gender']=map['POB']=map['DO
   String _errors;
   String _warnings;
 
-  bool _isValid(){
+  bool _isValid() {
+    map.forEach((k, v) => debugPrint('$k : $v'));
     _errors = "";
-    if (EmailValidator.validate(map["Email"].toString()) == false)
+    if (EmailValidator.validate((map["Email"] as String)) == false)
       _errors += "الرجاء التأكد من البريد الالكتروني\n";
-    if (map["Password"].toString().length < 8)
+    if ((map["Password"]as String).length < 8)
       _errors += "الرجاء ادخال كلمة سر تتكون من 8 رموز على الأقل\n";
-    if (map["Re_Password"] != map["Password"])
+    if ((map["Re_Password"] as String) != (map["Password"] as String))
       _errors += "الرجاء التأكد من تطابق كلمة السر\n";
-    if (map["Gender"] == -1)
-      _errors += "الرجاء اختيار النوع (ذكر/أنثى)\n";
-    if (map["POB"] == "Default")
-      _errors +=  "الرجاء ادخال محل الولادة\n";
-    if (map["DOB"] == "Default")
-      _errors += "الرجاء اختيار تاريخ الميلاد\n";
+    if (map["Gender"] == '-1') _errors += "الرجاء اختيار النوع (ذكر/أنثى)\n";
+    if (map["POB"] == "Default") _errors += "الرجاء ادخال محل الولادة\n";
+    if (map["DOB"] == "Default") _errors += "الرجاء اختيار تاريخ الميلاد\n";
     if (map["Village_Name"] == "Default")
       _errors += "الرجاء اختيار اسم القرية\n";
     if (map["Center_Name"] == "Default")
@@ -118,10 +125,8 @@ map['Email']=map['Password']=map['Re_Password']=map['Gender']=map['POB']=map['DO
       _errors += "الرجاء اختيار اسم المحافطة\n";
     if (map["M_status"] == "Default")
       _errors += "الرجاء اختيار الحالة الاجتماعية\n";
-    if (map["Father_Name"] == "Default")
-      _errors += "الرجاء اختيار اسم الأب\n";
-    if (map["Mother_Name"] == "Default")
-      _errors += "الرجاء اختيار اسم الأم\n";
+    if (map["Father_Name"] == "Default") _errors += "الرجاء اختيار اسم الأب\n";
+    if (map["Mother_Name"] == "Default") _errors += "الرجاء اختيار اسم الأم\n";
     // warnings
     if (_errors == "")
       return true;
@@ -129,16 +134,16 @@ map['Email']=map['Password']=map['Re_Password']=map['Gender']=map['POB']=map['DO
       return false;
   }
 
-  /// Returns a `Conainer` which contians list of items [_items]
-  /// And because every `Conainer` needs a controller, I created list of `dropDownBtn`
-  /// where each element is responsible for one list, so i needed an [idx] to diffrentiate
-  Container dropDownBtn(List<String> _items, int idx, String key) {
+  /// Returns a `Container` which contains list of items [_items]
+  /// And because every `Container` needs a controller, I created list of `dropDownBtn`
+  /// where each element is responsible for one list, so i needed an [idx] to differentiate
+  Container dropDownBtn(List<String> _items, String key, {String def = "الإسلام"}) {
     return new Container(
       padding: EdgeInsets.fromLTRB(
           MediaQuery.of(context).size.width * 0.70, 0, 0, 0),
       child: DropdownButton<String>(
         underline: new SizedBox(),
-        value: dropdownBtns[idx],
+        value: def,
         icon: new Icon(
           Icons.arrow_downward,
           textDirection: TextDirection.rtl,
@@ -150,7 +155,7 @@ map['Email']=map['Password']=map['Re_Password']=map['Gender']=map['POB']=map['DO
         ),
         onChanged: (String newVal) {
           setState(() {
-            dropdownBtns[idx] = newVal;
+            dropdownBtns[key] = newVal;
             map[key] = newVal;
           });
         },
@@ -164,15 +169,21 @@ map['Email']=map['Password']=map['Re_Password']=map['Gender']=map['POB']=map['DO
     );
   }
 
-  /// [flag]: It's mainly used to diffrentiate between password fields & non-password ones.
+  /// [flag]: It's mainly used to differentiate between password fields & non-password ones.
   /// [txt]: It has the main text for the component.
   /// [hint]: It contains the hint text for every component.
   /// [idx]: It was designed to get each text and save it in [map] public variable.
   /// [txtController]: Because every text needs a controller so we can keep changes in each Text Field.
   /// [_verifyText]: If we want to set validation method to each TextFormField, we can pass a function.
 
-  Column col(bool flag, String txt, String hint, String idx,
-      Function _verifyText, int i) {
+  Column col(bool mandatoryField, String txt, String hint, String key,
+      Function _verifyText,
+      // Optional Parameters
+      {String def: "",
+      bool obscureText: false,
+      TextDirection textDirection: TextDirection.rtl,
+      TextAlign textAlign: TextAlign.right}) {
+    map[key] = def;
     return new Column(
       children: <Widget>[
         new Container(
@@ -211,20 +222,20 @@ map['Email']=map['Password']=map['Re_Password']=map['Gender']=map['POB']=map['DO
               children: <Widget>[
                 new Expanded(
                   child: TextField(
-                    textDirection: TextDirection.rtl,
+                    textDirection: textDirection,
                     onChanged: (value) {
-                      setState(() {
-                        //debugPrint(idx);
-                        txtControllers[i].text = value;
-                        map[idx] = txtControllers[i].text;
-                      });
-                      if (_verifyText(txtControllers[i].text)) {}
+                      //setState(() {
+                        debugPrint('Hi1');
+                        debugPrint('Hi2');
+                        txtControllers[key].text = value;
+                        debugPrint('Hi3');
+                        debugPrint('value : ' + value);
+                      //});
+                      //if (_verifyText(txtControllers[key].text)) {}
                     },
-                    controller: txtControllers[i],
-                    obscureText: (txt == "رقم السر" || txt == "تأكيد رقم السر")
-                        ? true
-                        : false,
-                    textAlign: TextAlign.right,
+                    controller: txtControllers[key],
+                    obscureText: obscureText,
+                    textAlign: textAlign,
                     decoration: InputDecoration(
                       border: InputBorder.none,
                       hintText: hint,
@@ -252,7 +263,7 @@ map['Email']=map['Password']=map['Re_Password']=map['Gender']=map['POB']=map['DO
 
   /// Responsible to open the dialouge for flags and countries. (Open Source)
 
-  void _openCountryPickerDialog(String key, int i) {
+  void _openCountryPickerDialog(String key) {
     showDialog(
       context: context,
       builder: (context) => Theme(
@@ -267,7 +278,7 @@ map['Email']=map['Password']=map['Re_Password']=map['Gender']=map['POB']=map['DO
                 textDirection: TextDirection.rtl,
               ),
               onValuePicked: (Country country) => setState(() {
-                    _selectedDialogCountry[i] = country;
+                    _selectedDialogCountry[key] = country;
                     map[key] = country.name;
                   }),
               itemBuilder: _buildDialogItem)),
@@ -277,7 +288,7 @@ map['Email']=map['Password']=map['Re_Password']=map['Gender']=map['POB']=map['DO
   /// Main function for the sign up Page.
   @override
   Widget build(BuildContext context) {
-    intializeOurMap();
+    //intializeOurMap();
     return new SingleChildScrollView(
         child: new Column(
       children: <Widget>[
@@ -347,17 +358,17 @@ map['Email']=map['Password']=map['Re_Password']=map['Gender']=map['POB']=map['DO
                     //map.forEach((k, v) => debugPrint('$k: $v'));
                     setupPDF();
                     if (_isValid()) {
-                      debugPrint("-------------------------no Errors-------------------------");
+                      debugPrint(
+                          "-------------------------no Errors-------------------------");
                       Navigator.push(
                         context,
                         MaterialPageRoute(builder: (context) => MyAccount()),
                       );
-                    }
-                    else{
-                      debugPrint("-------------------------errors-------------------------");
+                    } else {
+                      debugPrint(
+                          "-------------------------errors-------------------------");
                       debugPrint(_errors);
                     } // display an error
-
                   },
                   child: new Container(
                     padding: const EdgeInsets.symmetric(
@@ -436,34 +447,34 @@ map['Email']=map['Password']=map['Re_Password']=map['Gender']=map['POB']=map['DO
           ],
         ),
         decoration(20),
-        col(false, "الجنسية", "مصري", "Nationality", isArabicString, i++),
-        Container(
+        col(true, "الجنسية", "مصري", "Nationality", isArabicString, def: "مصر"),
+        /*Container(
           width: MediaQuery.of(context).size.width * 0.85,
           child: Column(
             children: <Widget>[
               Container(
                 child: ListTile(
                   onTap: () {
-                    _openCountryPickerDialog('Nationality', i++);
+                    _openCountryPickerDialog('Nationality');
                   },
                   title: _buildDialogItem(_selectedDialogCountry[0]),
                 ),
               )
             ],
           ),
-        ),
+        ),*/
         decoration(5),
-        col(false, "الديانة", "مسلم/مسيحي", ".", isArabicString, i++),
-        dropDownBtn(religions, 0, 'Child_Religion'),
+        col(true, "الديانة", "مسلم/مسيحي", "Child_Religion", isArabicString, def: "مسلم"),
+        dropDownBtn(religions, 'Child_Religion'),
         decoration(20),
-        col(false, "محل الولادة", "إسم البلدة", "POB", isArabicString, i++),
+        col(true, "محل الولادة", "إسم البلدة", "POB", isArabicString),
         decoration(20),
-        col(false, "تاريخ الميلاد", "يوم/شهر/سنة", "DOB", isArabicString, i++),
+        col(true, "تاريخ الميلاد", "يوم/شهر/سنة", "DOB", isArabicString),
         new FlatButton(
             onPressed: () {
               DatePicker.showDatePicker(context,
-                  minTime: DateTime(1920, 1, i++),
-                  maxTime: DateTime(2100, 12, i++), onChanged: (date) {
+                  minTime: DateTime(1920, 1, 1),
+                  maxTime: DateTime(2100, 12, 30), onChanged: (date) {
                 setState(() {
                   txtDOBController.text =
                       '${date.year}:${date.month}:${date.day}';
@@ -477,62 +488,57 @@ map['Email']=map['Password']=map['Re_Password']=map['Gender']=map['POB']=map['DO
               style: TextStyle(color: Colors.black45),
             )),
         decoration(20),
-        col(false, "قرية", "مثال: طربنبا", "Village_Name", isArabicString, i++),
+        col(true, "قرية", "مثال: طربنبا", "Village_Name", isArabicString),
         decoration(20),
-        col(false, "قسم", "مثال: مركز دمنهور", "Center_Name", isArabicString,
-            i++),
+        col(true, "قسم", "مثال: مركز دمنهور", "Center_Name", isArabicString),
         decoration(20),
-        col(false, "محافظة", "مثال: محافظة البحيرة", "Gover_Name",
-            isArabicString, i++),
+        col(true, "محافظة", "مثال: البحيرة", "Gover_Name", isArabicString),
         decoration(20),
-        col(false, "الحالة اﻹجتماعية", "مثال: أعزب", "M_Status", isArabicString,
-            i++),
+        col(true, "الحالة اﻹجتماعية", "مثال: أعزب", "M_Status", isArabicString),
         decoration(20),
-        col(false, "اسم اﻷب", "مثال: محمد", "Father_Name", isArabicString, i++),
+        col(true, "اسم اﻷب", "مثال: محمد", "Father_Name", isArabicString),
         decoration(20),
-        col(false, "ديانة اﻷب", ".", ".", isArabicString, i++),
-        dropDownBtn(religions, 1, "Father_Religion"),
+        col(true, "ديانة اﻷب", ".", ".", isArabicString),
+        dropDownBtn(religions, "Father_Religion"),
         decoration(20),
-        col(false, "جنسية اﻷب", "مصري", "Father_Nationality", isArabicString,
-            i++),
-        new Container(
+        col(true, "جنسية اﻷب", "مصري", "Father_Nationality", isArabicString, def : 'مصر'),
+       /* new Container(
           width: MediaQuery.of(context).size.width * 0.85,
           child: Column(
             children: <Widget>[
               Container(
                 child: ListTile(
                   onTap: () {
-                    _openCountryPickerDialog('Father_Nationality', i++);
+                    _openCountryPickerDialog('Father_Nationality');
                   },
                   title: _buildDialogItem(_selectedDialogCountry[1]),
                 ),
-              )
+              ),
             ],
           ),
-        ),
+        ),*/
         decoration(5),
-        col(false, "اسم اﻷم", "مثال: ميرنا", "Mother_Name", isArabicString,
-            i++),
+        col(true, "اسم اﻷم", "مثال: ميرنا", "Mother_Name", isArabicString),
         decoration(20),
-        col(false, "ديانة اﻷم", ".", ".", isArabicString, i++),
-        dropDownBtn(religions, 2, "Mother_Religion"),
+        col(true, "ديانة اﻷم", ".", ".", isArabicString),
+        dropDownBtn(religions, "Mother_Religion"),
         decoration(20),
-        col(false, "جنسية اﻷم", ".", ".", isArabicString, i++),
-        new Container(
+        col(true, "جنسية اﻷم", ".", "Mother_Nationality", isArabicString, def : 'مصر'),
+        /*new Container(
           width: MediaQuery.of(context).size.width * 0.85,
           child: Column(
             children: <Widget>[
               Container(
                 child: ListTile(
                   onTap: () {
-                    _openCountryPickerDialog('Mother_Nationality', i++);
+                    _openCountryPickerDialog('Mother_Nationality');
                   },
                   title: _buildDialogItem(_selectedDialogCountry[2]),
                 ),
               )
             ],
           ),
-        ),
+        ),*/
         decoration(20),
       ],
     );
@@ -554,17 +560,17 @@ map['Email']=map['Password']=map['Re_Password']=map['Gender']=map['POB']=map['DO
           ),
         ),
         decoration(20),
-        col(false, "الموقف", "تحت التنجيد", "Mi_Status", isArabicString,
-            i++),
+        col(false, "الموقف", "تحت التنجيد", "Mi_Status",
+            isArabicString), // should be mandatory if boy
         decoration(20),
         col(false, "رقم بطاقة الخدمة العسكرية", "أرقام", "Mi_Number",
-            isArabicString, i++),
+            isArabicString), // should be mandatory if boy
         decoration(20),
         new FlatButton(
             onPressed: () {
               DatePicker.showDatePicker(context,
-                  minTime: DateTime(1920, 1, i++),
-                  maxTime: DateTime(2100, 12, i++), onChanged: (date) {
+                  minTime: DateTime(1920, 1, 1),
+                  maxTime: DateTime(2100, 12, 30), onChanged: (date) {
                 setState(() {
                   txtMilitaryController.text =
                       '${date.year}:${date.month}:${date.day}';
@@ -599,19 +605,19 @@ map['Email']=map['Password']=map['Re_Password']=map['Gender']=map['POB']=map['DO
         ),
         decoration(20),
         col(false, "أعلى مؤهل", "مثال: دكتوراه", "Best_Qualification",
-            isArabicString, i++),
+            isArabicString),
         decoration(20),
         col(false, "اسم المؤهل", "مثال: دكتوراه فى الهندسة المدنية",
-            "Name_Best_Qualification", isArabicString, i++),
+            "Name_Best_Qualification", isArabicString),
         decoration(20),
         col(false, "سنة الحصول عليه", "مثال: 2015", "Date_Best_Qualification",
-            isArabicString, i++),
+            isArabicString),
         decoration(20),
         col(false, "جامعة/وزارة", "مثال: جامعة اﻹسكندرية", "University_Name",
-            isArabicString, i++),
+            isArabicString),
         decoration(20),
         col(false, "كلية/معهد/مدرسة", "مثال: كلية الهندسة", "College_Name",
-            isArabicString, i++),
+            isArabicString),
         decoration(20),
       ],
     );
@@ -634,12 +640,12 @@ map['Email']=map['Password']=map['Re_Password']=map['Gender']=map['POB']=map['DO
         ),
         decoration(20),
         col(false, "اسم الزوجة/الزوجة", "مثال: محمد/سمر", "Husband_Wife_Name",
-            isArabicString, i++),
+            isArabicString),
         decoration(20),
         col(false, "نوع البطاقة", "مثال: دكتوراه فى الهندسة المدنية",
-            "Card_Type", isArabicString, i++),
+            "Card_Type", isArabicString),
         decoration(20),
-        col(false, "رقم البطاقة", "أرقام", "Card_Number", isArabicString, i++),
+        col(false, "رقم البطاقة", "أرقام", "Card_Number", isArabicString),
         decoration(20),
       ],
     );
@@ -661,20 +667,18 @@ map['Email']=map['Password']=map['Re_Password']=map['Gender']=map['POB']=map['DO
           ),
         ),
         decoration(20),
-        col(false, "الوظيفة", "مثال: رجل أعمال", "Job_Name", isArabicString,
-            i++),
+        col(true, "الوظيفة", "مثال: رجل أعمال", "Job_Name", isArabicString),
         decoration(20),
-        col(false, "سنة شغل الوظيفة", "مثال: 2015", "Job_Date", isArabicString,
-            i++),
+        col(false, "سنة شغل الوظيفة", "مثال: 2015", "Job_Date", isArabicString),
         decoration(20),
         col(false, "جهة العمل", "مثال: وزارة الكهرباء", "Job_Place",
-            isArabicString, i++),
+            isArabicString),
         decoration(20),
         col(false, "مكتب السجل التجاري", "مثال: مكتب قسم المنتزه",
-            "Commercial_Register", isArabicString, i++),
+            "Commercial_Register", isArabicString),
         decoration(20),
         col(false, "رقم السجل التجارى", "ثمان أرقام",
-            "Commercial_Register_Number", isArabicString, i++),
+            "Commercial_Register_Number", isArabicString),
         decoration(20),
       ],
     );
@@ -696,20 +700,19 @@ map['Email']=map['Password']=map['Re_Password']=map['Gender']=map['POB']=map['DO
           ),
         ),
         decoration(20),
-        col(false, "رقم العقار", "مثال: 17", "Building_Number", isArabicString,
-            i++),
+        col(true, "رقم العقار", "مثال: 17", "Building_Number", isArabicString),
         decoration(20),
-        col(false, "إسم الشارع", "مثال: شارع المعهد الدينى", "Street_Name",
-            isArabicString, i++),
+        col(true, "إسم الشارع", "مثال: شارع المعهد الدينى", "Street_Name",
+            isArabicString),
         decoration(20),
-        col(false, "مجمع سكنى", "مثال: مجمّع السلام", "Apartment_Block",
-            isArabicString, i++),
+        col(true, "مجمع سكنى", "مثال: مجمّع السلام", "Apartment_Block",
+            isArabicString),
         decoration(20),
-        col(false, "قسم/مركز", "مثال: قسم أول الرمل", "Station_Name",
-            isArabicString, i++),
+        col(true, "قسم/مركز", "مثال: قسم أول الرمل", "Station_Name",
+            isArabicString),
         decoration(20),
-        col(false, "محافظة", "مثال: اﻹسكندرية", "Governorate_Name",
-            isArabicString, i++),
+        col(true, "محافظة", "مثال: اﻹسكندرية", "Governorate_Name",
+            isArabicString),
         decoration(20),
       ],
     );
@@ -732,7 +735,7 @@ map['Email']=map['Password']=map['Re_Password']=map['Gender']=map['POB']=map['DO
         ),
         decoration(20),
         col(false, "الموطن اﻹنتخابي", "مثال: الجيزة", "Husband_Wife_Name",
-            isArabicString, i++),
+            isArabicString),
         decoration(20),
       ],
     );
@@ -754,13 +757,20 @@ map['Email']=map['Password']=map['Re_Password']=map['Gender']=map['POB']=map['DO
           ),
         ),
         decoration(20),
-        col(false, "البريد اﻹلكتروني", "example@example.com", "Email",
-            isArabicString, i++),
+        col(true, "البريد اﻹلكتروني", "example@example.com", "Email",
+            isArabicString,
+            textAlign: TextAlign.left, textDirection: TextDirection.ltr),
         decoration(20),
-        col(true, "رقم السر", "**********", "Password", isArabicString, i++),
+        col(true, "رقم السر", "**********", "Password", isArabicString,
+            textAlign: TextAlign.left,
+            textDirection: TextDirection.ltr,
+            obscureText: true),
         decoration(20),
         col(false, "تأكيد رقم السر", "**********", "Re_Password",
-            isArabicString, i++),
+            isArabicString,
+            textAlign: TextAlign.left,
+            textDirection: TextDirection.ltr,
+            obscureText: true),
         decoration(20),
       ],
     );
