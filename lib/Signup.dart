@@ -346,8 +346,6 @@ class _Signup extends State<SignupPage> with TickerProviderStateMixin {
                   ),
                   color: Colors.redAccent,
                   onPressed: () async {
-                    //    handleSignUp(map['4'], map['5']);
-                    //map.forEach((k, v) => debugPrint('$k: $v'));
                     setupPDF();
                     if (_isValid()) {
                       debugPrint(
