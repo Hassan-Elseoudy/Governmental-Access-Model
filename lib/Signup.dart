@@ -7,6 +7,7 @@ import 'package:gam_app/country_pickers.dart';
 import 'package:gam_app/PDFBuilder.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
+import 'package:gam_app/E_Governorate.dart';
 
 final Firestore db = Firestore.instance;
 final FirebaseAuth auth = FirebaseAuth.instance;
@@ -42,6 +43,10 @@ Future<FirebaseUser> handleSignUp(email, password) async {
   return user;
 }
 
+Governorate _initGovs;
+String _governorate = "محافظة أسوان", _city_name = "أسوان";
+String _governorate_birth = "محافظة أسوان", _city_name_birth = "أسوان";
+
 class SignupPage extends StatefulWidget {
   @override
   _Signup createState() => new _Signup();
@@ -63,6 +68,11 @@ class _Signup extends State<SignupPage> with TickerProviderStateMixin {
       'Father_Nationality': CountryPickerUtils.getCountryByPhoneCode('20'),
       'Mother_Nationality': CountryPickerUtils.getCountryByPhoneCode('20')
     });
+    _initGovs = Governorate.init();
+    String _governorate = _initGovs.egyptGovernorates[0].gov;
+    String _city_name = _initGovs.egyptGovernorates[0].cities[0];
+    String _governorate_birth = _initGovs.egyptGovernorates[0].gov;
+    String _city_name_birth = _initGovs.egyptGovernorates[0].cities[0];
   }
 
   /// Returns `true` if every [txt] is arabic, It's not working till now.
@@ -100,10 +110,7 @@ class _Signup extends State<SignupPage> with TickerProviderStateMixin {
     if ((map["Re_Password"] as String) != (map["Password"] as String))
       _errors += "الرجاء التأكد من تطابق كلمة السر\n";
     if (map["Gender"] == '-1') _errors += "الرجاء اختيار النوع (ذكر/أنثى)\n";
-    if (map["POB"] == "Default") _errors += "الرجاء ادخال محل الولادة\n";
     if (map["DOB"] == "Default") _errors += "الرجاء اختيار تاريخ الميلاد\n";
-    if (map["Village_Name"] == "Default")
-      _errors += "الرجاء اختيار اسم القرية\n";
     if (map["Center_Name"] == "Default")
       _errors += "الرجاء اختيار اسم المركز\n";
     if (map["Gover_Name"] == "Default")
@@ -196,7 +203,9 @@ class _Signup extends State<SignupPage> with TickerProviderStateMixin {
         if (txt.contains("جنس") == false &&
             txt.contains("علاق") == false &&
             txt.contains("ديانة") == false &&
-            txt.contains('تاريخ') == false)
+            txt.contains('تاريخ') == false &&
+            txt.contains('مدينة') == false &&
+            txt.contains('محافظة') == false)
           new Container(
             width: MediaQuery.of(context).size.width,
             margin: const EdgeInsets.only(left: 40.0, right: 40.0, top: 0),
@@ -452,8 +461,6 @@ class _Signup extends State<SignupPage> with TickerProviderStateMixin {
             def: "مسلم"),
         dropDownBtn(religions, 'Child_Religion'),
         decoration(20),
-        col(true, "محل الولادة", "إسم البلدة", "POB", isArabicString),
-        decoration(20),
         col(true, "تاريخ الميلاد", "يوم/شهر/سنة", "DOB", isArabicString),
         new FlatButton(
             onPressed: () {
@@ -473,11 +480,74 @@ class _Signup extends State<SignupPage> with TickerProviderStateMixin {
               style: TextStyle(color: Colors.black45),
             )),
         decoration(20),
-        col(true, "قرية", "مثال: طربنبا", "Village_Name", isArabicString),
+        col(true, "محافظة الميلاد", "مثال: البحيرة", "Gover_Name",
+            isArabicString),
+        new Container(
+          padding: EdgeInsets.fromLTRB(
+              MediaQuery.of(context).size.width * 0.50, 0, 0, 0),
+          child: DropdownButton<String>(
+            underline: new SizedBox(),
+            value: _governorate,
+            icon: new Icon(
+              Icons.arrow_downward,
+              textDirection: TextDirection.rtl,
+            ),
+            iconSize: 24,
+            elevation: 5,
+            style: TextStyle(
+              color: Colors.black,
+            ),
+            onChanged: (newValue) {
+              setState(() {
+                _governorate_birth = newValue;
+                map['Gover_Name'] = _governorate_birth;
+                _city_name = _initGovs.egyptGovernorates
+                    .where((n) => n.gov.toString() == _governorate)
+                    .first
+                    .cities[0]
+                    .toString();
+              });
+            },
+            items: _initGovs
+                .getGovernorates()
+                .map((region) => DropdownMenuItem<String>(
+                    child: Text(region), value: region))
+                .toList(),
+          ),
+        ),
         decoration(20),
-        col(true, "قسم", "مثال: مركز دمنهور", "Center_Name", isArabicString),
-        decoration(20),
-        col(true, "محافظة", "مثال: البحيرة", "Gover_Name", isArabicString),
+        col(true, "مدينة الميلاد", "مثال: مدينة دمنهور", "Center_Name",
+            isArabicString),
+        new Container(
+          padding: EdgeInsets.fromLTRB(
+              MediaQuery.of(context).size.width * 0.65, 0, 0, 0),
+          child: DropdownButton<String>(
+            underline: new SizedBox(),
+            value: _city_name,
+            icon: new Icon(
+              Icons.arrow_downward,
+              textDirection: TextDirection.rtl,
+            ),
+            iconSize: 24,
+            elevation: 5,
+            style: TextStyle(
+              color: Colors.black,
+            ),
+            onChanged: (newValue) {
+              setState(() {
+                _city_name_birth = newValue;
+                map['Center_Name'] = _city_name_birth;
+              });
+            },
+            items: _initGovs.egyptGovernorates
+                .where((n) => (n.gov == _governorate))
+                .last
+                .cities
+                .map((_) =>
+                    DropdownMenuItem<String>(child: new Text(_), value: _))
+                .toList(),
+          ),
+        ),
         decoration(20),
         col(true, "الحالة اﻹجتماعية", "مثال: أعزب", "M_Status", isArabicString),
         decoration(20),
@@ -631,7 +701,7 @@ class _Signup extends State<SignupPage> with TickerProviderStateMixin {
         col(false, "اسم الزوجة/الزوجة", "مثال: محمد/سمر", "Husband_Wife_Name",
             isArabicString),
         decoration(20),
-        col(false, "نوع البطاقة", "مثال: دكتوراه فى الهندسة المدنية",
+        col(false, "نوع البطاقة", "مثال: مدنية، جواز السفر",
             "Card_Type", isArabicString),
         decoration(20),
         col(false, "رقم البطاقة", "أرقام", "Card_Number", isArabicString),
@@ -689,19 +759,80 @@ class _Signup extends State<SignupPage> with TickerProviderStateMixin {
           ),
         ),
         decoration(20),
-        col(true, "رقم العقار", "مثال: 17", "Building_Number", isArabicString),
+        col(true, "محافظة", "مثال: البحيرة", "Governorate_Name",
+            isArabicString),
+        new Container(
+          padding: EdgeInsets.fromLTRB(
+              MediaQuery.of(context).size.width * 0.50, 0, 0, 0),
+          child: DropdownButton<String>(
+            underline: new SizedBox(),
+            value: _governorate,
+            icon: new Icon(
+              Icons.arrow_downward,
+              textDirection: TextDirection.rtl,
+            ),
+            iconSize: 24,
+            elevation: 5,
+            style: TextStyle(
+              color: Colors.black,
+            ),
+            onChanged: (newValue) {
+              setState(() {
+                _governorate = newValue;
+                map['Governorate_Name'] = _governorate;
+                _city_name = _initGovs.egyptGovernorates
+                    .where((n) => n.gov.toString() == _governorate)
+                    .first
+                    .cities[0]
+                    .toString();
+              });
+            },
+            items: _initGovs
+                .getGovernorates()
+                .map((region) => DropdownMenuItem<String>(
+                    child: Text(region), value: region))
+                .toList(),
+          ),
+        ),
+        decoration(20),
+        col(true, "مدينة/مركز", "مثال: دمنهور", "_City_Name", isArabicString),
+        new Container(
+          padding: EdgeInsets.fromLTRB(
+              MediaQuery.of(context).size.width * 0.65, 0, 0, 0),
+          child: DropdownButton<String>(
+            underline: new SizedBox(),
+            value: _city_name,
+            icon: new Icon(
+              Icons.arrow_downward,
+              textDirection: TextDirection.rtl,
+            ),
+            iconSize: 24,
+            elevation: 5,
+            style: TextStyle(
+              color: Colors.black,
+            ),
+            onChanged: (newValue) {
+              setState(() {
+                _city_name = newValue;
+                map['_City_Name'] = _city_name;
+              });
+            },
+            items: _initGovs.egyptGovernorates
+                .where((n) => (n.gov == _governorate))
+                .last
+                .cities
+                .map((_) =>
+                    DropdownMenuItem<String>(child: new Text(_), value: _))
+                .toList(),
+          ),
+        ),
+        decoration(20),
+        col(true, "مجمع سكنى", "مثال: شبرا", "Apartment_Block", isArabicString),
         decoration(20),
         col(true, "إسم الشارع", "مثال: شارع المعهد الدينى", "Street_Name",
             isArabicString),
         decoration(20),
-        col(true, "مجمع سكنى", "مثال: مجمّع السلام", "Apartment_Block",
-            isArabicString),
-        decoration(20),
-        col(true, "قسم/مركز", "مثال: قسم أول الرمل", "Station_Name",
-            isArabicString),
-        decoration(20),
-        col(true, "محافظة", "مثال: اﻹسكندرية", "Governorate_Name",
-            isArabicString),
+        col(true, "رقم العقار", "مثال: 17", "Building_Number", isArabicString),
         decoration(20),
       ],
     );
