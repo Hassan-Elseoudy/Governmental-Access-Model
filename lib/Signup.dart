@@ -103,7 +103,7 @@ class _Signup extends State<SignupPage> with TickerProviderStateMixin {
   bool _isValid() {
     map.forEach((k, v) => debugPrint('$k : $v'));
     _errors = "";
-    if (EmailValidator.validate((map["Email"] as String)) == false)
+    if(!RegExp(r"^[a-zA-Z0-9.]+@[a-zA-Z0-9]+\.[a-zA-Z]+").hasMatch(map["Email"].toString()))
       _errors += "الرجاء التأكد من البريد الالكتروني\n";
     if ((map["Password"] as String).length < 8)
       _errors += "الرجاء ادخال كلمة سر تتكون من 8 رموز على الأقل\n";
