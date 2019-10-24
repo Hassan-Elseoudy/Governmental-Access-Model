@@ -96,10 +96,10 @@ class _Signup extends State<SignupPage> with TickerProviderStateMixin {
       map['Gender'] = result == 0 ? 'ذكر' : 'أنثي';
     });
   }
-
+  List<String> MState =['ارملة','ارمل','مطلقة','مطلق','متزوجة','متزوج','عزباء','اعزب'];
+  List<String>  GoverName = ['الوادي الجديد','المنيا','المنوفية','مطروح','كفر الشيخ','قنا','القليوبية','الفيوم','الغربية','شمال سيناء	','الشرقية','السويس','سوهاج','دمياط','الدقهلية','الجيزة','جنوب سيناء	','الجيزة','بورسعيد','بني سويف	','البحيرة','البحر الأحمر','الأقصر','أسيوط','أسوان','الإسماعيلية','الإسكندرية','القاهرة'];
   String _errors;
   String _warnings;
-
   bool _isValid() {
     map.forEach((k, v) => debugPrint('$k : $v'));
     _errors = "";
@@ -110,14 +110,17 @@ class _Signup extends State<SignupPage> with TickerProviderStateMixin {
     if ((map["Re_Password"] as String) != (map["Password"] as String))
       _errors += "الرجاء التأكد من تطابق كلمة السر\n";
     if (map["Gender"] == '-1') _errors += "الرجاء اختيار النوع (ذكر/أنثى)\n";
-    if (map["DOB"] == "Default") _errors += "الرجاء اختيار تاريخ الميلاد\n";
+    if (map["DOB"] == "Default")
+      _errors += "الرجاء اختيار تاريخ الميلاد\n";
+
     if (map["Center_Name"] == "Default")
       _errors += "الرجاء اختيار اسم المركز\n";
-    if (map["Gover_Name"] == "Default")
+    if (!GoverName.contains(map["Gover_Name"].toString()) )
       _errors += "الرجاء اختيار اسم المحافطة\n";
-    if (map["M_status"] == "Default")
+    if (!MState.contains(map["M_status"].toString())) {
       _errors += "الرجاء اختيار الحالة الاجتماعية\n";
-    if (map["Father_Name"] == "Default") _errors += "الرجاء اختيار اسم الأب\n";
+    }
+    if (map["Father_Name"] == "Default" ) _errors += "الرجاء اختيار اسم الأب\n";
     if (map["Mother_Name"] == "Default") _errors += "الرجاء اختيار اسم الأم\n";
     // warnings
     if (_errors == "")
