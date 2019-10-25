@@ -44,8 +44,8 @@ Future<FirebaseUser> handleSignUp(email, password) async {
 }
 
 Governorate _initGovs;
-String _governorate = "محافظة أسوان", _city_name = "أسوان";
-String _governorate_birth = "محافظة أسوان", _city_name_birth = "أسوان";
+String _governorate = "محافظة أسوان", cityName = "أسوان";
+String governorateOfBirth = "محافظة أسوان", cityOfBirth = "أسوان";
 
 class SignupPage extends StatefulWidget {
   @override
@@ -70,9 +70,9 @@ class _Signup extends State<SignupPage> with TickerProviderStateMixin {
     });
     _initGovs = Governorate.init();
     String _governorate = _initGovs.egyptGovernorates[0].gov;
-    String _city_name = _initGovs.egyptGovernorates[0].cities[0];
-    String _governorate_birth = _initGovs.egyptGovernorates[0].gov;
-    String _city_name_birth = _initGovs.egyptGovernorates[0].cities[0];
+    String cityName = _initGovs.egyptGovernorates[0].cities[0];
+    String governorateOfBirth = _initGovs.egyptGovernorates[0].gov;
+    String cityOfBirth = _initGovs.egyptGovernorates[0].cities[0];
   }
 
   /// Returns `true` if every [txt] is arabic, It's not working till now.
@@ -96,31 +96,32 @@ class _Signup extends State<SignupPage> with TickerProviderStateMixin {
       map['Gender'] = result == 0 ? 'ذكر' : 'أنثي';
     });
   }
-  List<String> MState =['ارملة','ارمل','مطلقة','مطلق','متزوجة','متزوج','عزباء','اعزب'];
-  List<String>  GoverName = ['الوادي الجديد','المنيا','المنوفية','مطروح','كفر الشيخ','قنا','القليوبية','الفيوم','الغربية','شمال سيناء	','الشرقية','السويس','سوهاج','دمياط','الدقهلية','الجيزة','جنوب سيناء	','الجيزة','بورسعيد','بني سويف	','البحيرة','البحر الأحمر','الأقصر','أسيوط','أسوان','الإسماعيلية','الإسكندرية','القاهرة'];
+
+  // List<String> MState =['ارملة','ارمل','مطلقة','مطلق','متزوجة','متزوج','عزباء','اعزب'];
+  // List<String>  GoverName = ['الوادي الجديد','المنيا','المنوفية','مطروح','كفر الشيخ','قنا','القليوبية','الفيوم','الغربية','شمال سيناء	','الشرقية','السويس','سوهاج','دمياط','الدقهلية','الجيزة','جنوب سيناء	','الجيزة','بورسعيد','بني سويف	','البحيرة','البحر الأحمر','الأقصر','أسيوط','أسوان','الإسماعيلية','الإسكندرية','القاهرة'];
   String _errors;
   String _warnings;
   bool _isValid() {
     map.forEach((k, v) => debugPrint('$k : $v'));
     _errors = "";
-    if(!RegExp(r"^[a-zA-Z0-9.]+@[a-zA-Z0-9]+\.[a-zA-Z]+").hasMatch(map["Email"].toString()))
+    if (!RegExp(r"^[a-zA-Z0-9.]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
+        .hasMatch(map["Email"].toString()))
       _errors += "الرجاء التأكد من البريد الالكتروني\n";
     if ((map["Password"] as String).length < 8)
       _errors += "الرجاء ادخال كلمة سر تتكون من 8 رموز على الأقل\n";
     if ((map["Re_Password"] as String) != (map["Password"] as String))
       _errors += "الرجاء التأكد من تطابق كلمة السر\n";
     if (map["Gender"] == '-1') _errors += "الرجاء اختيار النوع (ذكر/أنثى)\n";
-    if (map["DOB"] == "Default")
-      _errors += "الرجاء اختيار تاريخ الميلاد\n";
+    if (map["DOB"] == "Default") _errors += "الرجاء اختيار تاريخ الميلاد\n";
 
     if (map["Center_Name"] == "Default")
       _errors += "الرجاء اختيار اسم المركز\n";
-    if (!GoverName.contains(map["Gover_Name"].toString()) )
+    /*   if (!GoverName.contains(map["Gover_Name"].toString()) )
       _errors += "الرجاء اختيار اسم المحافطة\n";
     if (!MState.contains(map["M_status"].toString())) {
       _errors += "الرجاء اختيار الحالة الاجتماعية\n";
-    }
-    if (map["Father_Name"] == "Default" ) _errors += "الرجاء اختيار اسم الأب\n";
+    } */
+    if (map["Father_Name"] == "Default") _errors += "الرجاء اختيار اسم الأب\n";
     if (map["Mother_Name"] == "Default") _errors += "الرجاء اختيار اسم الأم\n";
     // warnings
     if (_errors == "")
@@ -500,9 +501,9 @@ class _Signup extends State<SignupPage> with TickerProviderStateMixin {
             ),
             onChanged: (newValue) {
               setState(() {
-                _governorate_birth = newValue;
-                map['Gover_Name'] = _governorate_birth;
-                _city_name = _initGovs.egyptGovernorates
+                governorateOfBirth = newValue;
+                map['Gover_Name'] = governorateOfBirth;
+                cityName = _initGovs.egyptGovernorates
                     .where((n) => n.gov.toString() == _governorate)
                     .first
                     .cities[0]
@@ -524,7 +525,7 @@ class _Signup extends State<SignupPage> with TickerProviderStateMixin {
               MediaQuery.of(context).size.width * 0.65, 0, 0, 0),
           child: DropdownButton<String>(
             underline: new SizedBox(),
-            value: _city_name,
+            value: cityName,
             icon: new Icon(
               Icons.arrow_downward,
               textDirection: TextDirection.rtl,
@@ -536,8 +537,8 @@ class _Signup extends State<SignupPage> with TickerProviderStateMixin {
             ),
             onChanged: (newValue) {
               setState(() {
-                _city_name_birth = newValue;
-                map['Center_Name'] = _city_name_birth;
+                cityOfBirth = newValue;
+                map['Center_Name'] = cityOfBirth;
               });
             },
             items: _initGovs.egyptGovernorates
@@ -702,8 +703,8 @@ class _Signup extends State<SignupPage> with TickerProviderStateMixin {
         col(false, "اسم الزوجة/الزوجة", "مثال: محمد/سمر", "Husband_Wife_Name",
             isArabicString),
         decoration(20),
-        col(false, "نوع البطاقة", "مثال: مدنية، جواز السفر",
-            "Card_Type", isArabicString),
+        col(false, "نوع البطاقة", "مثال: مدنية، جواز السفر", "Card_Type",
+            isArabicString),
         decoration(20),
         col(false, "رقم البطاقة", "أرقام", "Card_Number", isArabicString),
         decoration(20),
@@ -781,7 +782,7 @@ class _Signup extends State<SignupPage> with TickerProviderStateMixin {
               setState(() {
                 _governorate = newValue;
                 map['Governorate_Name'] = _governorate;
-                _city_name = _initGovs.egyptGovernorates
+                cityName = _initGovs.egyptGovernorates
                     .where((n) => n.gov.toString() == _governorate)
                     .first
                     .cities[0]
@@ -802,7 +803,7 @@ class _Signup extends State<SignupPage> with TickerProviderStateMixin {
               MediaQuery.of(context).size.width * 0.65, 0, 0, 0),
           child: DropdownButton<String>(
             underline: new SizedBox(),
-            value: _city_name,
+            value: cityName,
             icon: new Icon(
               Icons.arrow_downward,
               textDirection: TextDirection.rtl,
@@ -814,8 +815,8 @@ class _Signup extends State<SignupPage> with TickerProviderStateMixin {
             ),
             onChanged: (newValue) {
               setState(() {
-                _city_name = newValue;
-                map['_City_Name'] = _city_name;
+                cityName = newValue;
+                map['_City_Name'] = cityName;
               });
             },
             items: _initGovs.egyptGovernorates

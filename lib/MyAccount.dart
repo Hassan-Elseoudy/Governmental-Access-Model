@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:gam_app/services_page.dart';
 
+import 'AboutProgram.dart';
+import 'ContactMe.dart';
+import 'Homepage.dart';
+import 'Setting.dart';
+
 class MyAccount extends StatefulWidget {
   @override
   _MyAccount createState() => _MyAccount();
@@ -39,7 +44,7 @@ class _MyAccount extends State<MyAccount> {
                     onPressed: () => {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => Services()),
+                        MaterialPageRoute(builder: (context) => MyAccount()),
                       ),
                     },
                   ),
@@ -82,7 +87,7 @@ class _MyAccount extends State<MyAccount> {
                   onPressed: () => {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => Services()),
+                      MaterialPageRoute(builder: (context) => Setting()),
                     ),
                   },
                 ),
@@ -102,7 +107,7 @@ class _MyAccount extends State<MyAccount> {
                   onPressed: () => {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => Services()),
+                      MaterialPageRoute(builder: (context) => ContactMe()),
                     ),
                   },
                 ),
@@ -122,7 +127,7 @@ class _MyAccount extends State<MyAccount> {
                   onPressed: () => {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => Services()),
+                      MaterialPageRoute(builder: (context) => AboutProgram()),
                     ),
                   },
                 ),
@@ -142,7 +147,7 @@ class _MyAccount extends State<MyAccount> {
                   onPressed: () => {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => Services()),
+                      MaterialPageRoute(builder: (context) => Homepage()),
                     ),
                   },
                 ),
@@ -151,7 +156,7 @@ class _MyAccount extends State<MyAccount> {
           ],
         ),
       ),
-      body: new Container(
+body: new Container(
           decoration: BoxDecoration(
             color: Colors.white,
             image: DecorationImage(
