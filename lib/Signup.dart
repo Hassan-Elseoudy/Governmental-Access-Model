@@ -1,238 +1,81 @@
+import 'dart:core';
+
 import 'package:flutter/material.dart';
-import 'package:gam_app/MyAccount.dart';
 import 'package:gam_app/country.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:gam_app/country_pickers.dart';
-import 'package:gam_app/PDFBuilder.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:gam_app/E_Governorate.dart';
 
 final Firestore db = Firestore.instance;
 final FirebaseAuth auth = FirebaseAuth.instance;
-List<String> religions = ["الإسلام", "المسيحية", "اليهيودية", "غير ذلك"];
-List<String> relatives = ["اﻷب", "الأم", "الجد", "الجدة"];
-Map<String, String> dropdownBtns = new Map();
-// Index 0 => ديانة الطفل
-// Index 1 => ديانة اﻷب
-// Index 2 => ديانة اﻷم
-// Index 3 => علاقة المُبلّغ بالطفل
 
-TextEditingController txtDOBController =
-    new TextEditingController(text: "اختر التاريخ");
-TextEditingController txtMilitaryController =
-    new TextEditingController(text: "اختر التاريخ");
-
-Map<String, TextEditingController> txtControllers =
-    new Map<String, TextEditingController>();
-
-int religionButton = -1;
-
-bool start = true;
-Map<String, Country> _selectedDialogCountry = {};
 Future<FirebaseUser> handleSignUp(email, password) async {
   AuthResult result = await auth.createUserWithEmailAndPassword(
       email: email, password: password);
   final FirebaseUser user = result.user;
-  user.sendEmailVerification();
+  await user.sendEmailVerification();
   assert(user != null);
   assert(await user.getIdToken() != null);
 
   return user;
 }
 
+bool isStartingApplication = true;
 Governorate _initGovs;
-String _governorate = "محافظة أسوان", cityName = "أسوان";
-String governorateOfBirth = "محافظة أسوان", cityOfBirth = "أسوان";
 
 class SignupPage extends StatefulWidget {
   @override
   _Signup createState() => new _Signup();
 }
 
-Map<String, dynamic> map = new Map();
-int genderValue = -1;
+Map<String, Container> labelsMap = new Map();
+Map<String, Widget> fieldsMap = new Map();
+Map<String, TextEditingController> controllers = new Map();
+String email,
+    password,
+    re_password,
+    gender,
+    nationality,
+    religion,
+    dob,
+    gob,
+    cob,
+    status,
+    father_name,
+    father_religion,
+    father_nationality,
+    mother_name,
+    mother_religion,
+    mother_nationality,
+    spouse_name,
+    card_type,
+    card_number,
+    gov,
+    city,
+    block,
+    street,
+    building_number,
+    qualification,
+    qualification_name,
+    qualification_date,
+    qualification_university,
+    qualification_faculty,
+    job,
+    job_date,
+    job_place,
+    job_office_place,
+    job_office_number,
+    marital_status,
+    marital_status_number,
+    marital_status_date,
+    election_place;
 
 class _Signup extends State<SignupPage> with TickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
-  }
-
-  void intializeOurMap() {
-    start = false;
-    _selectedDialogCountry.addAll({
-      'Nationality': CountryPickerUtils.getCountryByPhoneCode('1'),
-      'Father_Nationality': CountryPickerUtils.getCountryByPhoneCode('20'),
-      'Mother_Nationality': CountryPickerUtils.getCountryByPhoneCode('20')
-    });
-    _initGovs = Governorate.init();
-  }
-
-  /// Returns `true` if every [txt] is arabic, It's not working till now.
-  bool isArabicString(String txt) {
-    return new RegExp(r"[\u0600-\u06FF]").hasMatch(txt) == true ? true : false;
-  }
-
-  /// Returns `Divider` for decorations purposes with a specific [size].
-  Widget decoration(double size) {
-    return new Divider(
-      color: Colors.redAccent.shade400,
-      height: size,
-    );
-  }
-
-  /// Responsible to change the [genderValue] using [result] .
-  /// If `ذكر` then [genderValue] = 0, If `أنثي` then [genderValue] = 1
-  void _handleChangeGenger(result) {
-    setState(() {
-      genderValue = result;
-      map['Gender'] = result == 0 ? 'ذكر' : 'أنثي';
-    });
-  }
-  String _errors;
-  bool _isValid() {
-    map.forEach((k, v) => debugPrint('$k : $v'));
-    _errors = "";
-    if (!RegExp(r"^[a-zA-Z0-9.]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
-        .hasMatch(map["Email"].toString()))
-      _errors += "الرجاء التأكد من البريد الالكتروني\n";
-    if ((map["Password"] as String).length < 8)
-      _errors += "الرجاء ادخال كلمة سر تتكون من 8 رموز على الأقل\n";
-    if ((map["Re_Password"] as String) != (map["Password"] as String))
-      _errors += "الرجاء التأكد من تطابق كلمة السر\n";
-    if (map["Gender"] == '-1') _errors += "الرجاء اختيار النوع (ذكر/أنثى)\n";
-    if (map["DOB"] == "Default") _errors += "الرجاء اختيار تاريخ الميلاد\n";
-
-    if (map["Center_Name"] == "Default")
-      _errors += "الرجاء اختيار اسم المركز\n";
-    /*   if (!GoverName.contains(map["Gover_Name"].toString()) )
-      _errors += "الرجاء اختيار اسم المحافطة\n";
-    if (!MState.contains(map["M_status"].toString())) {
-      _errors += "الرجاء اختيار الحالة الاجتماعية\n";
-    } */
-    if (map["Father_Name"] == "Default") _errors += "الرجاء اختيار اسم الأب\n";
-    if (map["Mother_Name"] == "Default") _errors += "الرجاء اختيار اسم الأم\n";
-    // warnings
-    if (_errors == "")
-      return true;
-    else
-      return false;
-  }
-
-  /// Returns a `Container` which contains list of items [_items]
-  /// And because every `Container` needs a controller, I created list of `dropDownBtn`
-  /// where each element is responsible for one list, so i needed an [idx] to differentiate
-  Container dropDownBtn(List<String> _items, String key,
-      {String def = "الإسلام"}) {
-    return new Container(
-      padding: EdgeInsets.fromLTRB(
-          MediaQuery.of(context).size.width * 0.70, 0, 0, 0),
-      child: DropdownButton<String>(
-        underline: new SizedBox(),
-        value: def,
-        icon: new Icon(
-          Icons.arrow_downward,
-          textDirection: TextDirection.rtl,
-        ),
-        iconSize: 24,
-        elevation: 5,
-        style: TextStyle(
-          color: Colors.black,
-        ),
-        onChanged: (String newVal) {
-          setState(() {
-            dropdownBtns[key] = newVal;
-            map[key] = newVal;
-          });
-        },
-        items: _items.map<DropdownMenuItem<String>>((String value) {
-          return DropdownMenuItem<String>(
-            value: value,
-            child: Text(value),
-          );
-        }).toList(),
-      ),
-    );
-  }
-
-  /// [mandatoryField]: It's mainly used to differentiate between fields.
-  /// [txt]: It has the main text for the component.
-  /// [hint]: It contains the hint text for every component.
-  /// [idx]: It was designed to get each text and save it in [map] public variable.
-  /// [txtController]: Because every text needs a controller so we can keep changes in each Text Field.
-  /// [_verifyText]: If we want to set validation method to each TextFormField, we can pass a function.
-
-  Column col(bool mandatoryField, String txt, String hint, String key,
-      Function _verifyText,
-      // Optional Parameters
-      {String def: "",
-      bool obscureText: false,
-      TextDirection textDirection: TextDirection.rtl,
-      TextAlign textAlign: TextAlign.right}) {
-    map[key] = def;
-    return new Column(
-      children: <Widget>[
-        new Container(
-          width: MediaQuery.of(context).size.width * 0.8,
-          child: new Row(
-            children: <Widget>[
-              new Expanded(
-                child: new Padding(
-                  padding: const EdgeInsets.only(left: 40.0),
-                  child: new Text(
-                    txt,
-                    textDirection: TextDirection.rtl,
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      color: Colors.redAccent,
-                      fontSize: 15.0,
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-        if (txt.contains("جنس") == false &&
-            txt.contains("علاق") == false &&
-            txt.contains("ديانة") == false &&
-            txt.contains('تاريخ') == false &&
-            txt.contains('مدينة') == false &&
-            txt.contains('محافظة') == false)
-          new Container(
-            width: MediaQuery.of(context).size.width,
-            margin: const EdgeInsets.only(left: 40.0, right: 40.0, top: 0),
-            alignment: Alignment.center,
-            padding: const EdgeInsets.only(left: 0.0, right: 10.0),
-            child: new Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: <Widget>[
-                new Expanded(
-                  child: TextField(
-                    textDirection: textDirection,
-                    onChanged: (value) {
-                      setState(() {
-                        txtControllers[key].text = value;
-                      });
-                      if (_verifyText(txtControllers[key].text)) {}
-                    },
-                    controller: txtControllers[key],
-                    obscureText: obscureText,
-                    textAlign: textAlign,
-                    decoration: InputDecoration(
-                      border: InputBorder.none,
-                      hintText: hint,
-                      hintStyle: TextStyle(color: Colors.grey),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          )
-      ],
-    );
   }
 
   /// Responsible for Flags and countries. (Open Source)
@@ -262,19 +105,2128 @@ class _Signup extends State<SignupPage> with TickerProviderStateMixin {
                 textDirection: TextDirection.rtl,
               ),
               onValuePicked: (Country country) => setState(() {
-                    _selectedDialogCountry.update(
-                        _key, (Country _country) => country);
-                    _selectedDialogCountry
-                        .forEach((k, v) => debugPrint("$k + ${v.name}"));
+                    controllers[_key].text = country.name;
                   }),
               itemBuilder: _buildDialogItem)),
     );
   }
 
+  void initializeEmail() {
+    controllers["Email"] = new TextEditingController();
+    labelsMap["Email"] = new Container(
+      width: MediaQuery.of(context).size.width * 0.8,
+      child: new Row(
+        children: <Widget>[
+          new Expanded(
+            child: new Padding(
+              padding: const EdgeInsets.only(left: 40.0),
+              child: new Text(
+                "البريد الالكتروني",
+                textDirection: TextDirection.rtl,
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: Colors.redAccent,
+                  fontSize: 15.0,
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+    fieldsMap["Email"] = new Container(
+      width: MediaQuery.of(context).size.width,
+      margin: const EdgeInsets.only(left: 40.0, right: 40.0, top: 0),
+      alignment: Alignment.center,
+      padding: const EdgeInsets.only(left: 0.0, right: 10.0),
+      child: new Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: <Widget>[
+          new Expanded(
+            child: TextField(
+              textDirection: TextDirection.ltr,
+              onChanged: (value) {
+                setState(() {
+                  controllers["Email"].text = value;
+                });
+              },
+              controller: controllers["Email"],
+              obscureText: false,
+              textAlign: TextAlign.left,
+              decoration: InputDecoration(
+                border: InputBorder.none,
+                hintText: "example@domain.com",
+                hintStyle: TextStyle(color: Colors.grey),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void initializePassword() {
+    controllers["Password"] = new TextEditingController();
+    labelsMap["Password"] = new Container(
+      width: MediaQuery.of(context).size.width * 0.8,
+      child: new Row(
+        children: <Widget>[
+          new Expanded(
+            child: new Padding(
+              padding: const EdgeInsets.only(left: 40.0),
+              child: new Text(
+                "كلمة السر",
+                textDirection: TextDirection.rtl,
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: Colors.redAccent,
+                  fontSize: 15.0,
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+    fieldsMap["Password"] = new Container(
+      width: MediaQuery.of(context).size.width,
+      margin: const EdgeInsets.only(left: 40.0, right: 40.0, top: 0),
+      alignment: Alignment.center,
+      padding: const EdgeInsets.only(left: 0.0, right: 10.0),
+      child: new Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: <Widget>[
+          new Expanded(
+            child: TextField(
+              textDirection: TextDirection.ltr,
+              onChanged: (value) {
+                setState(() {
+                  controllers["Password"].text = value;
+                });
+              },
+              controller: controllers["Password"],
+              obscureText: true,
+              textAlign: TextAlign.left,
+              decoration: InputDecoration(
+                border: InputBorder.none,
+                hintText: "********",
+                hintStyle: TextStyle(color: Colors.grey),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void initializeRePassword() {
+    controllers["RePassword"] = new TextEditingController();
+    labelsMap["RePassword"] = new Container(
+      width: MediaQuery.of(context).size.width * 0.8,
+      child: new Row(
+        children: <Widget>[
+          new Expanded(
+            child: new Padding(
+              padding: const EdgeInsets.only(left: 40.0),
+              child: new Text(
+                "إعادة كلمة السر",
+                textDirection: TextDirection.rtl,
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: Colors.redAccent,
+                  fontSize: 15.0,
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+    fieldsMap["RePassword"] = new Container(
+      width: MediaQuery.of(context).size.width,
+      margin: const EdgeInsets.only(left: 40.0, right: 40.0, top: 0),
+      alignment: Alignment.center,
+      padding: const EdgeInsets.only(left: 0.0, right: 10.0),
+      child: new Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: <Widget>[
+          new Expanded(
+            child: TextField(
+              textDirection: TextDirection.ltr,
+              onChanged: (value) {
+                setState(() {
+                  controllers["RePassword"].text = value;
+                });
+              },
+              controller: controllers["RePassword"],
+              obscureText: true,
+              textAlign: TextAlign.left,
+              decoration: InputDecoration(
+                border: InputBorder.none,
+                hintText: "********",
+                hintStyle: TextStyle(color: Colors.grey),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void initializeGender() {
+    controllers["Gender"] = new TextEditingController(text: "0");
+    labelsMap["Gender"] = new Container(
+      width: MediaQuery.of(context).size.width * 0.8,
+      child: new Row(
+        children: <Widget>[
+          new Expanded(
+            child: new Padding(
+              padding: const EdgeInsets.only(left: 40.0),
+              child: new Text(
+                "النوع",
+                textDirection: TextDirection.rtl,
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: Colors.redAccent,
+                  fontSize: 15.0,
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+    fieldsMap["Gender"] = new Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: <Widget>[
+        new Radio(
+          value: 0,
+          activeColor: Colors.blue,
+          groupValue: int.parse(controllers["Gender"].text),
+          onChanged: (value) {
+            setState(() {
+              controllers["Gender"].text = value;
+            });
+          },
+        ),
+        new Text(
+          'ذكر',
+          style: new TextStyle(fontSize: 16.0),
+        ),
+        new Radio(
+          value: 1,
+          activeColor: Colors.pink,
+          groupValue: int.parse(controllers["Gender"].text),
+          onChanged: (value) {
+            setState(() {
+              controllers["Gender"].text = value;
+            });
+          },
+        ),
+        new Text(
+          'أنثي',
+          style: new TextStyle(
+            fontSize: 16.0,
+          ),
+        ),
+      ],
+    );
+  }
+
+  List<Widget> initializeNationality() {
+    controllers["Nationality"] = new TextEditingController(text: "مصر");
+    labelsMap["Nationality"] = new Container(
+      width: MediaQuery.of(context).size.width * 0.8,
+      child: new Row(
+        children: <Widget>[
+          new Expanded(
+            child: new Padding(
+              padding: const EdgeInsets.only(left: 40.0),
+              child: new Text(
+                "الجنسيّة",
+                textDirection: TextDirection.rtl,
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: Colors.redAccent,
+                  fontSize: 15.0,
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+    fieldsMap["Nationality"] = new Container(
+      width: MediaQuery.of(context).size.width * 0.85,
+      child: Column(
+        children: <Widget>[
+          Container(
+            child: ListTile(
+              onTap: () {
+                _openCountryPickerDialog('Nationality');
+              },
+              title: _buildDialogItem(
+                  new Country(name: "مصر")),
+            ),
+          )
+        ],
+      ),
+    );
+    return [labelsMap["Nationality"],fieldsMap["Nationality"]];
+  }
+
+  void initializeMotherNationality() {
+    controllers["MotherNationality"] = new TextEditingController(text: "مصر");
+    labelsMap["MotherNationality"] = new Container(
+      width: MediaQuery.of(context).size.width * 0.8,
+      child: new Row(
+        children: <Widget>[
+          new Expanded(
+            child: new Padding(
+              padding: const EdgeInsets.only(left: 40.0),
+              child: new Text(
+                "جنسيّة اﻷم",
+                textDirection: TextDirection.rtl,
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: Colors.redAccent,
+                  fontSize: 15.0,
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+    fieldsMap["MotherNationality"] = new Container(
+      width: MediaQuery.of(context).size.width * 0.85,
+      child: Column(
+        children: <Widget>[
+          Container(
+            child: ListTile(
+              onTap: () {
+                _openCountryPickerDialog('MotherNationality');
+              },
+              title: _buildDialogItem(
+                  new Country(name: controllers["MotherNationality"].text)),
+            ),
+          )
+        ],
+      ),
+    );
+  }
+
+  void initializeFatherNationality() {
+    controllers["FatherNationality"] = new TextEditingController(text: "مصر");
+    labelsMap["FatherNationality"] = new Container(
+      width: MediaQuery.of(context).size.width * 0.8,
+      child: new Row(
+        children: <Widget>[
+          new Expanded(
+            child: new Padding(
+              padding: const EdgeInsets.only(left: 40.0),
+              child: new Text(
+                "جنسيّة اﻷب",
+                textDirection: TextDirection.rtl,
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: Colors.redAccent,
+                  fontSize: 15.0,
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+    fieldsMap["FatherNationality"] = new Container(
+      width: MediaQuery.of(context).size.width * 0.85,
+      child: Column(
+        children: <Widget>[
+          Container(
+            child: ListTile(
+              onTap: () {
+                _openCountryPickerDialog('FatherNationality');
+              },
+              title: _buildDialogItem(
+                  new Country(name: controllers["FatherNationality"].text)),
+            ),
+          )
+        ],
+      ),
+    );
+  }
+
+  void initializeDOB() {
+    controllers["DOB"] = new TextEditingController(text: "إختر التاريخ");
+    labelsMap["DOB"] = new Container(
+      width: MediaQuery.of(context).size.width * 0.8,
+      child: new Row(
+        children: <Widget>[
+          new Expanded(
+            child: new Padding(
+              padding: const EdgeInsets.only(left: 40.0),
+              child: new Text(
+                "تاريخ الميلاد",
+                textDirection: TextDirection.rtl,
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: Colors.redAccent,
+                  fontSize: 15.0,
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+    fieldsMap["DOB"] = new FlatButton(
+        onPressed: () {
+          DatePicker.showDatePicker(context,
+              minTime: DateTime(1920, 1, 1),
+              maxTime: DateTime(2100, 12, 30), onChanged: (date) {
+            setState(() {
+              controllers["DOB"].text =
+                  '${date.year}:${date.month}:${date.day}';
+            });
+          }, currentTime: DateTime.now(), locale: LocaleType.ar);
+        },
+        child: Text(
+          controllers["DOB"].text,
+          textDirection: TextDirection.rtl,
+          style: TextStyle(color: Colors.black45),
+        ));
+  }
+
+  void initializeMaritalStatusDate() {
+    controllers["MaritalStatusDate"] =
+        new TextEditingController(text: "إختر التاريخ");
+    labelsMap["MaritalStatusDate"] = new Container(
+      width: MediaQuery.of(context).size.width * 0.8,
+      child: new Row(
+        children: <Widget>[
+          new Expanded(
+            child: new Padding(
+              padding: const EdgeInsets.only(left: 40.0),
+              child: new Text(
+                "تاريخ الخدمة العسكريّة",
+                textDirection: TextDirection.rtl,
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: Colors.redAccent,
+                  fontSize: 15.0,
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+    fieldsMap["MaritalStatusDate"] = new FlatButton(
+        onPressed: () {
+          DatePicker.showDatePicker(context,
+              minTime: DateTime(1920, 1, 1),
+              maxTime: DateTime(2100, 12, 30), onChanged: (date) {
+            setState(() {
+              controllers["MaritalStatusDate"].text =
+                  '${date.year}:${date.month}:${date.day}';
+            });
+          }, currentTime: DateTime.now(), locale: LocaleType.ar);
+        },
+        child: Text(
+          controllers["MaritalStatusDate"].text,
+          textDirection: TextDirection.rtl,
+          style: TextStyle(color: Colors.black45),
+        ));
+  }
+
+  void initializeReligion() {
+    controllers["Religion"] = new TextEditingController(text: "اﻹسلام");
+    labelsMap["Religion"] = new Container(
+      width: MediaQuery.of(context).size.width * 0.8,
+      child: new Row(
+        children: <Widget>[
+          new Expanded(
+            child: new Padding(
+              padding: const EdgeInsets.only(left: 40.0),
+              child: new Text(
+                "الديانة",
+                textDirection: TextDirection.rtl,
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: Colors.redAccent,
+                  fontSize: 15.0,
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+    fieldsMap["Religion"] = new Container(
+      padding: EdgeInsets.fromLTRB(
+          MediaQuery.of(context).size.width * 0.70, 0, 0, 0),
+      child: DropdownButton<String>(
+        underline: new SizedBox(),
+        value: controllers["Religion"].text,
+        icon: new Icon(
+          Icons.arrow_downward,
+          textDirection: TextDirection.rtl,
+        ),
+        iconSize: 24,
+        elevation: 5,
+        style: TextStyle(
+          color: Colors.black,
+        ),
+        onChanged: (String newVal) {
+          setState(() {
+            controllers["Religion"].text = newVal;
+          });
+        },
+        items: ["اﻹسلام", "المسيحية", "اليهيودية", "غير ذلك"]
+            .map<DropdownMenuItem<String>>((String value) {
+          return DropdownMenuItem<String>(
+            value: value,
+            child: Text(value),
+          );
+        }).toList(),
+      ),
+    );
+  }
+
+  void initializeMaritalStatus() {
+    controllers["MaritalStatus"] =
+        new TextEditingController(text: "مطالب للتجنيد");
+    labelsMap["MaritalStatus"] = new Container(
+      width: MediaQuery.of(context).size.width * 0.8,
+      child: new Row(
+        children: <Widget>[
+          new Expanded(
+            child: new Padding(
+              padding: const EdgeInsets.only(left: 40.0),
+              child: new Text(
+                "حالة الخدمة العسكرّية",
+                textDirection: TextDirection.rtl,
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: Colors.redAccent,
+                  fontSize: 15.0,
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+    fieldsMap["MaritalStatus"] = new Container(
+      padding: EdgeInsets.fromLTRB(
+          MediaQuery.of(context).size.width * 0.70, 0, 0, 0),
+      child: DropdownButton<String>(
+        underline: new SizedBox(),
+        value: controllers["MaritalStatus"].text,
+        icon: new Icon(
+          Icons.arrow_downward,
+          textDirection: TextDirection.rtl,
+        ),
+        iconSize: 24,
+        elevation: 5,
+        style: TextStyle(
+          color: Colors.black,
+        ),
+        onChanged: (String newVal) {
+          setState(() {
+            controllers["MaritalStatus"].text = newVal;
+          });
+        },
+        items: ["مطالب للتجنيد", "أنهى الخدمة", "إعفاء", "غير ذلك"]
+            .map<DropdownMenuItem<String>>((String value) {
+          return DropdownMenuItem<String>(
+            value: value,
+            child: Text(value),
+          );
+        }).toList(),
+      ),
+    );
+  }
+
+  void initializeMotherReligion() {
+    controllers["MotherReligion"] = new TextEditingController(text: "اﻹسلام");
+    labelsMap["MotherReligion"] = new Container(
+      width: MediaQuery.of(context).size.width * 0.8,
+      child: new Row(
+        children: <Widget>[
+          new Expanded(
+            child: new Padding(
+              padding: const EdgeInsets.only(left: 40.0),
+              child: new Text(
+                "ديانة اﻷم",
+                textDirection: TextDirection.rtl,
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: Colors.redAccent,
+                  fontSize: 15.0,
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+    fieldsMap["MotherReligion"] = new Container(
+      padding: EdgeInsets.fromLTRB(
+          MediaQuery.of(context).size.width * 0.70, 0, 0, 0),
+      child: DropdownButton<String>(
+        underline: new SizedBox(),
+        value: controllers["MotherReligion"].text,
+        icon: new Icon(
+          Icons.arrow_downward,
+          textDirection: TextDirection.rtl,
+        ),
+        iconSize: 24,
+        elevation: 5,
+        style: TextStyle(
+          color: Colors.black,
+        ),
+        onChanged: (String newVal) {
+          setState(() {
+            controllers["MotherReligion"].text = newVal;
+          });
+        },
+        items: ["اﻹسلام", "المسيحية", "اليهيودية", "غير ذلك"]
+            .map<DropdownMenuItem<String>>((String value) {
+          return DropdownMenuItem<String>(
+            value: value,
+            child: Text(value),
+          );
+        }).toList(),
+      ),
+    );
+  }
+
+  void initializeFatherReligion() {
+    controllers["FatherReligion"] = new TextEditingController(text: "اﻹسلام");
+    labelsMap["FatherReligion"] = new Container(
+      width: MediaQuery.of(context).size.width * 0.8,
+      child: new Row(
+        children: <Widget>[
+          new Expanded(
+            child: new Padding(
+              padding: const EdgeInsets.only(left: 40.0),
+              child: new Text(
+                "ديانة اﻷب",
+                textDirection: TextDirection.rtl,
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: Colors.redAccent,
+                  fontSize: 15.0,
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+    fieldsMap["Father_Religion"] = new Container(
+      padding: EdgeInsets.fromLTRB(
+          MediaQuery.of(context).size.width * 0.70, 0, 0, 0),
+      child: DropdownButton<String>(
+        underline: new SizedBox(),
+        value: controllers["FatherReligion"].text,
+        icon: new Icon(
+          Icons.arrow_downward,
+          textDirection: TextDirection.rtl,
+        ),
+        iconSize: 24,
+        elevation: 5,
+        style: TextStyle(
+          color: Colors.black,
+        ),
+        onChanged: (String newVal) {
+          setState(() {
+            controllers["Father_Religion"].text = newVal;
+          });
+        },
+        items: ["اﻹسلام", "المسيحية", "اليهيودية", "غير ذلك"]
+            .map<DropdownMenuItem<String>>((String value) {
+          return DropdownMenuItem<String>(
+            value: value,
+            child: Text(value),
+          );
+        }).toList(),
+      ),
+    );
+  }
+
+  void initializeStatus() {
+    controllers["Status"] = new TextEditingController(text: "أعزب");
+    labelsMap["Status"] = new Container(
+      width: MediaQuery.of(context).size.width * 0.8,
+      child: new Row(
+        children: <Widget>[
+          new Expanded(
+            child: new Padding(
+              padding: const EdgeInsets.only(left: 40.0),
+              child: new Text(
+                "الحالة اﻹجتماعية",
+                textDirection: TextDirection.rtl,
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: Colors.redAccent,
+                  fontSize: 15.0,
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+    fieldsMap["Status"] = new Container(
+      padding: EdgeInsets.fromLTRB(
+          MediaQuery.of(context).size.width * 0.70, 0, 0, 0),
+      child: DropdownButton<String>(
+        underline: new SizedBox(),
+        value: controllers["Status"].text,
+        icon: new Icon(
+          Icons.arrow_downward,
+          textDirection: TextDirection.rtl,
+        ),
+        iconSize: 24,
+        elevation: 5,
+        style: TextStyle(
+          color: Colors.black,
+        ),
+        onChanged: (String newVal) {
+          setState(() {
+            controllers["Status"].text = newVal;
+          });
+        },
+        items: ["أعزب", "متزوّج", "مطلق", "غير ذلك"]
+            .map<DropdownMenuItem<String>>((String value) {
+          return DropdownMenuItem<String>(
+            value: value,
+            child: Text(value),
+          );
+        }).toList(),
+      ),
+    );
+  }
+
+  void initializeName() {
+    controllers["Name"] = new TextEditingController();
+    labelsMap["Name"] = new Container(
+      width: MediaQuery.of(context).size.width * 0.8,
+      child: new Row(
+        children: <Widget>[
+          new Expanded(
+            child: new Padding(
+              padding: const EdgeInsets.only(left: 40.0),
+              child: new Text(
+                "اﻹسم",
+                textDirection: TextDirection.rtl,
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: Colors.redAccent,
+                  fontSize: 15.0,
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+    fieldsMap["Name"] = new Container(
+      width: MediaQuery.of(context).size.width,
+      margin: const EdgeInsets.only(left: 40.0, right: 40.0, top: 0),
+      alignment: Alignment.center,
+      padding: const EdgeInsets.only(left: 0.0, right: 10.0),
+      child: new Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: <Widget>[
+          new Expanded(
+            child: TextField(
+              textDirection: TextDirection.ltr,
+              onChanged: (value) {
+                setState(() {
+                  controllers["Name"].text = value;
+                });
+              },
+              controller: controllers["Name"],
+              textAlign: TextAlign.left,
+              decoration: InputDecoration(
+                border: InputBorder.none,
+                hintText: "مثال / نور",
+                hintStyle: TextStyle(color: Colors.grey),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void initializeFatherName() {
+    controllers["FatherName"] = new TextEditingController();
+    labelsMap["FatherName"] = new Container(
+      width: MediaQuery.of(context).size.width * 0.8,
+      child: new Row(
+        children: <Widget>[
+          new Expanded(
+            child: new Padding(
+              padding: const EdgeInsets.only(left: 40.0),
+              child: new Text(
+                "اسم اﻷب",
+                textDirection: TextDirection.rtl,
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: Colors.redAccent,
+                  fontSize: 15.0,
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+    fieldsMap["FatherName"] = new Container(
+      width: MediaQuery.of(context).size.width,
+      margin: const EdgeInsets.only(left: 40.0, right: 40.0, top: 0),
+      alignment: Alignment.center,
+      padding: const EdgeInsets.only(left: 0.0, right: 10.0),
+      child: new Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: <Widget>[
+          new Expanded(
+            child: TextField(
+              textDirection: TextDirection.ltr,
+              onChanged: (value) {
+                setState(() {
+                  controllers["FatherName"].text = value;
+                });
+              },
+              controller: controllers["FatherName"],
+              textAlign: TextAlign.left,
+              decoration: InputDecoration(
+                border: InputBorder.none,
+                hintText: "مثال / حسن",
+                hintStyle: TextStyle(color: Colors.grey),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void initializeMotherName() {
+    controllers["MotherName"] = new TextEditingController();
+    labelsMap["MotherName"] = new Container(
+      width: MediaQuery.of(context).size.width * 0.8,
+      child: new Row(
+        children: <Widget>[
+          new Expanded(
+            child: new Padding(
+              padding: const EdgeInsets.only(left: 40.0),
+              child: new Text(
+                "اسم اﻷم",
+                textDirection: TextDirection.rtl,
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: Colors.redAccent,
+                  fontSize: 15.0,
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+    fieldsMap["MotherName"] = new Container(
+      width: MediaQuery.of(context).size.width,
+      margin: const EdgeInsets.only(left: 40.0, right: 40.0, top: 0),
+      alignment: Alignment.center,
+      padding: const EdgeInsets.only(left: 0.0, right: 10.0),
+      child: new Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: <Widget>[
+          new Expanded(
+            child: TextField(
+              textDirection: TextDirection.ltr,
+              onChanged: (value) {
+                setState(() {
+                  controllers["MotherName"].text = value;
+                });
+              },
+              controller: controllers["Mother_Name"],
+              obscureText: false,
+              textAlign: TextAlign.left,
+              decoration: InputDecoration(
+                border: InputBorder.none,
+                hintText: "مثال / ميرنا",
+                hintStyle: TextStyle(color: Colors.grey),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void initializeQualification() {
+    controllers["Qualification"] = new TextEditingController();
+    labelsMap["Qualification"] = new Container(
+      width: MediaQuery.of(context).size.width * 0.8,
+      child: new Row(
+        children: <Widget>[
+          new Expanded(
+            child: new Padding(
+              padding: const EdgeInsets.only(left: 40.0),
+              child: new Text(
+                "أعلى مؤهل",
+                textDirection: TextDirection.rtl,
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: Colors.redAccent,
+                  fontSize: 15.0,
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+    fieldsMap["Qualification"] = new Container(
+      width: MediaQuery.of(context).size.width,
+      margin: const EdgeInsets.only(left: 40.0, right: 40.0, top: 0),
+      alignment: Alignment.center,
+      padding: const EdgeInsets.only(left: 0.0, right: 10.0),
+      child: new Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: <Widget>[
+          new Expanded(
+            child: TextField(
+              textDirection: TextDirection.ltr,
+              onChanged: (value) {
+                setState(() {
+                  controllers["Qualification"].text = value;
+                });
+              },
+              controller: controllers["Qualification"],
+              textAlign: TextAlign.left,
+              decoration: InputDecoration(
+                border: InputBorder.none,
+                hintText: "مثال / دكتوراه",
+                hintStyle: TextStyle(color: Colors.grey),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void initializeQualificationName() {
+    controllers["QualificationName"] = new TextEditingController();
+    labelsMap["QualificationName"] = new Container(
+      width: MediaQuery.of(context).size.width * 0.8,
+      child: new Row(
+        children: <Widget>[
+          new Expanded(
+            child: new Padding(
+              padding: const EdgeInsets.only(left: 40.0),
+              child: new Text(
+                "اسم المؤهل",
+                textDirection: TextDirection.rtl,
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: Colors.redAccent,
+                  fontSize: 15.0,
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+    fieldsMap["QualificationName"] = new Container(
+      width: MediaQuery.of(context).size.width,
+      margin: const EdgeInsets.only(left: 40.0, right: 40.0, top: 0),
+      alignment: Alignment.center,
+      padding: const EdgeInsets.only(left: 0.0, right: 10.0),
+      child: new Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: <Widget>[
+          new Expanded(
+            child: TextField(
+              textDirection: TextDirection.ltr,
+              onChanged: (value) {
+                setState(() {
+                  controllers["QualificationName"].text = value;
+                });
+              },
+              controller: controllers["QualificationName"],
+              textAlign: TextAlign.left,
+              decoration: InputDecoration(
+                border: InputBorder.none,
+                hintText: "مثال / دكتوراه فى الهندسة المدنيّة",
+                hintStyle: TextStyle(color: Colors.grey),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void initializeQualificationDate() {
+    controllers["QualificationDate"] = new TextEditingController();
+    labelsMap["QualificationDate"] = new Container(
+      width: MediaQuery.of(context).size.width * 0.8,
+      child: new Row(
+        children: <Widget>[
+          new Expanded(
+            child: new Padding(
+              padding: const EdgeInsets.only(left: 40.0),
+              child: new Text(
+                "سنة الحصول عليه",
+                textDirection: TextDirection.rtl,
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: Colors.redAccent,
+                  fontSize: 15.0,
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+    fieldsMap["QualificationDate"] = new Container(
+      width: MediaQuery.of(context).size.width,
+      margin: const EdgeInsets.only(left: 40.0, right: 40.0, top: 0),
+      alignment: Alignment.center,
+      padding: const EdgeInsets.only(left: 0.0, right: 10.0),
+      child: new Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: <Widget>[
+          new Expanded(
+            child: TextField(
+              textDirection: TextDirection.ltr,
+              onChanged: (value) {
+                setState(() {
+                  controllers["QualificationDate"].text = value;
+                });
+              },
+              controller: controllers["QualificationDate"],
+              textAlign: TextAlign.left,
+              decoration: InputDecoration(
+                border: InputBorder.none,
+                hintText: "مثال / 2015",
+                hintStyle: TextStyle(color: Colors.grey),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void initializeQualificationUniversity() {
+    controllers["QualificationUniversity"] = new TextEditingController();
+    labelsMap["QualificationUniversity"] = new Container(
+      width: MediaQuery.of(context).size.width * 0.8,
+      child: new Row(
+        children: <Widget>[
+          new Expanded(
+            child: new Padding(
+              padding: const EdgeInsets.only(left: 40.0),
+              child: new Text(
+                "جامعة / وزارة",
+                textDirection: TextDirection.rtl,
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: Colors.redAccent,
+                  fontSize: 15.0,
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+    fieldsMap["QualificationUniversity"] = new Container(
+      width: MediaQuery.of(context).size.width,
+      margin: const EdgeInsets.only(left: 40.0, right: 40.0, top: 0),
+      alignment: Alignment.center,
+      padding: const EdgeInsets.only(left: 0.0, right: 10.0),
+      child: new Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: <Widget>[
+          new Expanded(
+            child: TextField(
+              textDirection: TextDirection.ltr,
+              onChanged: (value) {
+                setState(() {
+                  controllers["QualificationUniversity"].text = value;
+                });
+              },
+              controller: controllers["QualificationUniversity"],
+              textAlign: TextAlign.left,
+              decoration: InputDecoration(
+                border: InputBorder.none,
+                hintText: "مثال / جامعة اﻹسكندرية",
+                hintStyle: TextStyle(color: Colors.grey),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void initializeQualificationFaculty() {
+    controllers["QualificationFaculty"] = new TextEditingController();
+    labelsMap["QualificationFaculty"] = new Container(
+      width: MediaQuery.of(context).size.width * 0.8,
+      child: new Row(
+        children: <Widget>[
+          new Expanded(
+            child: new Padding(
+              padding: const EdgeInsets.only(left: 40.0),
+              child: new Text(
+                "كليّة / معهد / مدرسة",
+                textDirection: TextDirection.rtl,
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: Colors.redAccent,
+                  fontSize: 15.0,
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+    fieldsMap["QualificationFaculty"] = new Container(
+      width: MediaQuery.of(context).size.width,
+      margin: const EdgeInsets.only(left: 40.0, right: 40.0, top: 0),
+      alignment: Alignment.center,
+      padding: const EdgeInsets.only(left: 0.0, right: 10.0),
+      child: new Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: <Widget>[
+          new Expanded(
+            child: TextField(
+              textDirection: TextDirection.ltr,
+              onChanged: (value) {
+                setState(() {
+                  controllers["QualificationFaculty"].text = value;
+                });
+              },
+              controller: controllers["QualificationFaculty"],
+              textAlign: TextAlign.left,
+              decoration: InputDecoration(
+                border: InputBorder.none,
+                hintText: "مثال / كليّة الهندسة",
+                hintStyle: TextStyle(color: Colors.grey),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void initializeMaritalStatusNumber() {
+    controllers["MaritalStatusNumber"] = new TextEditingController();
+    labelsMap["MaritalStatusNumber"] = new Container(
+      width: MediaQuery.of(context).size.width * 0.8,
+      child: new Row(
+        children: <Widget>[
+          new Expanded(
+            child: new Padding(
+              padding: const EdgeInsets.only(left: 40.0),
+              child: new Text(
+                "رقم الخدمة العسكريّة",
+                textDirection: TextDirection.rtl,
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: Colors.redAccent,
+                  fontSize: 15.0,
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+    fieldsMap["MaritalStatusNumber"] = new Container(
+      width: MediaQuery.of(context).size.width,
+      margin: const EdgeInsets.only(left: 40.0, right: 40.0, top: 0),
+      alignment: Alignment.center,
+      padding: const EdgeInsets.only(left: 0.0, right: 10.0),
+      child: new Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: <Widget>[
+          new Expanded(
+            child: TextField(
+              textDirection: TextDirection.ltr,
+              onChanged: (value) {
+                setState(() {
+                  controllers["MaritalStatusNumber"].text = value;
+                });
+              },
+              controller: controllers["MaritalStatusNumber"],
+              obscureText: false,
+              textAlign: TextAlign.left,
+              decoration: InputDecoration(
+                border: InputBorder.none,
+                hintText: "أرقام",
+                hintStyle: TextStyle(color: Colors.grey),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void initializeSpouseName() {
+    controllers["SpouseName"] = new TextEditingController();
+    labelsMap["SpouseName"] = new Container(
+      width: MediaQuery.of(context).size.width * 0.8,
+      child: new Row(
+        children: <Widget>[
+          new Expanded(
+            child: new Padding(
+              padding: const EdgeInsets.only(left: 40.0),
+              child: new Text(
+                "اسم الزوج / الزوجة",
+                textDirection: TextDirection.rtl,
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: Colors.redAccent,
+                  fontSize: 15.0,
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+    fieldsMap["SpouseName"] = new Container(
+      width: MediaQuery.of(context).size.width,
+      margin: const EdgeInsets.only(left: 40.0, right: 40.0, top: 0),
+      alignment: Alignment.center,
+      padding: const EdgeInsets.only(left: 0.0, right: 10.0),
+      child: new Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: <Widget>[
+          new Expanded(
+            child: TextField(
+              textDirection: TextDirection.ltr,
+              onChanged: (value) {
+                setState(() {
+                  controllers["SpouseName"].text = value;
+                });
+              },
+              controller: controllers["SpouseName"],
+              obscureText: false,
+              textAlign: TextAlign.left,
+              decoration: InputDecoration(
+                border: InputBorder.none,
+                hintText: "مثال / ميرنا،حسن",
+                hintStyle: TextStyle(color: Colors.grey),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void initializeCardType() {
+    controllers["CardType"] = new TextEditingController();
+    labelsMap["CardType"] = new Container(
+      width: MediaQuery.of(context).size.width * 0.8,
+      child: new Row(
+        children: <Widget>[
+          new Expanded(
+            child: new Padding(
+              padding: const EdgeInsets.only(left: 40.0),
+              child: new Text(
+                "نوع البطاقة",
+                textDirection: TextDirection.rtl,
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: Colors.redAccent,
+                  fontSize: 15.0,
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+    fieldsMap["CardType"] = new Container(
+      width: MediaQuery.of(context).size.width,
+      margin: const EdgeInsets.only(left: 40.0, right: 40.0, top: 0),
+      alignment: Alignment.center,
+      padding: const EdgeInsets.only(left: 0.0, right: 10.0),
+      child: new Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: <Widget>[
+          new Expanded(
+            child: TextField(
+              textDirection: TextDirection.ltr,
+              onChanged: (value) {
+                setState(() {
+                  controllers["CardType"].text = value;
+                });
+              },
+              controller: controllers["CardType"],
+              obscureText: false,
+              textAlign: TextAlign.left,
+              decoration: InputDecoration(
+                border: InputBorder.none,
+                hintText: "مثال / بطاقة الرقم القومي، جواز السفر",
+                hintStyle: TextStyle(color: Colors.grey),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void initializeCardNumber() {
+    controllers["CardNumber"] = new TextEditingController();
+    labelsMap["CardNumber"] = new Container(
+      width: MediaQuery.of(context).size.width * 0.8,
+      child: new Row(
+        children: <Widget>[
+          new Expanded(
+            child: new Padding(
+              padding: const EdgeInsets.only(left: 40.0),
+              child: new Text(
+                "رقم البطاقة",
+                textDirection: TextDirection.rtl,
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: Colors.redAccent,
+                  fontSize: 15.0,
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+    fieldsMap["CardNumber"] = new Container(
+      width: MediaQuery.of(context).size.width,
+      margin: const EdgeInsets.only(left: 40.0, right: 40.0, top: 0),
+      alignment: Alignment.center,
+      padding: const EdgeInsets.only(left: 0.0, right: 10.0),
+      child: new Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: <Widget>[
+          new Expanded(
+            child: TextField(
+              textDirection: TextDirection.ltr,
+              onChanged: (value) {
+                setState(() {
+                  controllers["CardNumber"].text = value;
+                });
+              },
+              controller: controllers["CardNumber"],
+              textAlign: TextAlign.left,
+              decoration: InputDecoration(
+                border: InputBorder.none,
+                hintText: "أرقام",
+                hintStyle: TextStyle(color: Colors.grey),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void initializeBlock() {
+    controllers["Block"] = new TextEditingController();
+    labelsMap["Block"] = new Container(
+      width: MediaQuery.of(context).size.width * 0.8,
+      child: new Row(
+        children: <Widget>[
+          new Expanded(
+            child: new Padding(
+              padding: const EdgeInsets.only(left: 40.0),
+              child: new Text(
+                "مجمّع سكنى",
+                textDirection: TextDirection.rtl,
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: Colors.redAccent,
+                  fontSize: 15.0,
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+    fieldsMap["Block"] = new Container(
+      width: MediaQuery.of(context).size.width,
+      margin: const EdgeInsets.only(left: 40.0, right: 40.0, top: 0),
+      alignment: Alignment.center,
+      padding: const EdgeInsets.only(left: 0.0, right: 10.0),
+      child: new Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: <Widget>[
+          new Expanded(
+            child: TextField(
+              textDirection: TextDirection.ltr,
+              onChanged: (value) {
+                setState(() {
+                  controllers["Block"].text = value;
+                });
+              },
+              controller: controllers["Block"],
+              obscureText: false,
+              textAlign: TextAlign.left,
+              decoration: InputDecoration(
+                border: InputBorder.none,
+                hintText: "مثال / شبرا",
+                hintStyle: TextStyle(color: Colors.grey),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void initializeStreet() {
+    controllers["Street"] = new TextEditingController();
+    labelsMap["Street"] = new Container(
+      width: MediaQuery.of(context).size.width * 0.8,
+      child: new Row(
+        children: <Widget>[
+          new Expanded(
+            child: new Padding(
+              padding: const EdgeInsets.only(left: 40.0),
+              child: new Text(
+                "اسم الشارع",
+                textDirection: TextDirection.rtl,
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: Colors.redAccent,
+                  fontSize: 15.0,
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+    fieldsMap["Street"] = new Container(
+      width: MediaQuery.of(context).size.width,
+      margin: const EdgeInsets.only(left: 40.0, right: 40.0, top: 0),
+      alignment: Alignment.center,
+      padding: const EdgeInsets.only(left: 0.0, right: 10.0),
+      child: new Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: <Widget>[
+          new Expanded(
+            child: TextField(
+              textDirection: TextDirection.ltr,
+              onChanged: (value) {
+                setState(() {
+                  controllers["Street"].text = value;
+                });
+              },
+              controller: controllers["Street"],
+              obscureText: false,
+              textAlign: TextAlign.left,
+              decoration: InputDecoration(
+                border: InputBorder.none,
+                hintText: "مثال / شارع المعهد الدينى",
+                hintStyle: TextStyle(color: Colors.grey),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void initializeBuildingNumber() {
+    controllers["BuildingNumber"] = new TextEditingController();
+    labelsMap["BuildingNumber"] = new Container(
+      width: MediaQuery.of(context).size.width * 0.8,
+      child: new Row(
+        children: <Widget>[
+          new Expanded(
+            child: new Padding(
+              padding: const EdgeInsets.only(left: 40.0),
+              child: new Text(
+                "رقم العقار",
+                textDirection: TextDirection.rtl,
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: Colors.redAccent,
+                  fontSize: 15.0,
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+    fieldsMap["BuildingNumber"] = new Container(
+      width: MediaQuery.of(context).size.width,
+      margin: const EdgeInsets.only(left: 40.0, right: 40.0, top: 0),
+      alignment: Alignment.center,
+      padding: const EdgeInsets.only(left: 0.0, right: 10.0),
+      child: new Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: <Widget>[
+          new Expanded(
+            child: TextField(
+              textDirection: TextDirection.ltr,
+              onChanged: (value) {
+                setState(() {
+                  controllers["BuildingNumber"].text = value;
+                });
+              },
+              controller: controllers["BuildingNumber"],
+              obscureText: false,
+              textAlign: TextAlign.left,
+              decoration: InputDecoration(
+                border: InputBorder.none,
+                hintText: "مثال / 17",
+                hintStyle: TextStyle(color: Colors.grey),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void initializeJob() {
+    controllers["Job"] = new TextEditingController();
+    labelsMap["Job"] = new Container(
+      width: MediaQuery.of(context).size.width * 0.8,
+      child: new Row(
+        children: <Widget>[
+          new Expanded(
+            child: new Padding(
+              padding: const EdgeInsets.only(left: 40.0),
+              child: new Text(
+                "الوظيفة",
+                textDirection: TextDirection.rtl,
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: Colors.redAccent,
+                  fontSize: 15.0,
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+    fieldsMap["Job"] = new Container(
+      width: MediaQuery.of(context).size.width,
+      margin: const EdgeInsets.only(left: 40.0, right: 40.0, top: 0),
+      alignment: Alignment.center,
+      padding: const EdgeInsets.only(left: 0.0, right: 10.0),
+      child: new Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: <Widget>[
+          new Expanded(
+            child: TextField(
+              textDirection: TextDirection.ltr,
+              onChanged: (value) {
+                setState(() {
+                  controllers["Job"].text = value;
+                });
+              },
+              controller: controllers["Job"],
+              obscureText: false,
+              textAlign: TextAlign.left,
+              decoration: InputDecoration(
+                border: InputBorder.none,
+                hintText: "مثال / رجل أعمال",
+                hintStyle: TextStyle(color: Colors.grey),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void initializeJobDate() {
+    controllers["JobDate"] = new TextEditingController();
+    labelsMap["JobDate"] = new Container(
+      width: MediaQuery.of(context).size.width * 0.8,
+      child: new Row(
+        children: <Widget>[
+          new Expanded(
+            child: new Padding(
+              padding: const EdgeInsets.only(left: 40.0),
+              child: new Text(
+                "سنة شغل الوظيفة",
+                textDirection: TextDirection.rtl,
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: Colors.redAccent,
+                  fontSize: 15.0,
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+    fieldsMap["JobDate"] = new Container(
+      width: MediaQuery.of(context).size.width,
+      margin: const EdgeInsets.only(left: 40.0, right: 40.0, top: 0),
+      alignment: Alignment.center,
+      padding: const EdgeInsets.only(left: 0.0, right: 10.0),
+      child: new Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: <Widget>[
+          new Expanded(
+            child: TextField(
+              textDirection: TextDirection.ltr,
+              onChanged: (value) {
+                setState(() {
+                  controllers["JobDate"].text = value;
+                });
+              },
+              controller: controllers["JobDate"],
+              textAlign: TextAlign.left,
+              decoration: InputDecoration(
+                border: InputBorder.none,
+                hintText: "مثال / 2015",
+                hintStyle: TextStyle(color: Colors.grey),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void initializeJobPlace() {
+    controllers["JobPlace"] = new TextEditingController();
+    labelsMap["JobPlace"] = new Container(
+      width: MediaQuery.of(context).size.width * 0.8,
+      child: new Row(
+        children: <Widget>[
+          new Expanded(
+            child: new Padding(
+              padding: const EdgeInsets.only(left: 40.0),
+              child: new Text(
+                "جهة العمل",
+                textDirection: TextDirection.rtl,
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: Colors.redAccent,
+                  fontSize: 15.0,
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+    fieldsMap["JobPlace"] = new Container(
+      width: MediaQuery.of(context).size.width,
+      margin: const EdgeInsets.only(left: 40.0, right: 40.0, top: 0),
+      alignment: Alignment.center,
+      padding: const EdgeInsets.only(left: 0.0, right: 10.0),
+      child: new Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: <Widget>[
+          new Expanded(
+            child: TextField(
+              textDirection: TextDirection.ltr,
+              onChanged: (value) {
+                setState(() {
+                  controllers["JobPlace"].text = value;
+                });
+              },
+              controller: controllers["JobPlace"],
+              obscureText: false,
+              textAlign: TextAlign.left,
+              decoration: InputDecoration(
+                border: InputBorder.none,
+                hintText: "مثال / وزارة الكهرباء",
+                hintStyle: TextStyle(color: Colors.grey),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void initializeJobOfficePlace() {
+    controllers["JobOfficePlace"] = new TextEditingController();
+    labelsMap["JobOfficePlace"] = new Container(
+      width: MediaQuery.of(context).size.width * 0.8,
+      child: new Row(
+        children: <Widget>[
+          new Expanded(
+            child: new Padding(
+              padding: const EdgeInsets.only(left: 40.0),
+              child: new Text(
+                "مكتب السجلّ التجاري",
+                textDirection: TextDirection.rtl,
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: Colors.redAccent,
+                  fontSize: 15.0,
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+    fieldsMap["JobOfficePlace"] = new Container(
+      width: MediaQuery.of(context).size.width,
+      margin: const EdgeInsets.only(left: 40.0, right: 40.0, top: 0),
+      alignment: Alignment.center,
+      padding: const EdgeInsets.only(left: 0.0, right: 10.0),
+      child: new Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: <Widget>[
+          new Expanded(
+            child: TextField(
+              textDirection: TextDirection.ltr,
+              onChanged: (value) {
+                setState(() {
+                  controllers["JobOfficePlace"].text = value;
+                });
+              },
+              controller: controllers["JobOfficePlace"],
+              obscureText: false,
+              textAlign: TextAlign.left,
+              decoration: InputDecoration(
+                border: InputBorder.none,
+                hintText: "مثال / مكتب قسم المنتزه",
+                hintStyle: TextStyle(color: Colors.grey),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void initializeJobOfficeNumber() {
+    controllers["JobOfficeNumber"] = new TextEditingController();
+    labelsMap["JobOfficeNumber"] = new Container(
+      width: MediaQuery.of(context).size.width * 0.8,
+      child: new Row(
+        children: <Widget>[
+          new Expanded(
+            child: new Padding(
+              padding: const EdgeInsets.only(left: 40.0),
+              child: new Text(
+                "رقم السجلّ التجاري",
+                textDirection: TextDirection.rtl,
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: Colors.redAccent,
+                  fontSize: 15.0,
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+    fieldsMap["JobOfficeNumber"] = new Container(
+      width: MediaQuery.of(context).size.width,
+      margin: const EdgeInsets.only(left: 40.0, right: 40.0, top: 0),
+      alignment: Alignment.center,
+      padding: const EdgeInsets.only(left: 0.0, right: 10.0),
+      child: new Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: <Widget>[
+          new Expanded(
+            child: TextField(
+              textDirection: TextDirection.ltr,
+              onChanged: (value) {
+                setState(() {
+                  controllers["JobOfficeNumber"].text = value;
+                });
+              },
+              controller: controllers["JobOfficeNumber"],
+              obscureText: false,
+              textAlign: TextAlign.left,
+              decoration: InputDecoration(
+                border: InputBorder.none,
+                hintText: "ثمان أرقام",
+                hintStyle: TextStyle(color: Colors.grey),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void initializeGOV() {
+    controllers["GOV"] = new TextEditingController(text: "محافظة أسوان");
+    labelsMap["GOV"] = new Container(
+      width: MediaQuery.of(context).size.width * 0.8,
+      child: new Row(
+        children: <Widget>[
+          new Expanded(
+            child: new Padding(
+              padding: const EdgeInsets.only(left: 40.0),
+              child: new Text(
+                "المحافظة",
+                textDirection: TextDirection.rtl,
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: Colors.redAccent,
+                  fontSize: 15.0,
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+    fieldsMap["GOV"] = new Container(
+      padding: EdgeInsets.fromLTRB(
+          MediaQuery.of(context).size.width * 0.50, 0, 0, 0),
+      child: DropdownButton<String>(
+        underline: new SizedBox(),
+        value: controllers["GOV"].text,
+        icon: new Icon(
+          Icons.arrow_downward,
+          textDirection: TextDirection.rtl,
+        ),
+        iconSize: 24,
+        elevation: 5,
+        style: TextStyle(
+          color: Colors.black,
+        ),
+        onChanged: (newValue) {
+          setState(() {
+            controllers["GOV"].text = newValue;
+            controllers["City"].text = _initGovs.egyptGovernorates
+                .where((n) => n.gov.toString() == controllers["GOV"].text)
+                .first
+                .cities[0]
+                .toString();
+          });
+        },
+        items: _initGovs
+            .getGovernorates()
+            .map((region) =>
+                DropdownMenuItem<String>(child: Text(region), value: region))
+            .toList(),
+      ),
+    );
+  }
+
+  void initializeCity() {
+    controllers["City"] = new TextEditingController(text: "أسوان");
+    labelsMap["City"] = new Container(
+      width: MediaQuery.of(context).size.width * 0.8,
+      child: new Row(
+        children: <Widget>[
+          new Expanded(
+            child: new Padding(
+              padding: const EdgeInsets.only(left: 40.0),
+              child: new Text(
+                "المدينة",
+                textDirection: TextDirection.rtl,
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: Colors.redAccent,
+                  fontSize: 15.0,
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+    fieldsMap["City"] = new Container(
+      padding: EdgeInsets.fromLTRB(
+          MediaQuery.of(context).size.width * 0.65, 0, 0, 0),
+      child: DropdownButton<String>(
+        underline: new SizedBox(),
+        value: controllers["City"].text,
+        icon: new Icon(
+          Icons.arrow_downward,
+          textDirection: TextDirection.rtl,
+        ),
+        iconSize: 24,
+        elevation: 5,
+        style: TextStyle(
+          color: Colors.black,
+        ),
+        onChanged: (newValue) {
+          setState(() {
+            controllers["City"].text = newValue;
+          });
+        },
+        items: _initGovs.egyptGovernorates
+            .where((n) => (n.gov == controllers["GOV"].text))
+            .last
+            .cities
+            .map((_) => DropdownMenuItem<String>(child: new Text(_), value: _))
+            .toList(),
+      ),
+    );
+  }
+
+  void initializeGOB() {
+    controllers["GOB"] = new TextEditingController(text: "محافظة أسوان");
+    labelsMap["GOB"] = new Container(
+      width: MediaQuery.of(context).size.width * 0.8,
+      child: new Row(
+        children: <Widget>[
+          new Expanded(
+            child: new Padding(
+              padding: const EdgeInsets.only(left: 40.0),
+              child: new Text(
+                "محافظة الميلاد",
+                textDirection: TextDirection.rtl,
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: Colors.redAccent,
+                  fontSize: 15.0,
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+    fieldsMap["GOB"] = new Container(
+      padding: EdgeInsets.fromLTRB(
+          MediaQuery.of(context).size.width * 0.50, 0, 0, 0),
+      child: DropdownButton<String>(
+        underline: new SizedBox(),
+        value: controllers["GOB"].text,
+        icon: new Icon(
+          Icons.arrow_downward,
+          textDirection: TextDirection.rtl,
+        ),
+        iconSize: 24,
+        elevation: 5,
+        style: TextStyle(
+          color: Colors.black,
+        ),
+        onChanged: (newValue) {
+          setState(() {
+            controllers["GOB"].text = newValue;
+            controllers["COB"].text = _initGovs.egyptGovernorates
+                .where((n) => n.gov.toString() == controllers["GOB"].text)
+                .first
+                .cities[0]
+                .toString();
+          });
+        },
+        items: _initGovs
+            .getGovernorates()
+            .map((region) =>
+                DropdownMenuItem<String>(child: Text(region), value: region))
+            .toList(),
+      ),
+    );
+  }
+
+  void initializeCOB() {
+    controllers["COB"] = new TextEditingController(text: "أسوان");
+    labelsMap["COB"] = new Container(
+      width: MediaQuery.of(context).size.width * 0.8,
+      child: new Row(
+        children: <Widget>[
+          new Expanded(
+            child: new Padding(
+              padding: const EdgeInsets.only(left: 40.0),
+              child: new Text(
+                "مدينة الميلاد",
+                textDirection: TextDirection.rtl,
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: Colors.redAccent,
+                  fontSize: 15.0,
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+    fieldsMap["COB"] = new Container(
+      padding: EdgeInsets.fromLTRB(
+          MediaQuery.of(context).size.width * 0.65, 0, 0, 0),
+      child: DropdownButton<String>(
+        underline: new SizedBox(),
+        value: controllers["COB"].text,
+        icon: new Icon(
+          Icons.arrow_downward,
+          textDirection: TextDirection.rtl,
+        ),
+        iconSize: 24,
+        elevation: 5,
+        style: TextStyle(
+          color: Colors.black,
+        ),
+        onChanged: (newValue) {
+          setState(() {
+            controllers["COB"].text = newValue;
+          });
+        },
+        items: _initGovs.egyptGovernorates
+            .where((n) => (n.gov == controllers["GOB"].text))
+            .last
+            .cities
+            .map((_) => DropdownMenuItem<String>(child: new Text(_), value: _))
+            .toList(),
+      ),
+    );
+  }
+
+  void initializeGOE() {
+    controllers["GOE"] = new TextEditingController(text: "محافظة أسوان");
+    labelsMap["GOE"] = new Container(
+      width: MediaQuery.of(context).size.width * 0.8,
+      child: new Row(
+        children: <Widget>[
+          new Expanded(
+            child: new Padding(
+              padding: const EdgeInsets.only(left: 40.0),
+              child: new Text(
+                "الموطن اﻹنتخابي",
+                textDirection: TextDirection.rtl,
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: Colors.redAccent,
+                  fontSize: 15.0,
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+    fieldsMap["GOE"] = new Container(
+      padding: EdgeInsets.fromLTRB(
+          MediaQuery.of(context).size.width * 0.50, 0, 0, 0),
+      child: DropdownButton<String>(
+        underline: new SizedBox(),
+        value: controllers["GOE"].text,
+        icon: new Icon(
+          Icons.arrow_downward,
+          textDirection: TextDirection.rtl,
+        ),
+        iconSize: 24,
+        elevation: 5,
+        style: TextStyle(
+          color: Colors.black,
+        ),
+        onChanged: (newValue) {
+          setState(() {
+            controllers["GOE"].text = newValue;
+          });
+        },
+        items: _initGovs
+            .getGovernorates()
+            .map((region) =>
+                DropdownMenuItem<String>(child: Text(region), value: region))
+            .toList(),
+      ),
+    );
+  }
+
+  /// Returns `true` if every [txt] is arabic, It's not working till now.
+  bool isArabicString(String txt) {
+    return new RegExp(r"[\u0600-\u06FF]").hasMatch(txt) == true ? true : false;
+  }
+
+  /// Returns `Divider` for decorations purposes with a specific [size].
+  Widget decoration(double size) {
+    return new Divider(color: Colors.redAccent.shade400, height: size);
+  }
+
+  // List<String> MState =['ارملة','ارمل','مطلقة','مطلق','متزوجة','متزوج','عزباء','اعزب'];
+  // List<String>  GoverName = ['الوادي الجديد','المنيا','المنوفية','مطروح','كفر الشيخ','قنا','القليوبية','الفيوم','الغربية','شمال سيناء	','الشرقية','السويس','سوهاج','دمياط','الدقهلية','الجيزة','جنوب سيناء	','الجيزة','بورسعيد','بني سويف	','البحيرة','البحر الأحمر','الأقصر','أسيوط','أسوان','الإسماعيلية','الإسكندرية','القاهرة'];
+  List<String> errorFields = new List();
+  List<String> warningFields = new List();
+/*
+  bool _isValid() {
+    errorFields.clear();
+    warningFields.clear();
+    for (var entry in map.entries) {
+      switch (entry.key) {
+        case "Email":
+          if (!RegExp(r"^[a-zA-Z0-9.]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
+              .hasMatch(entry.value.textValue)) errorFields.add(entry.key);
+          break;
+        case "Password":
+          if (entry.value.textValue.length < 8) errorFields.add(entry.key);
+          break;
+        case "Re_Password":
+          if (entry.value.textValue != map["Password"].textValue)
+            errorFields.add(entry.key);
+          break;
+        case "Gender":
+          if (entry.value.textValue == "-1") errorFields.add(entry.key);
+          break;
+        default:
+          if (entry.value.textValue == "") {
+            if (isMandatory[entry.key])
+              errorFields.add(entry.key);
+            else
+              warningFields.add(entry.key);
+          }
+          break;
+      }
+    }
+    return errorFields.isEmpty;
+  }
+*/
   /// Main function for the sign up Page.
   @override
   Widget build(BuildContext context) {
-    if (start) intializeOurMap();
     return new SingleChildScrollView(
         child: new Column(
       children: <Widget>[
@@ -291,93 +2243,8 @@ class _Signup extends State<SignupPage> with TickerProviderStateMixin {
             ),
           ),
         ),
-        loginData("بيانات الحساب"),
-        Divider(
-          color: Colors.white,
-          height: 30,
-        ),
-        personalData("البيانات الشخصيّة"),
-        Divider(
-          color: Colors.white,
-          height: 30,
-        ),
-        familyData("البيانات العائلية"),
-        Divider(
-          color: Colors.white,
-          height: 30,
-        ),
-        addressData("بيانات العنوان"),
-        Divider(
-          color: Colors.white,
-          height: 30,
-        ),
-        scientificData("البيانات العلميّة"),
-        Divider(
-          color: Colors.white,
-          height: 30,
-        ),
-        jobData("البيانات الوظيفية"),
-        Divider(
-          color: Colors.white,
-          height: 30,
-        ),
-        militaryServiceData("بيانات الخدمة العسكرّية"),
-        Divider(
-          color: Colors.white,
-          height: 30,
-        ),
-        electionData("البيانات اﻹنتخابية"),
-        new Container(
-          width: MediaQuery.of(context).size.width,
-          margin: const EdgeInsets.only(left: 30.0, right: 30.0, top: 50.0),
-          alignment: Alignment.center,
-          child: new Row(
-            children: <Widget>[
-              new Expanded(
-                child: new FlatButton(
-                  shape: new RoundedRectangleBorder(
-                    borderRadius: new BorderRadius.circular(30.0),
-                  ),
-                  color: Colors.redAccent,
-                  onPressed: () async {
-                    setupPDF();
-                    if (_isValid()) {
-                      debugPrint(
-                          "-------------------------no Errors-------------------------");
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => MyAccount()),
-                      );
-                    } else {
-                      debugPrint(
-                          "-------------------------errors-------------------------");
-                      debugPrint(_errors);
-                    } // display an error
-                  },
-                  child: new Container(
-                    padding: const EdgeInsets.symmetric(
-                      vertical: 20.0,
-                      horizontal: 20.0,
-                    ),
-                    child: new Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        new Expanded(
-                          child: Text(
-                            "إنشاء حساب جديد",
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
+        new Column(
+          children: initializeNationality(),
         ),
         Divider(
           color: Colors.white,
@@ -385,506 +2252,5 @@ class _Signup extends State<SignupPage> with TickerProviderStateMixin {
         ),
       ],
     ));
-  }
-
-  Widget personalData(String str) {
-    return new Column(
-      children: <Widget>[
-        new Container(
-          padding: EdgeInsets.fromLTRB(0, 0, 0, 15),
-          child: new Text(
-            str,
-            textAlign: TextAlign.center,
-            style: new TextStyle(
-              color: Colors.blue,
-              fontSize: 20,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-        ),
-        decoration(20),
-        new Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            new Radio(
-              value: 0,
-              activeColor: Colors.blue,
-              groupValue: genderValue,
-              onChanged: _handleChangeGenger,
-            ),
-            new Text(
-              'ذكر',
-              style: new TextStyle(fontSize: 16.0),
-            ),
-            new Radio(
-              value: 1,
-              activeColor: Colors.pink,
-              onChanged: _handleChangeGenger,
-              groupValue: genderValue,
-            ),
-            new Text(
-              'أنثي',
-              style: new TextStyle(
-                fontSize: 16.0,
-              ),
-            ),
-          ],
-        ),
-        decoration(20),
-        col(true, "الجنسية", "مصري", "Nationality", isArabicString, def: "مصر"),
-        Container(
-          width: MediaQuery.of(context).size.width * 0.85,
-          child: Column(
-            children: <Widget>[
-              Container(
-                child: ListTile(
-                  onTap: () {
-                    _openCountryPickerDialog('Nationality');
-                  },
-                  title:
-                      _buildDialogItem(_selectedDialogCountry['Nationality']),
-                ),
-              )
-            ],
-          ),
-        ),
-        decoration(5),
-        col(true, "الديانة", "مسلم/مسيحي", "Child_Religion", isArabicString,
-            def: "مسلم"),
-        dropDownBtn(religions, 'Child_Religion'),
-        decoration(20),
-        col(true, "تاريخ الميلاد", "يوم/شهر/سنة", "DOB", isArabicString),
-        new FlatButton(
-            onPressed: () {
-              DatePicker.showDatePicker(context,
-                  minTime: DateTime(1920, 1, 1),
-                  maxTime: DateTime(2100, 12, 30), onChanged: (date) {
-                setState(() {
-                  txtDOBController.text =
-                      '${date.year}:${date.month}:${date.day}';
-                });
-                map['DOB'] = '${date.year}:${date.month}:${date.day}';
-              }, currentTime: DateTime.now(), locale: LocaleType.ar);
-            },
-            child: Text(
-              txtDOBController.text,
-              textDirection: TextDirection.rtl,
-              style: TextStyle(color: Colors.black45),
-            )),
-        decoration(20),
-        col(true, "محافظة الميلاد", "مثال: البحيرة", "Gover_Name",
-            isArabicString),
-        new Container(
-          padding: EdgeInsets.fromLTRB(
-              MediaQuery.of(context).size.width * 0.50, 0, 0, 0),
-          child: DropdownButton<String>(
-            underline: new SizedBox(),
-            value: _governorate,
-            icon: new Icon(
-              Icons.arrow_downward,
-              textDirection: TextDirection.rtl,
-            ),
-            iconSize: 24,
-            elevation: 5,
-            style: TextStyle(
-              color: Colors.black,
-            ),
-            onChanged: (newValue) {
-              setState(() {
-                governorateOfBirth = newValue;
-                map['Gover_Name'] = governorateOfBirth;
-                cityName = _initGovs.egyptGovernorates
-                    .where((n) => n.gov.toString() == _governorate)
-                    .first
-                    .cities[0]
-                    .toString();
-              });
-            },
-            items: _initGovs
-                .getGovernorates()
-                .map((region) => DropdownMenuItem<String>(
-                    child: Text(region), value: region))
-                .toList(),
-          ),
-        ),
-        decoration(20),
-        col(true, "مدينة الميلاد", "مثال: مدينة دمنهور", "Center_Name",
-            isArabicString),
-        new Container(
-          padding: EdgeInsets.fromLTRB(
-              MediaQuery.of(context).size.width * 0.65, 0, 0, 0),
-          child: DropdownButton<String>(
-            underline: new SizedBox(),
-            value: cityName,
-            icon: new Icon(
-              Icons.arrow_downward,
-              textDirection: TextDirection.rtl,
-            ),
-            iconSize: 24,
-            elevation: 5,
-            style: TextStyle(
-              color: Colors.black,
-            ),
-            onChanged: (newValue) {
-              setState(() {
-                cityOfBirth = newValue;
-                map['Center_Name'] = cityOfBirth;
-              });
-            },
-            items: _initGovs.egyptGovernorates
-                .where((n) => (n.gov == _governorate))
-                .last
-                .cities
-                .map((_) =>
-                    DropdownMenuItem<String>(child: new Text(_), value: _))
-                .toList(),
-          ),
-        ),
-        decoration(20),
-        col(true, "الحالة اﻹجتماعية", "مثال: أعزب", "M_Status", isArabicString),
-        decoration(20),
-        col(true, "اسم اﻷب", "مثال: محمد", "Father_Name", isArabicString),
-        decoration(20),
-        col(true, "ديانة اﻷب", ".", ".", isArabicString),
-        dropDownBtn(religions, "Father_Religion"),
-        decoration(20),
-        col(true, "جنسية اﻷب", "مصري", "Father_Nationality", isArabicString,
-            def: 'مصر'),
-        new Container(
-          width: MediaQuery.of(context).size.width * 0.85,
-          child: Column(
-            children: <Widget>[
-              Container(
-                child: ListTile(
-                  onTap: () {
-                    _openCountryPickerDialog('Father_Nationality');
-                  },
-                  title: _buildDialogItem(
-                      _selectedDialogCountry['Father_Nationality']),
-                ),
-              ),
-            ],
-          ),
-        ),
-        decoration(5),
-        col(true, "اسم اﻷم", "مثال: ميرنا", "Mother_Name", isArabicString),
-        decoration(20),
-        col(true, "ديانة اﻷم", "", ".", isArabicString),
-        dropDownBtn(religions, "Mother_Religion"),
-        decoration(20),
-        col(true, "جنسية اﻷم", "", "Mother_Nationality", isArabicString,
-            def: 'مصر'),
-        new Container(
-          width: MediaQuery.of(context).size.width * 0.85,
-          child: Column(
-            children: <Widget>[
-              Container(
-                child: ListTile(
-                  onTap: () {
-                    _openCountryPickerDialog('Mother_Nationality');
-                  },
-                  title: _buildDialogItem(
-                      _selectedDialogCountry['Mother_Nationality']),
-                ),
-              )
-            ],
-          ),
-        ),
-        decoration(20),
-      ],
-    );
-  }
-
-  Widget militaryServiceData(String str) {
-    return new Column(
-      children: <Widget>[
-        new Container(
-          padding: EdgeInsets.fromLTRB(0, 0, 0, 15),
-          child: new Text(
-            str,
-            textAlign: TextAlign.center,
-            style: new TextStyle(
-              color: Colors.blue,
-              fontSize: 20,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-        ),
-        decoration(20),
-        col(false, "الموقف", "تحت التنجيد", "Mi_Status",
-            isArabicString), // should be mandatory if boy
-        decoration(20),
-        col(false, "رقم بطاقة الخدمة العسكرية", "أرقام", "Mi_Number",
-            isArabicString), // should be mandatory if boy
-        decoration(20),
-        new FlatButton(
-            onPressed: () {
-              DatePicker.showDatePicker(context,
-                  minTime: DateTime(1920, 1, 1),
-                  maxTime: DateTime(2100, 12, 30), onChanged: (date) {
-                setState(() {
-                  txtMilitaryController.text =
-                      '${date.year}:${date.month}:${date.day}';
-                });
-                map['DOM'] = '${date.year}:${date.month}:${date.day}';
-              }, currentTime: DateTime.now(), locale: LocaleType.ar);
-            },
-            child: Text(
-              txtDOBController.text,
-              textDirection: TextDirection.rtl,
-              style: TextStyle(color: Colors.black45),
-            )),
-        decoration(20),
-      ],
-    );
-  }
-
-  Widget scientificData(String str) {
-    return new Column(
-      children: <Widget>[
-        new Container(
-          padding: EdgeInsets.fromLTRB(0, 0, 0, 15),
-          child: new Text(
-            str,
-            textAlign: TextAlign.center,
-            style: new TextStyle(
-              color: Colors.blue,
-              fontSize: 20,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-        ),
-        decoration(20),
-        col(false, "أعلى مؤهل", "مثال: دكتوراه", "Best_Qualification",
-            isArabicString),
-        decoration(20),
-        col(false, "اسم المؤهل", "مثال: دكتوراه فى الهندسة المدنية",
-            "Name_Best_Qualification", isArabicString),
-        decoration(20),
-        col(false, "سنة الحصول عليه", "مثال: 2015", "Date_Best_Qualification",
-            isArabicString),
-        decoration(20),
-        col(false, "جامعة/وزارة", "مثال: جامعة اﻹسكندرية", "University_Name",
-            isArabicString),
-        decoration(20),
-        col(false, "كلية/معهد/مدرسة", "مثال: كلية الهندسة", "College_Name",
-            isArabicString),
-        decoration(20),
-      ],
-    );
-  }
-
-  Widget familyData(String str) {
-    return new Column(
-      children: <Widget>[
-        new Container(
-          padding: EdgeInsets.fromLTRB(0, 0, 0, 15),
-          child: new Text(
-            str,
-            textAlign: TextAlign.center,
-            style: new TextStyle(
-              color: Colors.blue,
-              fontSize: 20,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-        ),
-        decoration(20),
-        col(false, "اسم الزوجة/الزوجة", "مثال: محمد/سمر", "Husband_Wife_Name",
-            isArabicString),
-        decoration(20),
-        col(false, "نوع البطاقة", "مثال: مدنية، جواز السفر", "Card_Type",
-            isArabicString),
-        decoration(20),
-        col(false, "رقم البطاقة", "أرقام", "Card_Number", isArabicString),
-        decoration(20),
-      ],
-    );
-  }
-
-  Widget jobData(String str) {
-    return new Column(
-      children: <Widget>[
-        new Container(
-          padding: EdgeInsets.fromLTRB(0, 0, 0, 15),
-          child: new Text(
-            str,
-            textAlign: TextAlign.center,
-            style: new TextStyle(
-              color: Colors.blue,
-              fontSize: 20,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-        ),
-        decoration(20),
-        col(true, "الوظيفة", "مثال: رجل أعمال", "Job_Name", isArabicString),
-        decoration(20),
-        col(false, "سنة شغل الوظيفة", "مثال: 2015", "Job_Date", isArabicString),
-        decoration(20),
-        col(false, "جهة العمل", "مثال: وزارة الكهرباء", "Job_Place",
-            isArabicString),
-        decoration(20),
-        col(false, "مكتب السجل التجاري", "مثال: مكتب قسم المنتزه",
-            "Commercial_Register", isArabicString),
-        decoration(20),
-        col(false, "رقم السجل التجارى", "ثمان أرقام",
-            "Commercial_Register_Number", isArabicString),
-        decoration(20),
-      ],
-    );
-  }
-
-  Widget addressData(String str) {
-    return new Column(
-      children: <Widget>[
-        new Container(
-          padding: EdgeInsets.fromLTRB(0, 0, 0, 15),
-          child: new Text(
-            str,
-            textAlign: TextAlign.center,
-            style: new TextStyle(
-              color: Colors.blue,
-              fontSize: 20,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-        ),
-        decoration(20),
-        col(true, "محافظة", "مثال: البحيرة", "Governorate_Name",
-            isArabicString),
-        new Container(
-          padding: EdgeInsets.fromLTRB(
-              MediaQuery.of(context).size.width * 0.50, 0, 0, 0),
-          child: DropdownButton<String>(
-            underline: new SizedBox(),
-            value: _governorate,
-            icon: new Icon(
-              Icons.arrow_downward,
-              textDirection: TextDirection.rtl,
-            ),
-            iconSize: 24,
-            elevation: 5,
-            style: TextStyle(
-              color: Colors.black,
-            ),
-            onChanged: (newValue) {
-              setState(() {
-                _governorate = newValue;
-                map['Governorate_Name'] = _governorate;
-                cityName = _initGovs.egyptGovernorates
-                    .where((n) => n.gov.toString() == _governorate)
-                    .first
-                    .cities[0]
-                    .toString();
-              });
-            },
-            items: _initGovs
-                .getGovernorates()
-                .map((region) => DropdownMenuItem<String>(
-                    child: Text(region), value: region))
-                .toList(),
-          ),
-        ),
-        decoration(20),
-        col(true, "مدينة/مركز", "مثال: دمنهور", "_City_Name", isArabicString),
-        new Container(
-          padding: EdgeInsets.fromLTRB(
-              MediaQuery.of(context).size.width * 0.65, 0, 0, 0),
-          child: DropdownButton<String>(
-            underline: new SizedBox(),
-            value: cityName,
-            icon: new Icon(
-              Icons.arrow_downward,
-              textDirection: TextDirection.rtl,
-            ),
-            iconSize: 24,
-            elevation: 5,
-            style: TextStyle(
-              color: Colors.black,
-            ),
-            onChanged: (newValue) {
-              setState(() {
-                cityName = newValue;
-                map['_City_Name'] = cityName;
-              });
-            },
-            items: _initGovs.egyptGovernorates
-                .where((n) => (n.gov == _governorate))
-                .last
-                .cities
-                .map((_) =>
-                    DropdownMenuItem<String>(child: new Text(_), value: _))
-                .toList(),
-          ),
-        ),
-        decoration(20),
-        col(true, "مجمع سكنى", "مثال: شبرا", "Apartment_Block", isArabicString),
-        decoration(20),
-        col(true, "إسم الشارع", "مثال: شارع المعهد الدينى", "Street_Name",
-            isArabicString),
-        decoration(20),
-        col(true, "رقم العقار", "مثال: 17", "Building_Number", isArabicString),
-        decoration(20),
-      ],
-    );
-  }
-
-  Widget electionData(String str) {
-    return new Column(
-      children: <Widget>[
-        new Container(
-          padding: EdgeInsets.fromLTRB(0, 0, 0, 15),
-          child: new Text(
-            str,
-            textAlign: TextAlign.center,
-            style: new TextStyle(
-              color: Colors.blue,
-              fontSize: 20,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-        ),
-        decoration(20),
-        col(false, "الموطن اﻹنتخابي", "مثال: الجيزة", "Husband_Wife_Name",
-            isArabicString),
-        decoration(20),
-      ],
-    );
-  }
-
-  Widget loginData(String str) {
-    return new Column(
-      children: <Widget>[
-        new Container(
-          padding: EdgeInsets.fromLTRB(0, 0, 0, 15),
-          child: new Text(
-            str,
-            textAlign: TextAlign.center,
-            style: new TextStyle(
-              color: Colors.blue,
-              fontSize: 20,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-        ),
-        decoration(20),
-        col(true, "البريد اﻹلكتروني", "example@example.com", "Email",
-            isArabicString,
-            textAlign: TextAlign.left, textDirection: TextDirection.ltr),
-        decoration(20),
-        col(true, "رقم السر", "**********", "Password", isArabicString,
-            textAlign: TextAlign.left,
-            textDirection: TextDirection.ltr,
-            obscureText: true),
-        decoration(20),
-        col(false, "تأكيد رقم السر", "**********", "Re_Password",
-            isArabicString,
-            textAlign: TextAlign.left,
-            textDirection: TextDirection.ltr,
-            obscureText: true),
-        decoration(20),
-      ],
-    );
   }
 }
