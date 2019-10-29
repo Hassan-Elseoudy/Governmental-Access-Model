@@ -160,6 +160,7 @@ body: new Container(
           decoration: BoxDecoration(
             color: Colors.white,
             image: DecorationImage(
+              image: AssetImage('assets/images/mountains.jpg'),
               colorFilter: new ColorFilter.mode(
                   Colors.black.withOpacity(0.4), BlendMode.dstATop),
               fit: BoxFit.cover,

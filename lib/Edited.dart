@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:gam_app/A1_Gover_Services/S1_ShhadtMelad.dart';
-import 'package:gam_app/MyAccount.dart';
 class Edited extends StatelessWidget {
   @override
   Widget build(BuildContext context) {

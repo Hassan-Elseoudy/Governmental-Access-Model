@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:gam_app/A1_Gover_Services/S1_ShhadtMelad.dart';
 
 class AboutProgram extends StatelessWidget {
   @override

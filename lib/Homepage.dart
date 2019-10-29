@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:gam_app/Signup.dart';
-import 'package:gam_app/Login.dart';
-
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:gam_app/forgot_my_password.dart';
 
 final Firestore db = Firestore.instance;
 final FirebaseAuth auth = FirebaseAuth.instance;
@@ -186,7 +184,7 @@ class _Homepage extends State<Homepage>
         child: PageView(
           controller: _controller,
           physics: new AlwaysScrollableScrollPhysics(),
-          children: <Widget>[LoginPage(), homePage(), SignupPage()],
+          children: <Widget>[ForgotPassword(), homePage(), SignupPage()],
           scrollDirection: Axis.horizontal,
         ));
   }

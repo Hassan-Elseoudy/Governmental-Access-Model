@@ -5,7 +5,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:gam_app/country_pickers.dart';
 import 'package:gam_app/PDFBuilder.dart';
-import 'package:email_validator/email_validator.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:gam_app/E_Governorate.dart';
 
@@ -19,8 +18,6 @@ Map<String, String> dropdownBtns = new Map();
 // Index 2 => ديانة اﻷم
 // Index 3 => علاقة المُبلّغ بالطفل
 
-TextEditingController txtDOAController =
-    new TextEditingController(text: "اختر التاريخ");
 TextEditingController txtDOBController =
     new TextEditingController(text: "اختر التاريخ");
 TextEditingController txtMilitaryController =
@@ -30,6 +27,7 @@ Map<String, TextEditingController> txtControllers =
     new Map<String, TextEditingController>();
 
 int religionButton = -1;
+
 bool start = true;
 Map<String, Country> _selectedDialogCountry = {};
 Future<FirebaseUser> handleSignUp(email, password) async {
@@ -69,10 +67,6 @@ class _Signup extends State<SignupPage> with TickerProviderStateMixin {
       'Mother_Nationality': CountryPickerUtils.getCountryByPhoneCode('20')
     });
     _initGovs = Governorate.init();
-    String _governorate = _initGovs.egyptGovernorates[0].gov;
-    String cityName = _initGovs.egyptGovernorates[0].cities[0];
-    String governorateOfBirth = _initGovs.egyptGovernorates[0].gov;
-    String cityOfBirth = _initGovs.egyptGovernorates[0].cities[0];
   }
 
   /// Returns `true` if every [txt] is arabic, It's not working till now.
@@ -96,11 +90,7 @@ class _Signup extends State<SignupPage> with TickerProviderStateMixin {
       map['Gender'] = result == 0 ? 'ذكر' : 'أنثي';
     });
   }
-
-  // List<String> MState =['ارملة','ارمل','مطلقة','مطلق','متزوجة','متزوج','عزباء','اعزب'];
-  // List<String>  GoverName = ['الوادي الجديد','المنيا','المنوفية','مطروح','كفر الشيخ','قنا','القليوبية','الفيوم','الغربية','شمال سيناء	','الشرقية','السويس','سوهاج','دمياط','الدقهلية','الجيزة','جنوب سيناء	','الجيزة','بورسعيد','بني سويف	','البحيرة','البحر الأحمر','الأقصر','أسيوط','أسوان','الإسماعيلية','الإسكندرية','القاهرة'];
   String _errors;
-  String _warnings;
   bool _isValid() {
     map.forEach((k, v) => debugPrint('$k : $v'));
     _errors = "";
@@ -579,10 +569,10 @@ class _Signup extends State<SignupPage> with TickerProviderStateMixin {
         decoration(5),
         col(true, "اسم اﻷم", "مثال: ميرنا", "Mother_Name", isArabicString),
         decoration(20),
-        col(true, "ديانة اﻷم", ".", ".", isArabicString),
+        col(true, "ديانة اﻷم", "", ".", isArabicString),
         dropDownBtn(religions, "Mother_Religion"),
         decoration(20),
-        col(true, "جنسية اﻷم", ".", "Mother_Nationality", isArabicString,
+        col(true, "جنسية اﻷم", "", "Mother_Nationality", isArabicString,
             def: 'مصر'),
         new Container(
           width: MediaQuery.of(context).size.width * 0.85,
