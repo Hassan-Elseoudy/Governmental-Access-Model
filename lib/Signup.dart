@@ -33,7 +33,8 @@ class SignupPage extends StatefulWidget {
 Map<String, Container> labelsMap = new Map();
 Map<String, Widget> fieldsMap = new Map();
 Map<String, TextEditingController> controllers = new Map();
-String email,
+
+/*String email,
     password,
     re_password,
     gender,
@@ -70,7 +71,7 @@ String email,
     marital_status,
     marital_status_number,
     marital_status_date,
-    election_place;
+    election_place; */
 
 class _Signup extends State<SignupPage> with TickerProviderStateMixin {
   @override
@@ -89,7 +90,6 @@ class _Signup extends State<SignupPage> with TickerProviderStateMixin {
       );
 
   /// Responsible to open the dialouge for flags and countries. (Open Source)
-
   void _openCountryPickerDialog(String _key) {
     showDialog(
       context: context,
@@ -111,7 +111,7 @@ class _Signup extends State<SignupPage> with TickerProviderStateMixin {
     );
   }
 
-  void initializeEmail() {
+  List<Widget> initializeEmail() {
     controllers["Email"] = new TextEditingController();
     labelsMap["Email"] = new Container(
       width: MediaQuery.of(context).size.width * 0.8,
@@ -164,9 +164,10 @@ class _Signup extends State<SignupPage> with TickerProviderStateMixin {
         ],
       ),
     );
+    return [labelsMap["Email"],fieldsMap["Email"]];
   }
 
-  void initializePassword() {
+   List<Widget> initializePassword() {
     controllers["Password"] = new TextEditingController();
     labelsMap["Password"] = new Container(
       width: MediaQuery.of(context).size.width * 0.8,
@@ -219,9 +220,10 @@ class _Signup extends State<SignupPage> with TickerProviderStateMixin {
         ],
       ),
     );
+    return [labelsMap["Password"] ,fieldsMap["Password"]];
   }
 
-  void initializeRePassword() {
+   List<Widget> initializeRePassword() {
     controllers["RePassword"] = new TextEditingController();
     labelsMap["RePassword"] = new Container(
       width: MediaQuery.of(context).size.width * 0.8,
@@ -276,7 +278,7 @@ class _Signup extends State<SignupPage> with TickerProviderStateMixin {
     );
   }
 
-  void initializeGender() {
+   List<Widget> initializeGender() {
     controllers["Gender"] = new TextEditingController(text: "0");
     labelsMap["Gender"] = new Container(
       width: MediaQuery.of(context).size.width * 0.8,
@@ -378,7 +380,7 @@ class _Signup extends State<SignupPage> with TickerProviderStateMixin {
     return [labelsMap["Nationality"],fieldsMap["Nationality"]];
   }
 
-  void initializeMotherNationality() {
+   List<Widget> initializeMotherNationality() {
     controllers["MotherNationality"] = new TextEditingController(text: "مصر");
     labelsMap["MotherNationality"] = new Container(
       width: MediaQuery.of(context).size.width * 0.8,
@@ -417,9 +419,10 @@ class _Signup extends State<SignupPage> with TickerProviderStateMixin {
         ],
       ),
     );
+  return [labelsMap["MotherNationality"],fieldsMap["MotherNationality"]];
   }
 
-  void initializeFatherNationality() {
+   List<Widget> initializeFatherNationality() {
     controllers["FatherNationality"] = new TextEditingController(text: "مصر");
     labelsMap["FatherNationality"] = new Container(
       width: MediaQuery.of(context).size.width * 0.8,
@@ -458,9 +461,10 @@ class _Signup extends State<SignupPage> with TickerProviderStateMixin {
         ],
       ),
     );
+  return [labelsMap["FatherNationality"],fieldsMap["FatherNationality"]];
   }
 
-  void initializeDOB() {
+   List<Widget> initializeDOB() {
     controllers["DOB"] = new TextEditingController(text: "إختر التاريخ");
     labelsMap["DOB"] = new Container(
       width: MediaQuery.of(context).size.width * 0.8,
@@ -499,9 +503,10 @@ class _Signup extends State<SignupPage> with TickerProviderStateMixin {
           textDirection: TextDirection.rtl,
           style: TextStyle(color: Colors.black45),
         ));
+  return [labelsMap["DOB"],fieldsMap["DOB"]];
   }
 
-  void initializeMaritalStatusDate() {
+   List<Widget> initializeMaritalStatusDate() {
     controllers["MaritalStatusDate"] =
         new TextEditingController(text: "إختر التاريخ");
     labelsMap["MaritalStatusDate"] = new Container(
@@ -541,9 +546,10 @@ class _Signup extends State<SignupPage> with TickerProviderStateMixin {
           textDirection: TextDirection.rtl,
           style: TextStyle(color: Colors.black45),
         ));
+  return [labelsMap["MaritalStatusDate"],fieldsMap["MaritalStatusDate"]];
   }
 
-  void initializeReligion() {
+   List<Widget> initializeReligion() {
     controllers["Religion"] = new TextEditingController(text: "اﻹسلام");
     labelsMap["Religion"] = new Container(
       width: MediaQuery.of(context).size.width * 0.8,
@@ -595,9 +601,11 @@ class _Signup extends State<SignupPage> with TickerProviderStateMixin {
         }).toList(),
       ),
     );
+    return [labelsMap["Religion"],fieldsMap["Religion"]];
+
   }
 
-  void initializeMaritalStatus() {
+   List<Widget> initializeMaritalStatus() {
     controllers["MaritalStatus"] =
         new TextEditingController(text: "مطالب للتجنيد");
     labelsMap["MaritalStatus"] = new Container(
@@ -650,9 +658,11 @@ class _Signup extends State<SignupPage> with TickerProviderStateMixin {
         }).toList(),
       ),
     );
+      return [labelsMap["MaritalStatus"],fieldsMap["MaritalStatus"]];
+
   }
 
-  void initializeMotherReligion() {
+   List<Widget> initializeMotherReligion() {
     controllers["MotherReligion"] = new TextEditingController(text: "اﻹسلام");
     labelsMap["MotherReligion"] = new Container(
       width: MediaQuery.of(context).size.width * 0.8,
@@ -704,9 +714,11 @@ class _Signup extends State<SignupPage> with TickerProviderStateMixin {
         }).toList(),
       ),
     );
+        return [labelsMap["MotherReligion"],fieldsMap["MotherReligion"]];
+
   }
 
-  void initializeFatherReligion() {
+   List<Widget> initializeFatherReligion() {
     controllers["FatherReligion"] = new TextEditingController(text: "اﻹسلام");
     labelsMap["FatherReligion"] = new Container(
       width: MediaQuery.of(context).size.width * 0.8,
@@ -729,7 +741,7 @@ class _Signup extends State<SignupPage> with TickerProviderStateMixin {
         ],
       ),
     );
-    fieldsMap["Father_Religion"] = new Container(
+    fieldsMap["FatherReligion"] = new Container(
       padding: EdgeInsets.fromLTRB(
           MediaQuery.of(context).size.width * 0.70, 0, 0, 0),
       child: DropdownButton<String>(
@@ -758,9 +770,10 @@ class _Signup extends State<SignupPage> with TickerProviderStateMixin {
         }).toList(),
       ),
     );
+          return [labelsMap["FatherReligion"],fieldsMap["FatherReligion"]];
   }
 
-  void initializeStatus() {
+   List<Widget> initializeStatus() {
     controllers["Status"] = new TextEditingController(text: "أعزب");
     labelsMap["Status"] = new Container(
       width: MediaQuery.of(context).size.width * 0.8,
@@ -812,9 +825,11 @@ class _Signup extends State<SignupPage> with TickerProviderStateMixin {
         }).toList(),
       ),
     );
+    return [labelsMap["Status"],fieldsMap["Status"]];
+
   }
 
-  void initializeName() {
+   List<Widget> initializeName() {
     controllers["Name"] = new TextEditingController();
     labelsMap["Name"] = new Container(
       width: MediaQuery.of(context).size.width * 0.8,
@@ -866,9 +881,11 @@ class _Signup extends State<SignupPage> with TickerProviderStateMixin {
         ],
       ),
     );
+      return [labelsMap["Name"],fieldsMap["Name"]];
+
   }
 
-  void initializeFatherName() {
+   List<Widget> initializeFatherName() {
     controllers["FatherName"] = new TextEditingController();
     labelsMap["FatherName"] = new Container(
       width: MediaQuery.of(context).size.width * 0.8,
@@ -920,9 +937,11 @@ class _Signup extends State<SignupPage> with TickerProviderStateMixin {
         ],
       ),
     );
+    return [labelsMap["FatherName"],fieldsMap["FatherName"]];
+  
   }
 
-  void initializeMotherName() {
+   List<Widget> initializeMotherName() {
     controllers["MotherName"] = new TextEditingController();
     labelsMap["MotherName"] = new Container(
       width: MediaQuery.of(context).size.width * 0.8,
@@ -975,9 +994,11 @@ class _Signup extends State<SignupPage> with TickerProviderStateMixin {
         ],
       ),
     );
+      return [labelsMap["MotherName"],fieldsMap["MotherName"]];
+
   }
 
-  void initializeQualification() {
+  List<Widget> initializeQualification() {
     controllers["Qualification"] = new TextEditingController();
     labelsMap["Qualification"] = new Container(
       width: MediaQuery.of(context).size.width * 0.8,
@@ -1029,9 +1050,11 @@ class _Signup extends State<SignupPage> with TickerProviderStateMixin {
         ],
       ),
     );
+      return [labelsMap["Qualification"],fieldsMap["Qualification"]];
+
   }
 
-  void initializeQualificationName() {
+  List<Widget> initializeQualificationName() {
     controllers["QualificationName"] = new TextEditingController();
     labelsMap["QualificationName"] = new Container(
       width: MediaQuery.of(context).size.width * 0.8,
@@ -1083,9 +1106,12 @@ class _Signup extends State<SignupPage> with TickerProviderStateMixin {
         ],
       ),
     );
+      return [labelsMap["QualificationName"],fieldsMap["QualificationName"]];
+
   }
 
-  void initializeQualificationDate() {
+
+  List<Widget> initializeQualificationDate() {
     controllers["QualificationDate"] = new TextEditingController();
     labelsMap["QualificationDate"] = new Container(
       width: MediaQuery.of(context).size.width * 0.8,
@@ -1137,9 +1163,11 @@ class _Signup extends State<SignupPage> with TickerProviderStateMixin {
         ],
       ),
     );
+      return [labelsMap["QualificationDate"],fieldsMap["QualificationDate"]];
+
   }
 
-  void initializeQualificationUniversity() {
+  List<Widget> initializeQualificationUniversity() {
     controllers["QualificationUniversity"] = new TextEditingController();
     labelsMap["QualificationUniversity"] = new Container(
       width: MediaQuery.of(context).size.width * 0.8,
@@ -1191,9 +1219,11 @@ class _Signup extends State<SignupPage> with TickerProviderStateMixin {
         ],
       ),
     );
+      return [labelsMap["QualificationUniversity"],fieldsMap["QualificationUniversity"]];
+
   }
 
-  void initializeQualificationFaculty() {
+  List<Widget> initializeQualificationFaculty() {
     controllers["QualificationFaculty"] = new TextEditingController();
     labelsMap["QualificationFaculty"] = new Container(
       width: MediaQuery.of(context).size.width * 0.8,
@@ -1245,9 +1275,10 @@ class _Signup extends State<SignupPage> with TickerProviderStateMixin {
         ],
       ),
     );
+    return [labelsMap["QualificationFaculty"],fieldsMap["QualificationFaculty"]];
   }
 
-  void initializeMaritalStatusNumber() {
+  List<Widget> initializeMaritalStatusNumber() {
     controllers["MaritalStatusNumber"] = new TextEditingController();
     labelsMap["MaritalStatusNumber"] = new Container(
       width: MediaQuery.of(context).size.width * 0.8,
@@ -1300,9 +1331,10 @@ class _Signup extends State<SignupPage> with TickerProviderStateMixin {
         ],
       ),
     );
+    return [labelsMap["MaritalStatusNumber"],fieldsMap["MaritalStatusNumber"]];
   }
 
-  void initializeSpouseName() {
+  List<Widget> initializeSpouseName() {
     controllers["SpouseName"] = new TextEditingController();
     labelsMap["SpouseName"] = new Container(
       width: MediaQuery.of(context).size.width * 0.8,
@@ -1355,9 +1387,11 @@ class _Signup extends State<SignupPage> with TickerProviderStateMixin {
         ],
       ),
     );
+    return [labelsMap["SpouseName"],fieldsMap["SpouseName"]];
+
   }
 
-  void initializeCardType() {
+  List<Widget> initializeCardType() {
     controllers["CardType"] = new TextEditingController();
     labelsMap["CardType"] = new Container(
       width: MediaQuery.of(context).size.width * 0.8,
@@ -1410,9 +1444,10 @@ class _Signup extends State<SignupPage> with TickerProviderStateMixin {
         ],
       ),
     );
+    return [labelsMap["CardType"],fieldsMap["CardType"]];
   }
 
-  void initializeCardNumber() {
+  List<Widget> initializeCardNumber() {
     controllers["CardNumber"] = new TextEditingController();
     labelsMap["CardNumber"] = new Container(
       width: MediaQuery.of(context).size.width * 0.8,
@@ -1464,9 +1499,10 @@ class _Signup extends State<SignupPage> with TickerProviderStateMixin {
         ],
       ),
     );
+    return [labelsMap["CardNumber"],fieldsMap["CardNumber"]];
   }
 
-  void initializeBlock() {
+  List<Widget> initializeBlock() {
     controllers["Block"] = new TextEditingController();
     labelsMap["Block"] = new Container(
       width: MediaQuery.of(context).size.width * 0.8,
@@ -1519,9 +1555,10 @@ class _Signup extends State<SignupPage> with TickerProviderStateMixin {
         ],
       ),
     );
+    return [labelsMap["Block"],fieldsMap["Block"]];
   }
 
-  void initializeStreet() {
+  List<Widget> initializeStreet() {
     controllers["Street"] = new TextEditingController();
     labelsMap["Street"] = new Container(
       width: MediaQuery.of(context).size.width * 0.8,
@@ -1574,9 +1611,11 @@ class _Signup extends State<SignupPage> with TickerProviderStateMixin {
         ],
       ),
     );
+    return [labelsMap["Street"],fieldsMap["Street"]];
+
   }
 
-  void initializeBuildingNumber() {
+  List<Widget> initializeBuildingNumber() {
     controllers["BuildingNumber"] = new TextEditingController();
     labelsMap["BuildingNumber"] = new Container(
       width: MediaQuery.of(context).size.width * 0.8,
@@ -1629,9 +1668,10 @@ class _Signup extends State<SignupPage> with TickerProviderStateMixin {
         ],
       ),
     );
+    return [labelsMap["BuildingNumber"],fieldsMap["BuildingNumber"]];
   }
 
-  void initializeJob() {
+  List<Widget> initializeJob() {
     controllers["Job"] = new TextEditingController();
     labelsMap["Job"] = new Container(
       width: MediaQuery.of(context).size.width * 0.8,
@@ -1684,9 +1724,10 @@ class _Signup extends State<SignupPage> with TickerProviderStateMixin {
         ],
       ),
     );
+    return [labelsMap["Job"],fieldsMap["Job"]];
   }
 
-  void initializeJobDate() {
+  List<Widget> initializeJobDate() {
     controllers["JobDate"] = new TextEditingController();
     labelsMap["JobDate"] = new Container(
       width: MediaQuery.of(context).size.width * 0.8,
@@ -1738,9 +1779,10 @@ class _Signup extends State<SignupPage> with TickerProviderStateMixin {
         ],
       ),
     );
+      return [labelsMap["JobDate"],fieldsMap["JobDate"]];
   }
 
-  void initializeJobPlace() {
+  List<Widget> initializeJobPlace() {
     controllers["JobPlace"] = new TextEditingController();
     labelsMap["JobPlace"] = new Container(
       width: MediaQuery.of(context).size.width * 0.8,
@@ -1793,9 +1835,10 @@ class _Signup extends State<SignupPage> with TickerProviderStateMixin {
         ],
       ),
     );
+    return [labelsMap["JobPlace"],fieldsMap["JobPlace"]];
   }
 
-  void initializeJobOfficePlace() {
+  List<Widget> initializeJobOfficePlace() {
     controllers["JobOfficePlace"] = new TextEditingController();
     labelsMap["JobOfficePlace"] = new Container(
       width: MediaQuery.of(context).size.width * 0.8,
@@ -1848,9 +1891,10 @@ class _Signup extends State<SignupPage> with TickerProviderStateMixin {
         ],
       ),
     );
+    return [labelsMap["JobOfficePlace"],fieldsMap["JobOfficePlace"]];
   }
 
-  void initializeJobOfficeNumber() {
+  List<Widget> initializeJobOfficeNumber() {
     controllers["JobOfficeNumber"] = new TextEditingController();
     labelsMap["JobOfficeNumber"] = new Container(
       width: MediaQuery.of(context).size.width * 0.8,
@@ -1903,9 +1947,10 @@ class _Signup extends State<SignupPage> with TickerProviderStateMixin {
         ],
       ),
     );
+    return [labelsMap["JobOfficeNumber"],fieldsMap["JobOfficeNumber"]];
   }
 
-  void initializeGOV() {
+  List<Widget> initializeGOV() {
     controllers["GOV"] = new TextEditingController(text: "محافظة أسوان");
     labelsMap["GOV"] = new Container(
       width: MediaQuery.of(context).size.width * 0.8,
@@ -1960,9 +2005,11 @@ class _Signup extends State<SignupPage> with TickerProviderStateMixin {
             .toList(),
       ),
     );
+    return [labelsMap["GOV"],fieldsMap["GOV"]];
+
   }
 
-  void initializeCity() {
+  List<Widget> initializeCity() {
     controllers["City"] = new TextEditingController(text: "أسوان");
     labelsMap["City"] = new Container(
       width: MediaQuery.of(context).size.width * 0.8,
@@ -2013,9 +2060,10 @@ class _Signup extends State<SignupPage> with TickerProviderStateMixin {
             .toList(),
       ),
     );
+    return [labelsMap["City"],fieldsMap["City"]];
   }
 
-  void initializeGOB() {
+  List<Widget> initializeGOB() {
     controllers["GOB"] = new TextEditingController(text: "محافظة أسوان");
     labelsMap["GOB"] = new Container(
       width: MediaQuery.of(context).size.width * 0.8,
@@ -2070,9 +2118,10 @@ class _Signup extends State<SignupPage> with TickerProviderStateMixin {
             .toList(),
       ),
     );
+    return [labelsMap["GOB"],fieldsMap["GOB"]];
   }
 
-  void initializeCOB() {
+  List<Widget> initializeCOB() {
     controllers["COB"] = new TextEditingController(text: "أسوان");
     labelsMap["COB"] = new Container(
       width: MediaQuery.of(context).size.width * 0.8,
@@ -2123,9 +2172,10 @@ class _Signup extends State<SignupPage> with TickerProviderStateMixin {
             .toList(),
       ),
     );
+    return [labelsMap["COB"],fieldsMap["COB"]];
   }
 
-  void initializeGOE() {
+  List<Widget> initializeGOE() {
     controllers["GOE"] = new TextEditingController(text: "محافظة أسوان");
     labelsMap["GOE"] = new Container(
       width: MediaQuery.of(context).size.width * 0.8,
@@ -2175,6 +2225,7 @@ class _Signup extends State<SignupPage> with TickerProviderStateMixin {
             .toList(),
       ),
     );
+    return [labelsMap["GOE"],fieldsMap["GOE"]];
   }
 
   /// Returns `true` if every [txt] is arabic, It's not working till now.
@@ -2246,6 +2297,45 @@ class _Signup extends State<SignupPage> with TickerProviderStateMixin {
         new Column(
           children: initializeNationality(),
         ),
+        new Column( children:  initializeEmail()),
+ new Column( children:  initializePassword()),
+ new Column( children:  initializeRePassword()),
+ new Column( children:  initializeGender()),
+ new Column( children:  initializeNationality()),
+ new Column( children:  initializeMotherNationality()),
+ new Column( children:  initializeFatherNationality()),
+ new Column( children:  initializeDOB()),
+ new Column( children:  initializeMaritalStatusDate()),
+ new Column( children:  initializeReligion()),
+ new Column( children:  initializeMaritalStatus()),
+ new Column( children:  initializeMotherReligion()),
+ new Column( children:  initializeFatherReligion()),
+ new Column( children:  initializeStatus()),
+ new Column( children:  initializeName()),
+ new Column( children:  initializeFatherName()),
+ new Column( children:  initializeMotherName()),
+ new Column( children:  initializeQualification()),
+ new Column( children:  initializeQualificationName()),
+ new Column( children:  initializeQualificationDate()),
+ new Column( children:  initializeQualificationUniversity()),
+ new Column( children:  initializeQualificationFaculty()),
+ new Column( children:  initializeMaritalStatusNumber()),
+ new Column( children:  initializeSpouseName()),
+ new Column( children:  initializeCardType()),
+ new Column( children:  initializeCardNumber()),
+ new Column( children:  initializeBlock()),
+ new Column( children:  initializeStreet()),
+ new Column( children:  initializeBuildingNumber()),
+ new Column( children:  initializeJob()),
+ new Column( children:  initializeJobDate()),
+ new Column( children:  initializeJobPlace()),
+ new Column( children:  initializeJobOfficePlace()),
+ new Column( children:  initializeJobOfficeNumber()),
+ new Column( children:  initializeGOV()),
+ new Column( children:  initializeCity()),
+ new Column( children:  initializeGOB()),
+ new Column( children:  initializeCOB()),
+ new Column( children:  initializeGOE()),
         Divider(
           color: Colors.white,
           height: 10,
