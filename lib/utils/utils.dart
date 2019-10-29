@@ -18,6 +18,9 @@ class CountryPickerUtils {
   }
 
   static Widget getDefaultFlagImage(Country country) {
+    if(country == null){
+      debugPrint("Hiiiiiiiiiiiiii I'm null");
+    }
     return Image.asset(
       CountryPickerUtils.getFlagImageAssetPath(country.isoCode),
       height: 20.0,
