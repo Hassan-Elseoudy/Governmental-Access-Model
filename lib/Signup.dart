@@ -41,17 +41,17 @@ Map<String, TextEditingController> controllers = (
       "Nationality" : c[4] = TextEditingController(text: "966"),
       "MotherNationality" : c[5] = new TextEditingController(text: "20"),
       "FatherNationality" : c[6] = new TextEditingController(text: "20"),
-      "DOB" : c[7],
-      "GOB" : c[8],
-      "COB" : c[9],
-      "GOV" : c[10],
-      "City" : c[11],
-      "MaritalStatusDate" : c[12],
-      "MaritalStatus" : c[13],
-      "Religion" : c[14],
-      "MotherReligion" : c[15],
-      "FatherReligion" : c[16],
-      "Status" : c[17],
+      "DOB" : c[7] = new TextEditingController(text: "إختر التاريخ"),
+      "GOB" : c[8] = new TextEditingController(text: "محافظة أسوان"),
+      "COB" : c[9] = new TextEditingController(text: "أسوان"),
+      "GOV" : c[10] = new TextEditingController(text: "محافظة أسوان"),
+      "City" : c[11] = new TextEditingController(text: "أسوان"),
+      "MaritalStatusDate" : c[12] = new TextEditingController(text: "إختر التاريخ"),
+      "MaritalStatus" : c[13] = new TextEditingController(text: "مطالب للتجنيد"),
+      "Religion" : c[14] = new TextEditingController(text: "اﻹسلام"),
+      "MotherReligion" : c[15] = new TextEditingController(text: "اﻹسلام"),
+      "FatherReligion" : c[16] = new TextEditingController(text: "اﻹسلام"),
+      "Status" : c[17] = new TextEditingController(text: "أعزب"),
       "Name" : c[18],
       "FatherName" : c[19],
       "MotherName" : c[20],
@@ -72,6 +72,7 @@ Map<String, TextEditingController> controllers = (
       "JobOfficePlace" : c[35],
       "JobOfficeNumber" : c[36],
       "MaritalStatusNumber" : c[37],
+      "GOE" : c[38] = new TextEditingController(text: "محافظة أسوان"),
     });
 List<TextEditingController> c = new List<TextEditingController>(40);
 
@@ -353,7 +354,7 @@ class _Signup extends State<SignupPage> with TickerProviderStateMixin {
           groupValue: int.parse(controllers["Gender"].text),
           onChanged: (value) {
             setState(() {
-              controllers["Gender"].text = value;
+              controllers["Gender"].text = value.toString();
             });
           },
         ),
@@ -367,7 +368,7 @@ class _Signup extends State<SignupPage> with TickerProviderStateMixin {
           groupValue: int.parse(controllers["Gender"].text),
           onChanged: (value) {
             setState(() {
-              controllers["Gender"].text = value;
+              controllers["Gender"].text = value.toString();
             });
           },
         ),
@@ -506,7 +507,6 @@ class _Signup extends State<SignupPage> with TickerProviderStateMixin {
   }
 
   List<Widget> initializeDOB() {
-    controllers["DOB"] = new TextEditingController(text: "إختر التاريخ");
     labelsMap["DOB"] = new Container(
       width: MediaQuery.of(context).size.width * 0.8,
       child: new Row(
@@ -548,8 +548,6 @@ class _Signup extends State<SignupPage> with TickerProviderStateMixin {
   }
 
   List<Widget> initializeMaritalStatusDate() {
-    controllers["MaritalStatusDate"] =
-        new TextEditingController(text: "إختر التاريخ");
     labelsMap["MaritalStatusDate"] = new Container(
       width: MediaQuery.of(context).size.width * 0.8,
       child: new Row(
@@ -591,7 +589,6 @@ class _Signup extends State<SignupPage> with TickerProviderStateMixin {
   }
 
   List<Widget> initializeReligion() {
-    controllers["Religion"] = new TextEditingController(text: "اﻹسلام");
     labelsMap["Religion"] = new Container(
       width: MediaQuery.of(context).size.width * 0.8,
       child: new Row(
@@ -646,8 +643,6 @@ class _Signup extends State<SignupPage> with TickerProviderStateMixin {
   }
 
   List<Widget> initializeMaritalStatus() {
-    controllers["MaritalStatus"] =
-        new TextEditingController(text: "مطالب للتجنيد");
     labelsMap["MaritalStatus"] = new Container(
       width: MediaQuery.of(context).size.width * 0.8,
       child: new Row(
@@ -702,7 +697,6 @@ class _Signup extends State<SignupPage> with TickerProviderStateMixin {
   }
 
   List<Widget> initializeMotherReligion() {
-    controllers["MotherReligion"] = new TextEditingController(text: "اﻹسلام");
     labelsMap["MotherReligion"] = new Container(
       width: MediaQuery.of(context).size.width * 0.8,
       child: new Row(
@@ -757,7 +751,6 @@ class _Signup extends State<SignupPage> with TickerProviderStateMixin {
   }
 
   List<Widget> initializeFatherReligion() {
-    controllers["FatherReligion"] = new TextEditingController(text: "اﻹسلام");
     labelsMap["FatherReligion"] = new Container(
       width: MediaQuery.of(context).size.width * 0.8,
       child: new Row(
@@ -796,7 +789,7 @@ class _Signup extends State<SignupPage> with TickerProviderStateMixin {
         ),
         onChanged: (String newVal) {
           setState(() {
-            controllers["Father_Religion"].text = newVal;
+            controllers["FatherReligion"].text = newVal;
           });
         },
         items: ["اﻹسلام", "المسيحية", "اليهيودية", "غير ذلك"]
@@ -812,7 +805,6 @@ class _Signup extends State<SignupPage> with TickerProviderStateMixin {
   }
 
   List<Widget> initializeStatus() {
-    controllers["Status"] = new TextEditingController(text: "أعزب");
     labelsMap["Status"] = new Container(
       width: MediaQuery.of(context).size.width * 0.8,
       child: new Row(
@@ -1964,7 +1956,6 @@ class _Signup extends State<SignupPage> with TickerProviderStateMixin {
   }
 
   List<Widget> initializeGOV() {
-    controllers["GOV"] = new TextEditingController(text: "محافظة أسوان");
     labelsMap["GOV"] = new Container(
       width: MediaQuery.of(context).size.width * 0.8,
       child: new Row(
@@ -2022,7 +2013,6 @@ class _Signup extends State<SignupPage> with TickerProviderStateMixin {
   }
 
   List<Widget> initializeCity() {
-    controllers["City"] = new TextEditingController(text: "أسوان");
     labelsMap["City"] = new Container(
       width: MediaQuery.of(context).size.width * 0.8,
       child: new Row(
@@ -2076,7 +2066,6 @@ class _Signup extends State<SignupPage> with TickerProviderStateMixin {
   }
 
   List<Widget> initializeGOB() {
-    controllers["GOB"] = new TextEditingController(text: "محافظة أسوان");
     labelsMap["GOB"] = new Container(
       width: MediaQuery.of(context).size.width * 0.8,
       child: new Row(
@@ -2134,7 +2123,6 @@ class _Signup extends State<SignupPage> with TickerProviderStateMixin {
   }
 
   List<Widget> initializeCOB() {
-    controllers["COB"] = new TextEditingController(text: "أسوان");
     labelsMap["COB"] = new Container(
       width: MediaQuery.of(context).size.width * 0.8,
       child: new Row(
@@ -2188,7 +2176,6 @@ class _Signup extends State<SignupPage> with TickerProviderStateMixin {
   }
 
   List<Widget> initializeGOE() {
-    controllers["GOE"] = new TextEditingController(text: "محافظة أسوان");
     labelsMap["GOE"] = new Container(
       width: MediaQuery.of(context).size.width * 0.8,
       child: new Row(
@@ -2613,8 +2600,7 @@ class _Signup extends State<SignupPage> with TickerProviderStateMixin {
                   color: Colors.redAccent,
                   onPressed: () async {
                     setupPDF();
-                      debugPrint(
-                          "-------------------------no Errors-------------------------");
+                    controllers.forEach((k,v) => debugPrint("${k},${v?.text}"));
                       Navigator.push(
                         context,
                         MaterialPageRoute(builder: (context) => MyAccount()),
