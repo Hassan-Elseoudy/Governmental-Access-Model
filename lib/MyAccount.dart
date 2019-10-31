@@ -11,6 +11,48 @@ class MyAccount extends StatefulWidget {
   _MyAccount createState() => _MyAccount();
 }
 
+Map<String, String> status = ({
+  "Email": "غير مفعّل",
+  "Password": "غير مفعّل",
+  "RePassword": "غير مفعّل",
+  "Gender": "غير مفعّل",
+  "Nationality": "غير مفعّل",
+  "MotherNationality": "غير مفعّل",
+  "FatherNationality": "غير مفعّل",
+  "DOB": "غير مفعّل",
+  "GOB": "غير مفعّل",
+  "COB": "غير مفعّل",
+  "GOV": "غير مفعّل",
+  "City": "غير مفعّل",
+  "MaritalStatusDate": "غير مفعّل",
+  "MaritalStatus": "غير مفعّل",
+  "Religion": "غير مفعّل",
+  "MotherReligion": "غير مفعّل",
+  "FatherReligion": "غير مفعّل",
+  "Status": "غير مفعّل",
+  "Name": "غير مفعّل",
+  "FatherName": "غير مفعّل",
+  "MotherName": "غير مفعّل",
+  "Qualification": "غير مفعّل",
+  "QualificationName": "غير مفعّل",
+  "QualificationDate": "غير مفعّل",
+  "QualificationFaculty": "غير مفعّل",
+  "QualificationUniversity": "غير مفعّل",
+  "SpouseName": "غير مفعّل",
+  "CardType": "غير مفعّل",
+  "CardNumber": "غير مفعّل",
+  "Block": "غير مفعّل",
+  "Street": "غير مفعّل",
+  "BuildingNumber": "غير مفعّل",
+  "Job": "غير مفعّل",
+  "JobDate": "غير مفعّل",
+  "JobPlace": "غير مفعّل",
+  "JobOfficePlace": "غير مفعّل",
+  "JobOfficeNumber": "غير مفعّل",
+  "MaritalStatusNumber": "غير مفعّل",
+  "GOE": "غير مفعّل",
+});
+
 class _MyAccount extends State<MyAccount> {
   Widget build(BuildContext context) {
     return new Scaffold(
@@ -156,7 +198,7 @@ class _MyAccount extends State<MyAccount> {
           ],
         ),
       ),
-body: new Container(
+      body: new Container(
           decoration: BoxDecoration(
             color: Colors.white,
             image: DecorationImage(
@@ -170,6 +212,7 @@ body: new Container(
           child: new ListView(
             children: <Widget>[
               new Card(
+
                 color: Colors.white10,
                 margin: new EdgeInsets.all(10),
                 shape: RoundedRectangleBorder(
@@ -195,6 +238,9 @@ body: new Container(
                           color: Colors.redAccent.shade700,
                           fontSize: 20,
                         )),
+                    new Text(
+                      status["Name"]
+                    ),
                   ],
                 ),
               ),
@@ -227,6 +273,9 @@ body: new Container(
                           color: Colors.redAccent.shade700,
                           fontSize: 20,
                         )),
+                    new Text(
+                        status["GOB"]
+                    ),
                   ],
                 ),
               ),
@@ -259,6 +308,9 @@ body: new Container(
                           color: Colors.redAccent.shade700,
                           fontSize: 20,
                         )),
+                    new Text(
+                        status["DOB"]
+                    ),
                   ],
                 ),
               ),
@@ -274,7 +326,7 @@ body: new Container(
                 child: new Column(
                   mainAxisSize: MainAxisSize.min,
                   children: <Widget>[
-                    new Text("رقم المستخدم للدخول",
+                    new Text("اﻹيميل",
                         textDirection: TextDirection.rtl,
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
@@ -291,6 +343,9 @@ body: new Container(
                           color: Colors.redAccent.shade700,
                           fontSize: 20,
                         )),
+                    new Text(
+                        status["اﻹيميل"]
+                    ),
                   ],
                 ),
               ),
@@ -323,38 +378,9 @@ body: new Container(
                           color: Colors.redAccent.shade700,
                           fontSize: 20,
                         )),
-                  ],
-                ),
-              ),
-              Divider(
-                height: 30.0,
-              ),
-              new Card(
-                color: Colors.white10,
-                margin: new EdgeInsets.all(10),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(15.0),
-                ),
-                child: new Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: <Widget>[
-                    new Text("الجنسية",
-                        textDirection: TextDirection.rtl,
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          color: Colors.blue.shade900,
-                          fontSize: 20,
-                        )),
-                    Divider(
-                      height: 10.0,
+                    new Text(
+                        status["Nationality"]
                     ),
-                    new Text("hna el asm mn database",
-                        textDirection: TextDirection.rtl,
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          color: Colors.redAccent.shade700,
-                          fontSize: 20,
-                        )),
                   ],
                 ),
               ),
@@ -387,6 +413,9 @@ body: new Container(
                           color: Colors.redAccent.shade700,
                           fontSize: 20,
                         )),
+                    new Text(
+                        status["Religion"]
+                    ),
                   ],
                 ),
               ),

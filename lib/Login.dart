@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:gam_app/MyAccount.dart';
+import 'package:gam_app/forgot_my_password.dart';
 
 class LoginPage extends StatefulWidget {
   @override
   _LoginPage createState() => new _LoginPage();
 }
 
-class _LoginPage extends State<LoginPage>
-    with TickerProviderStateMixin {
+class _LoginPage extends State<LoginPage> with TickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
@@ -159,7 +159,12 @@ class _LoginPage extends State<LoginPage>
                     ),
                     textAlign: TextAlign.end,
                   ),
-                  onPressed: () => {},
+                  onPressed: () => {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => ForgotPassword()),
+                    )
+                  },
                 ),
               ),
             ],
@@ -210,6 +215,5 @@ class _LoginPage extends State<LoginPage>
         ],
       ),
     );
-  
   }
 }
